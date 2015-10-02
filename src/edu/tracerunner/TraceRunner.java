@@ -1,8 +1,5 @@
 package edu.tracerunner;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
@@ -34,8 +31,16 @@ public class TraceRunner {
     }
     public static void main(String[] args) throws Exception
     {
+        if (args.length < 3){
+            throw new IllegalArgumentException("usage: [port] [log output file] [class filter]");
+        }
+        List<String> mentered = new ArrayList<>();
         int portNum = Integer.parseInt(args[0]);
- //       String clazz = args[1];
+        String logOutput = args[1];
+        List<String> filters = new ArrayList<>();
+        for(int j=2; j< args.length; ++j){
+            filters.add(args[j]);
+        }
         VirtualMachineManager vmMgr = Bootstrap.virtualMachineManager();
         AttachingConnector socketConnector = null;
         List<AttachingConnector> attachingConnectors = vmMgr.attachingConnectors();
@@ -47,19 +52,16 @@ public class TraceRunner {
             break;
             }
         }
-        if (socketConnector != null)
-        {
+        if (socketConnector != null) {
             Map paramsMap = socketConnector.defaultArguments();
-            Connector.IntegerArgument portArg = (Connector.IntegerArgument)paramsMap.get("port");
+            Connector.IntegerArgument portArg = (Connector.IntegerArgument) paramsMap.get("port");
             portArg.setValue(portNum);
             VirtualMachine vm = socketConnector.attach(paramsMap);
             System.out.println("Attached to process '" + vm.name() + "'");
 
 
-
             Method dispatchMessage = getDispatchMessage(vm);
             //List<Method> targetMethods = getMethods(vm, clazz);
-
 
 
             //Set breakpoint
@@ -72,39 +74,46 @@ public class TraceRunner {
             bReq.enable();
 
             //Method entry notification
-            MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
 
-
+            for(String filter : filters) {
+                MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
+                methodEntryRequest.addClassFilter(filter);
+                methodEntryRequest.enable();
+            }
 
 
             EventQueue evtQueue = vm.eventQueue();
 
 
             //Process breakpoints main loop
-            while(true) {
-                EventSet evtSet = evtQueue.remove();
-                EventIterator evtIter = evtSet.eventIterator();
-                while(evtIter.hasNext()) {
-                    try
-                    {
-                        Event evt = evtIter.next();
-                        Map<String, Value> eventdetails = processEvent(evt);
-                        System.out.println(eventdetails);
-                    }
-
-                    catch (Exception exc)
-                    {
-                        System.out.println(exc.getClass().getName() + ": " + exc.getMessage());
-                    }
-                    finally
-                    {
-                        evtSet.resume();
+            try {
+                while (true) {
+                    EventSet evtSet = evtQueue.remove();
+                    EventIterator evtIter = evtSet.eventIterator();
+                    while (evtIter.hasNext()) {
+                        try {
+                            Event evt = evtIter.next();
+                            Map<String, Value> eventdetails = processEvent(evt, mentered);
+                            if (eventdetails.size() > 0) {
+                                System.out.println(eventdetails);
+                                for (String method : mentered) {
+                                    System.out.println("     " + method);
+                                }
+                                mentered.clear();
+                            }
+                        } catch (Exception exc) {
+                            System.out.println(exc.getClass().getName() + ": " + exc.getMessage());
+                        } finally {
+                            evtSet.resume();
+                        }
                     }
                 }
-            }
-            //TODO: https://dzone.com/articles/generating-minable-event
+                //TODO: https://dzone.com/articles/generating-minable-event
+            }catch (VMDisconnectedException e){
+                //TODO: dump data here
+                System.out.println("Process exited");
 
-            //TODO: dump message for each hit
+            }
         }
     }
 
@@ -152,7 +161,7 @@ public class TraceRunner {
     }
 
 
-    private static Map<String, Value> processEvent(Event evt) throws IncompatibleThreadStateException, AbsentInformationException {
+    private static Map<String, Value> processEvent(Event evt, List<String> mentered) throws IncompatibleThreadStateException, AbsentInformationException {
         Map<String, Value> retrievedValues = new HashMap<>();
         EventRequest evtReq = evt.request();
         if (evtReq instanceof BreakpointRequest) {
@@ -178,11 +187,12 @@ public class TraceRunner {
                     }
                 }
             }
-        }else if(evtReq instanceof MethodEntryRequest) {
-            MethodEntryRequest mer = (MethodEntryRequest) evtReq;
-            System.out.println("method entry");
-        }else {
-            System.out.println("Other event occured: " +  evtReq);
+        }else{
+            if(evt instanceof MethodEntryEvent) {
+                MethodEntryEvent mer = (MethodEntryEvent) evt;
+                mentered.add(mer.method().toString());
+                //System.out.println("method entry: " + mer.method().toString());
+            }
         }
         return retrievedValues;
     }
