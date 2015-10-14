@@ -1,4 +1,5 @@
 apply plugin: 'java'
+
 version = '1.0'
 
 task fatJar(type: Jar) {
@@ -11,11 +12,20 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-repositories {
-    mavenCentral()
-}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
+    dependencies {
+        //println("${System.properties['java.home']}/../lib/tools.jar")
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.0'
+
+
+    }
+}
 dependencies {
     compile files("${System.properties['java.home']}/../lib/tools.jar")
 }
 
+//apply plugin: 'com.google.protobuf'
