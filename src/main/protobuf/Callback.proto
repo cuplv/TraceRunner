@@ -1,0 +1,4 @@
+message Callback
+{
+	optional int32 what = 1;
+}

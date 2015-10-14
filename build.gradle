@@ -1,6 +1,27 @@
 apply plugin: 'java'
 
 version = '1.0'
+//sourceSets {1
+//    main {
+//        proto {
+//
+//            srcDir 'src/main/protobuf'
+//            include '**/*.protodevel'
+//        }
+//        java {
+//
+//        }
+//    }
+//    test {
+//        proto {
+//            // In addition to the default 'src/test/proto'
+//            srcDir 'src/test/protocolbuffers'
+//        }
+//    }
+//}
+
+
+
 
 task fatJar(type: Jar) {
     manifest {
@@ -11,6 +32,9 @@ task fatJar(type: Jar) {
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+repositories{
+    mavenCentral()
 }
 buildscript {
     repositories {
@@ -26,6 +50,19 @@ buildscript {
 }
 dependencies {
     compile files("${System.properties['java.home']}/../lib/tools.jar")
+    compile 'com.google.protobuf:protobuf-java:2.6.1'
 }
 
-//apply plugin: 'com.google.protobuf'
+
+apply plugin: 'com.google.protobuf'
+sourceSets {
+    main {
+        proto {
+            srcDir 'src/main/protobuf'
+            include '**/*.protodevel'
+        }
+        java {
+            exclude 'some/unwanted/package/**'
+        }
+    }
+}
