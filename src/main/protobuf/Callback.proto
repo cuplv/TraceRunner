@@ -1,3 +1,4 @@
+option java_package = "edu.colorado.plv";
 message Callback
 {
 	optional int32 what = 1;
@@ -12,9 +13,12 @@ message MethodEvent
 		METHODEXIT = 1;
 	}
 	optional string fullname = 1;
+	optional ConcreteObject reciever = 2;
+	repeated ConcreteObject parameters = 3;
 
 }
 message ConcreteObject
 {
-
+	optional int32 id = 1;
+	optional string type = 2;
 }

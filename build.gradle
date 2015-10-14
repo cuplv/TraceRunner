@@ -37,9 +37,6 @@ repositories{
     mavenCentral()
 }
 buildscript {
-    repositories {
-        mavenCentral()
-    }
 
     dependencies {
         //println("${System.properties['java.home']}/../lib/tools.jar")
@@ -47,6 +44,10 @@ buildscript {
 
 
     }
+    repositories {
+        mavenCentral()
+    }
+
 }
 dependencies {
     compile files("${System.properties['java.home']}/../lib/tools.jar")
@@ -59,10 +60,11 @@ sourceSets {
     main {
         proto {
             srcDir 'src/main/protobuf'
+            srcDir 'build/generated/**'
             include '**/*.protodevel'
         }
         java {
-            exclude 'some/unwanted/package/**'
+            include 'build/generated/source/proto/main/java**'
         }
     }
 }
