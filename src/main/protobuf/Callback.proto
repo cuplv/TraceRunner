@@ -1,4 +1,20 @@
 message Callback
 {
 	optional int32 what = 1;
+	repeated MethodEvent methodEntryList = 2;
+
+}
+
+message MethodEvent
+{
+	enum Type {
+		METHODENTRY = 0;
+		METHODEXIT = 1;
+	}
+	optional string fullname = 1;
+
+}
+message ConcreteObject
+{
+
 }
