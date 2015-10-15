@@ -64,7 +64,9 @@ sourceSets {
             include '**/*.protodevel'
         }
         java {
+            include 'src/main/java/**'
             include 'build/generated/source/proto/main/java**'
+
         }
     }
 }

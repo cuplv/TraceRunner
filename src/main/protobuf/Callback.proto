@@ -2,7 +2,10 @@ option java_package = "edu.colorado.plv";
 message Callback
 {
 	optional int32 what = 1;
-	repeated MethodEvent methodEntryList = 2;
+	optional PValue when = 2;
+	optional PValue target = 3;
+	optional PValue callback = 4;
+	repeated MethodEvent methodEntryList = 5;
 
 }
 
@@ -21,4 +24,29 @@ message ConcreteObject
 {
 	optional int32 id = 1;
 	optional string type = 2;
+}
+message PValue {
+	oneof valueType{
+		int32 pIntegerValue = 1;
+		PStringReference pStringReference = 2;
+		PObjectReference pObjctReferenc = 3;
+		bool pBoolValue = 4;
+		float pFloatValue = 5;
+		string pOtherValue = 6;
+	}
+}
+message PObjectReference
+{
+	optional int64 id = 1;
+	optional string type = 2;
+
+}
+message PStringReference
+{
+	optional int64 id = 1;
+	optional string value = 2;
+
+}
+message CallbackSize {
+	optional int64 size = 1;
 }

@@ -1,4 +1,5 @@
 package edu.colorado.plv;
+import java.io.FileOutputStream;
 import java.util.*;
 
 
@@ -8,6 +9,25 @@ import java.util.*;
  * TODO: In progress
  */
 public class TraceRunner {
+    public static void main(String[] args) throws Exception
+    {
+        if (args.length < 3){
+            throw new IllegalArgumentException("usage: [port] [log output file] [class filter] or [log input file]");
+        }
+        if (args.length == 1) {
+
+
+        }
+        String logOutput = args[1];
+        int port = Integer.parseInt(args[0]);
+        List<String> filters = new ArrayList<>();
+        for(int j=2; j< args.length; ++j){
+            filters.add(args[j]);
+        }
+        EventProcessor eventProcessor = new ProtoProcessor(new FileOutputStream(logOutput));
+        TraceMain traceMain = new TraceMain(true, port,  eventProcessor, filters);
+        traceMain.mainLoop();
+    }
     public static List<String> getfields(){
         List<String> out = new ArrayList<>();
 //        out.add("android.os.MessageZ.what");
@@ -20,25 +40,7 @@ public class TraceRunner {
         out.add("callback");
         return out;
     }
-    public static void main(String[] args) throws Exception
-    {
-        if (args.length < 3){
-            throw new IllegalArgumentException("usage: [port] [log output file] [class filter] [optional Read]");
-        }
-        if (args.length == 4) {
 
-
-        }
-        String logOutput = args[1];
-        int port = Integer.parseInt(args[0]);
-        List<String> filters = new ArrayList<>();
-        for(int j=2; j< args.length; ++j){
-            filters.add(args[j]);
-        }
-        EventProcessor eventProcessor = new PrintProcessor();
-        TraceMain traceMain = new TraceMain(true, port,  eventProcessor, filters);
-        traceMain.mainLoop();
-    }
 
 
 }
