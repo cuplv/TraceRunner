@@ -17,13 +17,13 @@ import java.util.Map;
 /**
  * Created by s on 10/13/15.
  */
-public class TraceMain {
+public class TraceMainLoop {
     private final int port;
     private boolean verbose;
     private EventProcessor eventProcessor;
     private List<String> filters;
 
-    public TraceMain(boolean verbose, int port, EventProcessor eventProcessor, List<String> filters) {
+    public TraceMainLoop(boolean verbose, int port, EventProcessor eventProcessor, List<String> filters) {
         this.verbose = verbose;
         this.port = port;
         this.eventProcessor = eventProcessor;

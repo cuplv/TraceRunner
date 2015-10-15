@@ -33,6 +33,7 @@ message PValue {
 		bool pBoolValue = 4;
 		float pFloatValue = 5;
 		string pOtherValue = 6;
+		bool pNull = 7;
 	}
 }
 message PObjectReference

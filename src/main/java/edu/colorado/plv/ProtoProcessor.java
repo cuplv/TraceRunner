@@ -23,10 +23,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ProtoProcessor implements EventProcessor {
     FileOutputStream output;
     BlockingQueue<CallbackOuterClass.Callback> toWrite = new LinkedBlockingQueue<>();
+    Thread writerThread;
 
     ProtoProcessor(FileOutputStream output){
         this.output = output;
-        Thread writerThread = new Thread(new FileWriter(output, toWrite));
+        writerThread = new Thread(new FileWriter(output, toWrite));
+        writerThread.start();
     }
     Map<String, Value> currentMessage = null;
 
@@ -59,7 +61,13 @@ public class ProtoProcessor implements EventProcessor {
         @Override
         public void run() {
             for(;;) {
-                CallbackOuterClass.Callback callback = toWrite.poll();
+                CallbackOuterClass.Callback callback = null;
+                try {
+                    callback = toWrite.take();
+                } catch (InterruptedException e) {
+                    return;
+                }
+                System.out.println(callback);
                 byte[] bytes = callback.toByteArray();
                 //Note that if a callback trace exceeds 2G it will probably break
                 //I can't imagine this will ever happen
@@ -81,8 +89,7 @@ public class ProtoProcessor implements EventProcessor {
     }
 
     @Override
-    public void processMessage(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException {
-        BreakpointEvent brEvt = (BreakpointEvent) evt;
+    public void processMessage(BreakpointEvent brEvt) throws IncompatibleThreadStateException, AbsentInformationException {
         ThreadReference threadRef = brEvt.thread();
         StackFrame stackFrame = null;
         stackFrame = threadRef.frame(0);
@@ -145,6 +152,15 @@ public class ProtoProcessor implements EventProcessor {
     @Override
     public void done() {
         finalizeLastMessage();
+        while(toWrite.size() > 0){
+            System.out.println("waiting for write to finish");
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            writerThread.interrupt();
+        }
     }
 
     private static List<Method> getMethods(VirtualMachine vm, String clazz){
@@ -187,9 +203,13 @@ public class ProtoProcessor implements EventProcessor {
                                     .setType(type)
                                     .build())
                     .build();
-        } else if(value instanceof BooleanValue){
-            BooleanValue booleanValue = (BooleanValue)value;
+        } else if(value instanceof BooleanValue) {
+            BooleanValue booleanValue = (BooleanValue) value;
             return CallbackOuterClass.PValue.newBuilder().setPBoolValue(booleanValue.value()).build();
+        }else if(value == null){
+            //Apparently value is set to null for runtime null values
+            return CallbackOuterClass.PValue.newBuilder()
+                    .setPNull(true).build();
         }else{
             String tostring = value.toString();
             return CallbackOuterClass.PValue.newBuilder()

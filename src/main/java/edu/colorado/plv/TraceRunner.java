@@ -25,8 +25,8 @@ public class TraceRunner {
             filters.add(args[j]);
         }
         EventProcessor eventProcessor = new ProtoProcessor(new FileOutputStream(logOutput));
-        TraceMain traceMain = new TraceMain(true, port,  eventProcessor, filters);
-        traceMain.mainLoop();
+        TraceMainLoop traceMainLoop = new TraceMainLoop(true, port,  eventProcessor, filters);
+        traceMainLoop.mainLoop();
     }
     public static List<String> getfields(){
         List<String> out = new ArrayList<>();

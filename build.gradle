@@ -1,24 +1,7 @@
 apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
 
 version = '1.0'
-//sourceSets {1
-//    main {
-//        proto {
-//
-//            srcDir 'src/main/protobuf'
-//            include '**/*.protodevel'
-//        }
-//        java {
-//
-//        }
-//    }
-//    test {
-//        proto {
-//            // In addition to the default 'src/test/proto'
-//            srcDir 'src/test/protocolbuffers'
-//        }
-//    }
-//}
 
 
 
@@ -55,7 +38,7 @@ dependencies {
 }
 
 
-apply plugin: 'com.google.protobuf'
+
 sourceSets {
     main {
         proto {
@@ -63,10 +46,10 @@ sourceSets {
             srcDir 'build/generated/**'
             include '**/*.protodevel'
         }
-        java {
-            include 'src/main/java/**'
-            include 'build/generated/source/proto/main/java**'
-
-        }
+//        java {
+//            include 'src/main/java/**'
+//            include 'build/generated/source/proto/main/java**'
+//
+//        }
     }
 }
