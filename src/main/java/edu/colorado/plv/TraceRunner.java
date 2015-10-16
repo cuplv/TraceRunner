@@ -15,7 +15,7 @@ public class TraceRunner {
         if (args.length == 1) {
             FileInputStream fileInputStream = new FileInputStream(args[0]);
             ProtoProcessor.readInputStream(fileInputStream);
-
+            return;
 
         }
         if (args.length < 3){
@@ -31,18 +31,6 @@ public class TraceRunner {
         EventProcessor eventProcessor = new ProtoProcessor(new FileOutputStream(logOutput));
         TraceMainLoop traceMainLoop = new TraceMainLoop(true, port,  eventProcessor, filters);
         traceMainLoop.mainLoop();
-    }
-    public static List<String> getfields(){
-        List<String> out = new ArrayList<>();
-//        out.add("android.os.MessageZ.what");
-//        out.add("android.os.Message.when");
-//        out.add("android.os.Message.target");
-//        out.add("android.os.Message.callback");
-        out.add("what");
-        out.add("Message.when");
-        out.add("target");
-        out.add("callback");
-        return out;
     }
 
 

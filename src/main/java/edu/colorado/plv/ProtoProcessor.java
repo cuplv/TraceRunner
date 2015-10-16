@@ -29,8 +29,10 @@ public class ProtoProcessor implements EventProcessor {
         this.output = output;
         writerThread = new Thread(new FileWriter(output, toWrite));
         writerThread.start();
+        methodEvents = new ArrayList<CallbackOuterClass.MethodEvent>();
     }
     Map<String, Value> currentMessage = null;
+    List<CallbackOuterClass.MethodEvent> methodEvents;
 
 
 
@@ -56,6 +58,7 @@ public class ProtoProcessor implements EventProcessor {
                 return;
             }
             System.out.println(callback);
+            System.out.println("-----------------------------------------------------------");
         }
     }
 
@@ -83,22 +86,6 @@ public class ProtoProcessor implements EventProcessor {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                System.out.println(callback);
-//                byte[] bytes = callback.toByteArray();
-//                //Note that if a callback trace exceeds 2G it will probably break
-//                //I can't imagine this will ever happen
-//                String size = Integer.toString(bytes.length);
-//                int padding = 10 - size.length();
-//                for(int i = 0; i<padding; ++i){
-//                    size = "0" + size;
-//                }
-//                try {
-//                    outfile.write(size.getBytes());
-//                    outfile.write(bytes);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
             }
 
         }
@@ -107,8 +94,7 @@ public class ProtoProcessor implements EventProcessor {
     @Override
     public void processMessage(BreakpointEvent brEvt) throws IncompatibleThreadStateException, AbsentInformationException {
         ThreadReference threadRef = brEvt.thread();
-        StackFrame stackFrame = null;
-        stackFrame = threadRef.frame(0);
+        StackFrame stackFrame = threadRef.frame(0);
         List visVars = stackFrame.visibleVariables();
         LocalVariable msgvar = (LocalVariable) visVars.get(0); //Should only be one
         Value value = stackFrame.getValue(msgvar);
@@ -144,11 +130,12 @@ public class ProtoProcessor implements EventProcessor {
             builder.setWhen(valueToProtobuf(currentMessage.get("Message.when")));
             builder.setTarget(valueToProtobuf(currentMessage.get("target")));
             builder.setCallback(valueToProtobuf(currentMessage.get("callback")));
+            builder.addAllMethodEntryList(methodEvents);
             //TODO: serialize messages
             try {
                 toWrite.put(builder.build());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //should never happen
             }
             //TODO: add to  queue
 
@@ -161,8 +148,63 @@ public class ProtoProcessor implements EventProcessor {
     @Override
     public void processInvoke(MethodEntryEvent evt) {
 
-        String method = (evt.method().toString());
-        System.out.println(method);
+        Method method = evt.method();
+        String methodname = (method.toString());
+        boolean isStatic = evt.method().isStatic();
+        ThreadReference threadRef = evt.thread();
+        long threadID = threadRef.uniqueID();
+        String signature = method.signature();
+        List<LocalVariable> arguments = null;
+        ReferenceType declaringType = method.declaringType();
+        List<StackFrame> stackFrames;
+        CallbackOuterClass.PValue caller = null;
+        CallbackOuterClass.PValue calle = null;
+        try {
+            stackFrames = threadRef.frames();
+            int level = 0;
+//            long calleId = 0;
+//            String calleClass = null;
+//            long callerId = 0;
+//            String callerClass = null;
+            for(StackFrame stackFrame : stackFrames){
+                ObjectReference objectReference = stackFrame.thisObject();
+
+                if (level == 0) {
+                    calle = valueToProtobuf(objectReference);
+//                    calleId = objectReference.uniqueID();
+//                    calleClass = objectReference.referenceType().toString();
+                }
+                if (level == 1) {
+                    caller = valueToProtobuf(objectReference);
+//                    callerId = objectReference.uniqueID();
+//                    callerClass = objectReference.referenceType().toString();
+                }
+                level++;
+                if (level > 1) {
+                    break;
+                }
+            }
+        } catch (IncompatibleThreadStateException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            arguments = evt.method().arguments();
+        } catch (AbsentInformationException e) {
+            //TODO: handle this case
+            System.out.println("absent information" + e.toString());
+        }
+        methodEvents.add(CallbackOuterClass.MethodEvent.newBuilder()
+                .setFullname(evt.method().name())
+                .setIsStatic(isStatic)
+                .setThreadID(threadID)
+                .setSignature(signature)
+                .setCalle(calle)
+                .setCaller(caller)
+                .setDeclaringType(declaringType.toString())
+                .build());
+        System.out.println(methodname);
     }
 
     @Override

@@ -16,8 +16,14 @@ message MethodEvent
 		METHODEXIT = 1;
 	}
 	optional string fullname = 1;
-	optional ConcreteObject reciever = 2;
-	repeated ConcreteObject parameters = 3;
+	optional bool isStatic = 2;
+	optional int64 threadID = 3;
+	optional ConcreteObject reciever = 4;
+	repeated ConcreteObject parameters = 5;
+	optional string signature = 6;
+	optional string declaring_type = 7;
+	optional PValue caller = 8;
+	optional PValue calle = 9;
 
 }
 message ConcreteObject
