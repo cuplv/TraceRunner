@@ -1,4 +1,5 @@
 package edu.colorado.plv;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.*;
 
@@ -11,13 +12,16 @@ import java.util.*;
 public class TraceRunner {
     public static void main(String[] args) throws Exception
     {
+        if (args.length == 1) {
+            FileInputStream fileInputStream = new FileInputStream(args[0]);
+            ProtoProcessor.readInputStream(fileInputStream);
+
+
+        }
         if (args.length < 3){
             throw new IllegalArgumentException("usage: [port] [log output file] [class filter] or [log input file]");
         }
-        if (args.length == 1) {
 
-
-        }
         String logOutput = args[1];
         int port = Integer.parseInt(args[0]);
         List<String> filters = new ArrayList<>();

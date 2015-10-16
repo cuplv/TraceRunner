@@ -5,10 +5,10 @@ import com.sun.jdi.*;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.MethodEntryEvent;
+import sun.nio.cs.US_ASCII;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +48,17 @@ public class ProtoProcessor implements EventProcessor {
         out.add("callback");
         return out;
     }
+
+    public static void readInputStream(InputStream fileInputStream) throws IOException {
+        while(true) {
+            CallbackOuterClass.Callback callback = CallbackOuterClass.Callback.parseDelimitedFrom(fileInputStream);
+            if(callback == null){
+                return;
+            }
+            System.out.println(callback);
+        }
+    }
+
     private class FileWriter implements Runnable{
         private final FileOutputStream outfile;
         private final BlockingQueue<CallbackOuterClass.Callback> toWrite;
@@ -67,21 +78,26 @@ public class ProtoProcessor implements EventProcessor {
                 } catch (InterruptedException e) {
                     return;
                 }
-                System.out.println(callback);
-                byte[] bytes = callback.toByteArray();
-                //Note that if a callback trace exceeds 2G it will probably break
-                //I can't imagine this will ever happen
-                String size = Integer.toString(bytes.length);
-                int padding = 10 - size.length();
-                for(int i = 0; i<padding; ++i){
-                    size = "0" + size;
-                }
                 try {
-                    outfile.write(size.getBytes());
-                    outfile.write(bytes);
+                    callback.writeDelimitedTo(outfile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+//                System.out.println(callback);
+//                byte[] bytes = callback.toByteArray();
+//                //Note that if a callback trace exceeds 2G it will probably break
+//                //I can't imagine this will ever happen
+//                String size = Integer.toString(bytes.length);
+//                int padding = 10 - size.length();
+//                for(int i = 0; i<padding; ++i){
+//                    size = "0" + size;
+//                }
+//                try {
+//                    outfile.write(size.getBytes());
+//                    outfile.write(bytes);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
             }
 
