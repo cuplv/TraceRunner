@@ -154,30 +154,27 @@ public class ProtoProcessor implements EventProcessor {
         ThreadReference threadRef = evt.thread();
         long threadID = threadRef.uniqueID();
         String signature = method.signature();
-        List<LocalVariable> arguments = null;
         ReferenceType declaringType = method.declaringType();
         List<StackFrame> stackFrames;
         CallbackOuterClass.PValue caller = null;
         CallbackOuterClass.PValue calle = null;
+        List<CallbackOuterClass.PValue> arguments = new ArrayList<>();
         try {
             stackFrames = threadRef.frames();
             int level = 0;
-//            long calleId = 0;
-//            String calleClass = null;
-//            long callerId = 0;
-//            String callerClass = null;
             for(StackFrame stackFrame : stackFrames){
                 ObjectReference objectReference = stackFrame.thisObject();
 
                 if (level == 0) {
                     calle = valueToProtobuf(objectReference);
-//                    calleId = objectReference.uniqueID();
-//                    calleClass = objectReference.referenceType().toString();
+                    List<Value> argumentsVals = stackFrame.getArgumentValues();
+                    for(Value value : argumentsVals){
+                        arguments.add(valueToProtobuf(value));
+                    }
+
                 }
                 if (level == 1) {
                     caller = valueToProtobuf(objectReference);
-//                    callerId = objectReference.uniqueID();
-//                    callerClass = objectReference.referenceType().toString();
                 }
                 level++;
                 if (level > 1) {
@@ -187,14 +184,6 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
-
-        try {
-
-            arguments = evt.method().arguments();
-        } catch (AbsentInformationException e) {
-            //TODO: handle this case
-            System.out.println("absent information" + e.toString());
-        }
         methodEvents.add(CallbackOuterClass.MethodEvent.newBuilder()
                 .setFullname(evt.method().name())
                 .setIsStatic(isStatic)
@@ -203,6 +192,7 @@ public class ProtoProcessor implements EventProcessor {
                 .setCalle(calle)
                 .setCaller(caller)
                 .setDeclaringType(declaringType.toString())
+                .addAllParameters(arguments)
                 .build());
         System.out.println(methodname);
     }

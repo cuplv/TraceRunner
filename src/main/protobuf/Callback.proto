@@ -19,7 +19,7 @@ message MethodEvent
 	optional bool isStatic = 2;
 	optional int64 threadID = 3;
 	optional ConcreteObject reciever = 4;
-	repeated ConcreteObject parameters = 5;
+	repeated PValue parameters = 5;
 	optional string signature = 6;
 	optional string declaring_type = 7;
 	optional PValue caller = 8;
