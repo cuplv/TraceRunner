@@ -1,14 +1,10 @@
 package edu.colorado.plv;
 
-import com.google.protobuf.ByteString;
 import com.sun.jdi.*;
-import com.sun.jdi.connect.Connector;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.MethodEntryEvent;
-import sun.nio.cs.US_ASCII;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +25,7 @@ public class ProtoProcessor implements EventProcessor {
         this.output = output;
         writerThread = new Thread(new FileWriter(output, toWrite));
         writerThread.start();
-        methodEvents = new ArrayList<CallbackOuterClass.MethodEvent>();
+        methodEvents = new ArrayList<>();
     }
     Map<String, Value> currentMessage = null;
     List<CallbackOuterClass.MethodEvent> methodEvents;
@@ -261,7 +257,7 @@ public class ProtoProcessor implements EventProcessor {
         }else{
             String tostring = value.toString();
             return CallbackOuterClass.PValue.newBuilder()
-                    .setPOtherValueBytes(ByteString.copyFromUtf8(tostring))
+                    .setPOtherValue(tostring)
                     .build();
         }
     }

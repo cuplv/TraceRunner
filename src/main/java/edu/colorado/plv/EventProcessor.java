@@ -6,6 +6,7 @@ import com.sun.jdi.Value;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.MethodEntryEvent;
+import com.sun.jdi.event.MethodExitEvent;
 import com.sun.jdi.request.BreakpointRequest;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface EventProcessor {
     void processMessage(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException;
     void processInvoke(MethodEntryEvent evt);
     void done();
+    //void processMethodExit(MethodExitEvent evt);
 }

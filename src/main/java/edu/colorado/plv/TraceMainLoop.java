@@ -1,6 +1,7 @@
 package edu.colorado.plv;
 
 import com.sun.jdi.*;
+import com.sun.jdi.VirtualMachineManager;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
@@ -17,21 +18,20 @@ import java.util.Map;
 /**
  * Created by s on 10/13/15.
  */
+
 public class TraceMainLoop {
     private final int port;
-    private boolean verbose;
+
     private EventProcessor eventProcessor;
     private List<String> filters;
 
-    public TraceMainLoop(boolean verbose, int port, EventProcessor eventProcessor, List<String> filters) {
-        this.verbose = verbose;
+    public TraceMainLoop(int port, EventProcessor eventProcessor, List<String> filters) {
         this.port = port;
         this.eventProcessor = eventProcessor;
         this.filters = filters;
 
     }
     public void mainLoop() throws IOException, IllegalConnectorArgumentsException, InterruptedException {
-        List<String> mentered = new ArrayList<>();
 
 
 
