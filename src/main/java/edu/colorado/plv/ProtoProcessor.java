@@ -135,6 +135,7 @@ public class ProtoProcessor implements EventProcessor {
                 //should never happen
             }
             //TODO: add to  queue
+            methodEvents.clear();
 
 
 
