@@ -9,6 +9,7 @@ import com.sun.jdi.event.*;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.MethodEntryRequest;
+import com.sun.jdi.request.MethodExitRequest;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,6 +74,9 @@ public class TraceMainLoop {
                 MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
                 methodEntryRequest.addClassFilter(filter);
                 methodEntryRequest.enable();
+                MethodExitRequest methodExitRequest = evtReqMgr.createMethodExitRequest();
+                methodExitRequest.addClassFilter(filter);
+                methodExitRequest.enable();
             }
 
 
@@ -91,6 +95,8 @@ public class TraceMainLoop {
                                 eventProcessor.processMessage((BreakpointEvent)evt);
                             }else if (evt instanceof MethodEntryEvent){
                                 eventProcessor.processInvoke((MethodEntryEvent)evt);
+                            }else if (evt instanceof MethodExitEvent){
+                                eventProcessor.processMethodExit((MethodExitEvent)evt);
                             }
 //                            Map<String, Value> eventdetails = eventProcessor.processEvent(evt, mentered);
 //                            if (eventdetails.size() > 0) {

@@ -8,13 +8,12 @@ message Callback
 	repeated MethodEvent methodEntryList = 5;
 
 }
-
+enum EventType {
+	METHODENTRY = 0;
+	METHODEXIT = 1;
+}
 message MethodEvent
 {
-	enum Type {
-		METHODENTRY = 0;
-		METHODEXIT = 1;
-	}
 	optional string fullname = 1;
 	optional bool isStatic = 2;
 	optional int64 threadID = 3;
@@ -24,6 +23,7 @@ message MethodEvent
 	optional string declaring_type = 7;
 	optional PValue caller = 8;
 	optional PValue calle = 9;
+	optional EventType eventType = 10;
 
 }
 message ConcreteObject

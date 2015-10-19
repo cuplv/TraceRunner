@@ -191,6 +191,7 @@ public class ProtoProcessor implements EventProcessor {
                 .setCaller(caller)
                 .setDeclaringType(declaringType.toString())
                 .addAllParameters(arguments)
+                .setEventType(CallbackOuterClass.EventType.METHODENTRY)
                 .build());
         System.out.println(methodname);
     }
@@ -211,7 +212,54 @@ public class ProtoProcessor implements EventProcessor {
 
     @Override
     public void processMethodExit(MethodExitEvent evt) {
+        Method method = evt.method();
+        String methodname = (method.toString());
+        boolean isStatic = evt.method().isStatic();
+        ThreadReference threadRef = evt.thread();
+        long threadID = threadRef.uniqueID();
+        String signature = method.signature();
+        ReferenceType declaringType = method.declaringType();
+        List<StackFrame> stackFrames;
+        CallbackOuterClass.PValue caller = null;
+        CallbackOuterClass.PValue calle = null;
+        List<CallbackOuterClass.PValue> arguments = new ArrayList<>();
+        try {
+            stackFrames = threadRef.frames();
+            int level = 0;
+            for(StackFrame stackFrame : stackFrames){
+                ObjectReference objectReference = stackFrame.thisObject();
 
+                if (level == 0) {
+                    calle = valueToProtobuf(objectReference);
+                    List<Value> argumentsVals = stackFrame.getArgumentValues();
+                    for(Value value : argumentsVals){
+                        arguments.add(valueToProtobuf(value));
+                    }
+
+                }
+                if (level == 1) {
+                    caller = valueToProtobuf(objectReference);
+                }
+                level++;
+                if (level > 1) {
+                    break;
+                }
+            }
+        } catch (IncompatibleThreadStateException e) {
+            e.printStackTrace();
+        }
+        methodEvents.add(CallbackOuterClass.MethodEvent.newBuilder()
+                .setFullname(evt.method().name())
+                .setIsStatic(isStatic)
+                .setThreadID(threadID)
+                .setSignature(signature)
+                .setCalle(calle)
+                .setCaller(caller)
+                .setDeclaringType(declaringType.toString())
+                .addAllParameters(arguments)
+                .setEventType(CallbackOuterClass.EventType.METHODEXIT)
+                .build());
+        System.out.println(methodname);
     }
 
     private static List<Method> getMethods(VirtualMachine vm, String clazz){
