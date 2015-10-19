@@ -3,6 +3,7 @@ package edu.colorado.plv;
 import com.sun.jdi.*;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.MethodEntryEvent;
+import com.sun.jdi.event.MethodExitEvent;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -205,6 +206,11 @@ public class ProtoProcessor implements EventProcessor {
             }
             writerThread.interrupt();
         }
+    }
+
+    @Override
+    public void processMethodExit(MethodExitEvent evt) {
+
     }
 
     private static List<Method> getMethods(VirtualMachine vm, String clazz){

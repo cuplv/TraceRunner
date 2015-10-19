@@ -51,7 +51,9 @@ sourceSets {
 }
 idea {
     module {
-        downloadJavadoc = true
+       buildDir.listFiles({d,f->f != 'generated'} as FilenameFilter).each {excludeDirs += it} //2
+       sourceDirs += file(new File(buildDir, 'generated/source/proto/main/java'))
+       excludeDirs -= file(buildDir) //1
     }
 }
 

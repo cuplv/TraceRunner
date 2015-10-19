@@ -3,6 +3,7 @@ package edu.colorado.plv;
 import com.sun.jdi.*;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.MethodEntryEvent;
+import com.sun.jdi.event.MethodExitEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,11 @@ public class PrintProcessor implements EventProcessor {
 
     @Override
     public void done() {
+
+    }
+
+    @Override
+    public void processMethodExit(MethodExitEvent evt) {
 
     }
 

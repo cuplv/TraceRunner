@@ -20,5 +20,5 @@ public interface EventProcessor {
     void processMessage(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException;
     void processInvoke(MethodEntryEvent evt);
     void done();
-    //void processMethodExit(MethodExitEvent evt);
+    void processMethodExit(MethodExitEvent evt);
 }
