@@ -311,6 +311,7 @@ public class ProtoProcessor implements EventProcessor {
         return rClazz.allMethods();
     }
 
+
     public static CallbackOuterClass.PValue valueToProtobuf(Value value){
         if(value instanceof IntegerValue) {
             IntegerValue integerValue = (IntegerValue) value;
@@ -329,11 +330,42 @@ public class ProtoProcessor implements EventProcessor {
             ObjectReference objectReference = (ObjectReference)value;
             long id = objectReference.uniqueID();
             String type = objectReference.type().toString();
+            ReferenceType referenceType = objectReference.referenceType();
+            List<CallbackOuterClass.PField> primitiveFields = new ArrayList<>();
+            if(referenceType instanceof ClassType){
+                ClassType classType = (ClassType) referenceType;
+                List<Field> fields = classType.fields();
+                for(Field field : fields){
+                    Type fieldType;
+                    try {
+                        fieldType = field.type();
+                    } catch (ClassNotLoadedException e) {
+                        fieldType = null;
+                    }
+                    if(fieldType != null && fieldType instanceof PrimitiveType){
+                        if(fieldType instanceof PrimitiveType) {
+
+                            primitiveFields.add(CallbackOuterClass.PField.newBuilder()
+                                    .setFieldValue((valueToProtobuf(objectReference.getValue(field))))
+                                    .setName(field.name()).build());
+                        }
+                        if(fieldType instanceof ClassType){
+                            if(fieldType.signature().equals("Ljava/lang/String;")){
+                                primitiveFields.add(CallbackOuterClass.PField.newBuilder()
+                                        .setFieldValue(valueToProtobuf(objectReference.getValue(field)))
+                                        .setName(field.name()).build());
+                            }
+                        }
+                    }
+                }
+            }
+
             return CallbackOuterClass.PValue.newBuilder()
                     .setPObjctReferenc(
                             CallbackOuterClass.PObjectReference.newBuilder()
                                     .setId(id)
                                     .setType(type)
+                                    .addAllPrimitiveFields(primitiveFields)
                                     .build())
                     .build();
         } else if(value instanceof BooleanValue) {

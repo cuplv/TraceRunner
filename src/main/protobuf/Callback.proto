@@ -66,7 +66,13 @@ message PObjectReference
 {
 	optional int64 id = 1;
 	optional string type = 2;
+	repeated PField primitiveFields = 3;
 
+}
+message PField
+{
+	optional string name = 1;
+	optional PValue fieldValue = 2;
 }
 message PStringReference
 {
