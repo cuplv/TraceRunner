@@ -2,6 +2,7 @@ package edu.colorado.plv;
 
 import com.sun.jdi.*;
 import com.sun.jdi.event.BreakpointEvent;
+import com.sun.jdi.event.ExceptionEvent;
 import com.sun.jdi.event.MethodEntryEvent;
 import com.sun.jdi.event.MethodExitEvent;
 
@@ -72,6 +73,11 @@ public class PrintProcessor implements EventProcessor {
 
     @Override
     public void processMethodExit(MethodExitEvent evt) {
+
+    }
+
+    @Override
+    public void processException(ExceptionEvent evt) {
 
     }
 

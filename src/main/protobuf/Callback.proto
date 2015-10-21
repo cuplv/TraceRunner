@@ -12,6 +12,16 @@ enum EventType {
 	METHODENTRY = 0;
 	METHODEXIT = 1;
 }
+message CallbackEvent {
+	oneof eventType{
+		MethodEvent methodEvent = 1;
+		ExceptionEvent exceptionEvent = 2;
+
+	}
+}
+message ExceptionEvent {
+	optional string exceptionName = 1;
+}
 message MethodEvent
 {
 	optional string fullname = 1;

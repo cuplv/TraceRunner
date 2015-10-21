@@ -6,10 +6,7 @@ import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import com.sun.jdi.event.*;
-import com.sun.jdi.request.BreakpointRequest;
-import com.sun.jdi.request.EventRequestManager;
-import com.sun.jdi.request.MethodEntryRequest;
-import com.sun.jdi.request.MethodExitRequest;
+import com.sun.jdi.request.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,7 +45,7 @@ public class TraceMainLoop {
             }
         }
         if (socketConnector != null) {
-            Map paramsMap = socketConnector.defaultArguments();
+            Map<String, Connector.Argument> paramsMap = socketConnector.defaultArguments();
             Connector.IntegerArgument portArg = (Connector.IntegerArgument) paramsMap.get("port");
             portArg.setValue(port);
             VirtualMachine vm = socketConnector.attach(paramsMap);
@@ -78,6 +75,9 @@ public class TraceMainLoop {
                 methodExitRequest.addClassFilter(filter);
                 methodExitRequest.enable();
             }
+            ExceptionRequest exceptionRequest;
+            exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true);
+            exceptionRequest.enable();
 
 
             EventQueue evtQueue = vm.eventQueue();
@@ -97,6 +97,8 @@ public class TraceMainLoop {
                                 eventProcessor.processInvoke((MethodEntryEvent)evt);
                             }else if (evt instanceof MethodExitEvent){
                                 eventProcessor.processMethodExit((MethodExitEvent)evt);
+                            }else if (evt instanceof ExceptionEvent){
+                                eventProcessor.processException((ExceptionEvent)evt);
                             }
 //                            Map<String, Value> eventdetails = eventProcessor.processEvent(evt, mentered);
 //                            if (eventdetails.size() > 0) {

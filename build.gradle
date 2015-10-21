@@ -57,6 +57,11 @@ idea {
     }
 }
 
+tasks.withType(JavaCompile) {
+    // this subproject requires -parameters option
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
        //generatedSourceDirs = file('build/generated/source/proto/main/java')
 //       downloadJavadoc = true
 //       downloadSources = true
