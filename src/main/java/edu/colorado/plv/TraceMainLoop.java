@@ -77,6 +77,7 @@ public class TraceMainLoop {
             }
             ExceptionRequest exceptionRequest;
             exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true);
+            exceptionRequest.addClassExclusionFilter("java.lang.ClassNotFoundException");
             exceptionRequest.enable();
 
 

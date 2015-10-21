@@ -27,10 +27,10 @@ public class ProtoProcessor implements EventProcessor {
         this.output = output;
         writerThread = new Thread(new FileWriter(output, toWrite));
         writerThread.start();
-        methodEvents = new ArrayList<>();
+        eventsInCurrentCallback = new ArrayList<>();
     }
     Map<String, Value> currentMessage = null;
-    List<CallbackOuterClass.MethodEvent> methodEvents;
+    List<CallbackOuterClass.EventInCallback> eventsInCurrentCallback;
 
 
 
@@ -128,7 +128,7 @@ public class ProtoProcessor implements EventProcessor {
             builder.setWhen(valueToProtobuf(currentMessage.get("Message.when")));
             builder.setTarget(valueToProtobuf(currentMessage.get("target")));
             builder.setCallback(valueToProtobuf(currentMessage.get("callback")));
-            builder.addAllMethodEntryList(methodEvents);
+            builder.addAllEventsInCallback(eventsInCurrentCallback);
             //TODO: serialize messages
             try {
                 toWrite.put(builder.build());
@@ -136,7 +136,7 @@ public class ProtoProcessor implements EventProcessor {
                 //should never happen
             }
             //TODO: add to  queue
-            methodEvents.clear();
+            eventsInCurrentCallback.clear();
 
 
 
@@ -183,16 +183,18 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
-        methodEvents.add(CallbackOuterClass.MethodEvent.newBuilder()
-                .setFullname(evt.method().name())
-                .setIsStatic(isStatic)
-                .setThreadID(threadID)
-                .setSignature(signature)
-                .setCalle(calle)
-                .setCaller(caller)
-                .setDeclaringType(declaringType.toString())
-                .addAllParameters(arguments)
-                .setEventType(CallbackOuterClass.EventType.METHODENTRY)
+        eventsInCurrentCallback.add(CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
+                CallbackOuterClass.MethodEvent.newBuilder()
+                        .setFullname(evt.method().name())
+                        .setIsStatic(isStatic)
+                        .setThreadID(threadID)
+                        .setSignature(signature)
+                        .setCalle(calle)
+                        .setCaller(caller)
+                        .setDeclaringType(declaringType.toString())
+                        .addAllParameters(arguments)
+                        .setEventType(CallbackOuterClass.EventType.METHODENTRY)
+                        .build())
                 .build());
         System.out.println(methodname);
     }
@@ -249,22 +251,48 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
-        methodEvents.add(CallbackOuterClass.MethodEvent.newBuilder()
-                .setFullname(evt.method().name())
-                .setIsStatic(isStatic)
-                .setThreadID(threadID)
-                .setSignature(signature)
-                .setCalle(calle)
-                .setCaller(caller)
-                .setDeclaringType(declaringType.toString())
-                .addAllParameters(arguments)
-                .setEventType(CallbackOuterClass.EventType.METHODEXIT)
-                .build());
+        eventsInCurrentCallback.add(CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
+                CallbackOuterClass.MethodEvent.newBuilder()
+                        .setFullname(evt.method().name())
+                        .setIsStatic(isStatic)
+                        .setThreadID(threadID)
+                        .setSignature(signature)
+                        .setCalle(calle)
+                        .setCaller(caller)
+                        .setDeclaringType(declaringType.toString())
+                        .addAllParameters(arguments)
+                        .setEventType(CallbackOuterClass.EventType.METHODEXIT)
+                        .build()).build());
         System.out.println(methodname);
     }
 
     @Override
     public void processException(ExceptionEvent evt) {
+        Location location = evt.location();
+        Method method = location.method();
+
+        int lineNumber = location.lineNumber();
+        String sourceName;
+        try {
+            sourceName = location.sourceName();
+        } catch (AbsentInformationException e) {
+            sourceName = "<<None>>";
+        }
+        CallbackOuterClass.PValue exception = valueToProtobuf(evt.exception());
+        CallbackOuterClass.ExceptionEvent exceptionEvent = CallbackOuterClass.ExceptionEvent.newBuilder()
+                .setMethod(CallbackOuterClass.PMethod.newBuilder()
+                        .setName(method.name())
+                        .setClass_(method.declaringType().name())
+                        .build())
+                .setLineNumber(lineNumber)
+                .setSourceName(sourceName)
+                .setException(exception)
+                .build();
+        CallbackOuterClass.EventInCallback event =
+                CallbackOuterClass.EventInCallback.newBuilder().setExceptionEvent(exceptionEvent).build();
+        eventsInCurrentCallback.add(event);
+
+
 
     }
 

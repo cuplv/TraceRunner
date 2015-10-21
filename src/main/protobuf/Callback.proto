@@ -5,22 +5,32 @@ message Callback
 	optional PValue when = 2;
 	optional PValue target = 3;
 	optional PValue callback = 4;
-	repeated MethodEvent methodEntryList = 5;
+	repeated EventInCallback eventsInCallback = 5;
 
 }
 enum EventType {
 	METHODENTRY = 0;
 	METHODEXIT = 1;
 }
-message CallbackEvent {
+message EventInCallback {
 	oneof eventType{
 		MethodEvent methodEvent = 1;
 		ExceptionEvent exceptionEvent = 2;
 
 	}
 }
+message PMethod{
+	optional string name = 1;
+	optional string package = 2;
+	optional string class = 3;
+}
 message ExceptionEvent {
-	optional string exceptionName = 1;
+	optional PValue exception = 1;
+	optional PMethod method = 2;
+	optional int32 lineNumber = 3;
+	optional string sourceName = 4;
+
+
 }
 message MethodEvent
 {
