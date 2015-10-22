@@ -124,10 +124,10 @@ public class ProtoProcessor implements EventProcessor {
         if (currentMessage != null) {
 
             CallbackOuterClass.Callback.Builder builder = CallbackOuterClass.Callback.newBuilder();
-            builder.setWhat(((IntegerValue)currentMessage.get("what")).value());
-            builder.setWhen(valueToProtobuf(currentMessage.get("Message.when")));
-            builder.setTarget(valueToProtobuf(currentMessage.get("target")));
-            builder.setCallback(valueToProtobuf(currentMessage.get("callback")));
+            builder.setWhat(((IntegerValue) currentMessage.get("what")).value());
+            builder.setWhen(valueToProtobuf(currentMessage.get("Message.when"), false));
+            builder.setTarget(valueToProtobuf(currentMessage.get("target"), false));
+            builder.setCallback(valueToProtobuf(currentMessage.get("callback"), false));
             builder.addAllEventsInCallback(eventsInCurrentCallback);
             //TODO: serialize messages
             try {
@@ -165,15 +165,15 @@ public class ProtoProcessor implements EventProcessor {
                 ObjectReference objectReference = stackFrame.thisObject();
 
                 if (level == 0) {
-                    calle = valueToProtobuf(objectReference);
+                    calle = valueToProtobuf(objectReference, false);
                     List<Value> argumentsVals = stackFrame.getArgumentValues();
                     for(Value value : argumentsVals){
-                        arguments.add(valueToProtobuf(value));
+                        arguments.add(valueToProtobuf(value, false));
                     }
 
                 }
                 if (level == 1) {
-                    caller = valueToProtobuf(objectReference);
+                    caller = valueToProtobuf(objectReference, false);
                 }
                 level++;
                 if (level > 1) {
@@ -233,15 +233,15 @@ public class ProtoProcessor implements EventProcessor {
                 ObjectReference objectReference = stackFrame.thisObject();
 
                 if (level == 0) {
-                    calle = valueToProtobuf(objectReference);
+                    calle = valueToProtobuf(objectReference, false);
                     List<Value> argumentsVals = stackFrame.getArgumentValues();
                     for(Value value : argumentsVals){
-                        arguments.add(valueToProtobuf(value));
+                        arguments.add(valueToProtobuf(value, false));
                     }
 
                 }
                 if (level == 1) {
-                    caller = valueToProtobuf(objectReference);
+                    caller = valueToProtobuf(objectReference, false);
                 }
                 level++;
                 if (level > 1) {
@@ -278,7 +278,7 @@ public class ProtoProcessor implements EventProcessor {
         } catch (AbsentInformationException e) {
             sourceName = "<<None>>";
         }
-        CallbackOuterClass.PValue exception = valueToProtobuf(evt.exception());
+        CallbackOuterClass.PValue exception = valueToProtobuf(evt.exception(), true);
         CallbackOuterClass.ExceptionEvent exceptionEvent = CallbackOuterClass.ExceptionEvent.newBuilder()
                 .setMethod(CallbackOuterClass.PMethod.newBuilder()
                         .setName(method.name())
@@ -312,7 +312,7 @@ public class ProtoProcessor implements EventProcessor {
     }
 
 
-    public static CallbackOuterClass.PValue valueToProtobuf(Value value){
+    public static CallbackOuterClass.PValue valueToProtobuf(Value value, boolean logPrims){
         if(value instanceof IntegerValue) {
             IntegerValue integerValue = (IntegerValue) value;
             return CallbackOuterClass.PValue.newBuilder().setPIntegerValue(integerValue.value()).build();
@@ -331,43 +331,56 @@ public class ProtoProcessor implements EventProcessor {
             long id = objectReference.uniqueID();
             String type = objectReference.type().toString();
             ReferenceType referenceType = objectReference.referenceType();
-            List<CallbackOuterClass.PField> primitiveFields = new ArrayList<>();
-            if(referenceType instanceof ClassType){
-                ClassType classType = (ClassType) referenceType;
-                List<Field> fields = classType.fields();
-                for(Field field : fields){
-                    Type fieldType;
-                    try {
-                        fieldType = field.type();
-                    } catch (ClassNotLoadedException e) {
-                        fieldType = null;
-                    }
-                    if(fieldType != null && fieldType instanceof PrimitiveType){
-                        if(fieldType instanceof PrimitiveType) {
 
-                            primitiveFields.add(CallbackOuterClass.PField.newBuilder()
-                                    .setFieldValue((valueToProtobuf(objectReference.getValue(field))))
-                                    .setName(field.name()).build());
+            List<CallbackOuterClass.PField> primitiveFields = null;
+            if(logPrims) {
+                primitiveFields = new ArrayList<>();
+                if (referenceType instanceof ClassType) {
+                    ClassType classType = (ClassType) referenceType;
+                    List<Field> fields = classType.fields();
+                    for (Field field : fields) {
+                        Type fieldType;
+                        try {
+                            fieldType = field.type();
+                        } catch (ClassNotLoadedException e) {
+                            fieldType = null;
                         }
-                        if(fieldType instanceof ClassType){
-                            if(fieldType.signature().equals("Ljava/lang/String;")){
+                        if (fieldType != null && fieldType instanceof PrimitiveType) {
+                            if (fieldType instanceof PrimitiveType) {
+
                                 primitiveFields.add(CallbackOuterClass.PField.newBuilder()
-                                        .setFieldValue(valueToProtobuf(objectReference.getValue(field)))
+                                        .setFieldValue((valueToProtobuf(objectReference.getValue(field), false)))
                                         .setName(field.name()).build());
+                            }
+                            if (fieldType instanceof ClassType) {
+                                if (fieldType.signature().equals("Ljava/lang/String;")) {
+                                    primitiveFields.add(CallbackOuterClass.PField.newBuilder()
+                                            .setFieldValue(valueToProtobuf(objectReference.getValue(field), false))
+                                            .setName(field.name()).build());
+                                }
                             }
                         }
                     }
                 }
             }
-
-            return CallbackOuterClass.PValue.newBuilder()
-                    .setPObjctReferenc(
-                            CallbackOuterClass.PObjectReference.newBuilder()
-                                    .setId(id)
-                                    .setType(type)
-                                    .addAllPrimitiveFields(primitiveFields)
-                                    .build())
-                    .build();
+            if(primitiveFields != null) {
+                return CallbackOuterClass.PValue.newBuilder()
+                        .setPObjctReferenc(
+                                CallbackOuterClass.PObjectReference.newBuilder()
+                                        .setId(id)
+                                        .setType(type)
+                                        .addAllPrimitiveFields(primitiveFields)
+                                        .build())
+                        .build();
+            }else {
+                return CallbackOuterClass.PValue.newBuilder()
+                        .setPObjctReferenc(
+                                CallbackOuterClass.PObjectReference.newBuilder()
+                                        .setId(id)
+                                        .setType(type)
+                                        .build())
+                        .build();
+            }
         } else if(value instanceof BooleanValue) {
             BooleanValue booleanValue = (BooleanValue) value;
             return CallbackOuterClass.PValue.newBuilder().setPBoolValue(booleanValue.value()).build();
