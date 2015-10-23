@@ -66,18 +66,29 @@ public class TraceMainLoop {
             bReq.enable();
 
             //Method entry notification
+            List<String> classExclusions = ClassExclusions.getClassExlusions();
 
             for (String filter : filters) {
                 MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
                 methodEntryRequest.addClassFilter(filter);
-                methodEntryRequest.enable();
                 MethodExitRequest methodExitRequest = evtReqMgr.createMethodExitRequest();
                 methodExitRequest.addClassFilter(filter);
+
+                for(String exclusion: classExclusions){
+                    methodEntryRequest.addClassExclusionFilter(exclusion);
+                    methodExitRequest.addClassExclusionFilter(exclusion);
+                }
+
+                methodEntryRequest.enable();
                 methodExitRequest.enable();
             }
             ExceptionRequest exceptionRequest;
             exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true);
-            exceptionRequest.addClassExclusionFilter("java.lang.ClassNotFoundException");
+//            exceptionRequest.addClassExclusionFilter("java.lang.ClassNotFoundException");
+            List<String> exceptionExclusions = ClassExclusions.exceptionExclusions();
+            for(String exclusion : exceptionExclusions){
+                exceptionRequest.addClassExclusionFilter(exclusion);
+            }
             exceptionRequest.enable();
 
 
