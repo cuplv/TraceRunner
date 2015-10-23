@@ -11,6 +11,7 @@ public class ClassExclusions {
     public static List<String> getClassExlusions() {
         List<String> exclusions = new ArrayList<>();
         exclusions.add("android.media.MediaHTTPConnection");
+        exclusions.add("android.util.Log");
         return exclusions;
     }
     public static List<String> exceptionExclusions() {

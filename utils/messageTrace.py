@@ -24,7 +24,7 @@ if 0 != res:
 
 #run apk
 print "***Run APK***"
-res = subprocess.call(['adb', 'shell', 'am', 'start', '-D', '-n', package + '/.' + appname])
+res = subprocess.call(['adb', 'shell', 'am', 'start', '-D', '-n', package + '/' + appname])
 if  0 != res:
 	raise Exception("starting failed")
 

@@ -76,6 +76,7 @@ public class ProtoProcessor implements EventProcessor {
                 CallbackOuterClass.Callback callback = null;
                 try {
                     callback = toWrite.take();
+                    System.out.println("wrote record, " + toWrite.size() + " to go");
                 } catch (InterruptedException e) {
                     return;
                 }
@@ -196,7 +197,6 @@ public class ProtoProcessor implements EventProcessor {
                         .setEventType(CallbackOuterClass.EventType.METHODENTRY)
                         .build())
                 .build());
-        System.out.println(methodname);
     }
 
     @Override
@@ -263,7 +263,6 @@ public class ProtoProcessor implements EventProcessor {
                         .addAllParameters(arguments)
                         .setEventType(CallbackOuterClass.EventType.METHODEXIT)
                         .build()).build());
-        System.out.println(methodname);
     }
 
     @Override
