@@ -60,7 +60,7 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processInvoke(MethodEntryEvent evt) {
+    public void processInvoke(MethodEntryEvent evt, boolean isCallback) {
 
         String method = (evt.method().toString());
         System.out.println(method);
@@ -72,7 +72,7 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processMethodExit(MethodExitEvent evt) {
+    public void processMethodExit(MethodExitEvent evt, boolean isCallback) {
 
     }
 

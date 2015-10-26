@@ -45,6 +45,7 @@ message MethodEvent
 	optional PValue caller = 8;
 	optional PValue calle = 9;
 	optional EventType eventType = 10;
+	optional bool isCallback = 11;
 
 }
 message ConcreteObject

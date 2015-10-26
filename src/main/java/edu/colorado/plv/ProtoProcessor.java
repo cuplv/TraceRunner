@@ -154,7 +154,7 @@ public class ProtoProcessor implements EventProcessor {
 //    }
 
     @Override
-    public void processInvoke(MethodEntryEvent evt) {
+    public void processInvoke(MethodEntryEvent evt, boolean isCallback) {
 
         Method method = evt.method();
         System.out.println(method);
@@ -202,6 +202,7 @@ public class ProtoProcessor implements EventProcessor {
                         .setCaller(caller)
                         .setDeclaringType(declaringType.toString())
                         .addAllParameters(arguments)
+                        .setIsCallback(isCallback)
                         .setEventType(CallbackOuterClass.EventType.METHODENTRY));
         toWrite.add(nevt);
     }
@@ -220,7 +221,7 @@ public class ProtoProcessor implements EventProcessor {
     }
 
     @Override
-    public void processMethodExit(MethodExitEvent evt) {
+    public void processMethodExit(MethodExitEvent evt, boolean isCallback) {
         Method method = evt.method();
         String methodname = (method.toString());
         boolean isStatic = evt.method().isStatic();
@@ -267,6 +268,7 @@ public class ProtoProcessor implements EventProcessor {
                         .setCaller(caller)
                         .setDeclaringType(declaringType.toString())
                         .addAllParameters(arguments)
+                        .setIsCallback(isCallback)
                         .setEventType(CallbackOuterClass.EventType.METHODEXIT)
 
         );

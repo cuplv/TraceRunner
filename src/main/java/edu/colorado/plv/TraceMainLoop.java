@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by s on 10/13/15.
@@ -20,6 +21,7 @@ import java.util.Map;
 public class TraceMainLoop {
     private final int port;
     private final String appPackage;
+    private final Pattern appPackageRegex;
 
     private EventProcessor eventProcessor;
     private List<String> filters;
@@ -47,6 +49,9 @@ public class TraceMainLoop {
         this.eventProcessor = eventProcessor;
         this.filters = filters;
         this.appPackage = appPackage;
+        this.entryToToggle = new ArrayList<>();
+        this.exitToToggle = new ArrayList<>();
+        this.appPackageRegex = GlobUtil.createRegexFromGlob(appPackage);
 
     }
     public void mainLoop() throws IOException, IllegalConnectorArgumentsException, InterruptedException {
@@ -91,6 +96,7 @@ public class TraceMainLoop {
             packageEntry.addClassFilter(appPackage);
             packageEntry.enable();
             MethodExitRequest packageExit = evtReqMgr.createMethodExitRequest();
+            packageExit.addClassFilter(appPackage);
             packageExit.enable();
 
 
@@ -136,13 +142,32 @@ public class TraceMainLoop {
                             Event evt = evtIter.next();
                             if (evt instanceof BreakpointEvent) {
                                 eventProcessor.processMessage((BreakpointEvent)evt);
+                                callback = null; //TODO: if additional breakpoints add check for msg here
                             }else if (evt instanceof MethodEntryEvent){
                                 MethodEntryEvent mevt = (MethodEntryEvent) evt;
-                                Method m = mevt.method();
-                                String name = m.declaringType().name();
-                                eventProcessor.processInvoke(mevt);
+                                boolean isCallback = false;
+                                if(callback == null) {
+                                    Method m = mevt.method();
+                                    String name = m.declaringType().name();
+                                    if(appPackageRegex.matcher(name).matches()){//set callback value when app package is first hit
+                                        if(m.name() != "<init>") {
+                                            callback = m;
+                                            enableAll();
+                                            isCallback = true;
+                                        }
+                                    }
+                                }
+                                eventProcessor.processInvoke(mevt, isCallback);
                             }else if (evt instanceof MethodExitEvent){
-                                eventProcessor.processMethodExit((MethodExitEvent)evt);
+                                MethodExitEvent mxe = (MethodExitEvent) evt;
+                                Method m = mxe.method();
+                                boolean isCallback = false;
+                                if(m == callback){
+                                    callback = null;
+                                    disableAll();
+                                    isCallback = true;
+                                }
+                                eventProcessor.processMethodExit(mxe, isCallback);
                             }else if (evt instanceof ExceptionEvent){
                                 eventProcessor.processException((ExceptionEvent)evt);
                             }
