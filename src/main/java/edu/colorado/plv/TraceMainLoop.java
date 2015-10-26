@@ -19,14 +19,34 @@ import java.util.Map;
 
 public class TraceMainLoop {
     private final int port;
+    private final String appPackage;
 
     private EventProcessor eventProcessor;
     private List<String> filters;
+    private List<MethodEntryRequest> entryToToggle;
+    private List<MethodExitRequest> exitToToggle;
+    private void enableAll(){
+        for(MethodEntryRequest e: entryToToggle){
+            e.enable();
+        }
+        for(MethodExitRequest e: exitToToggle){
+            e.enable();
+        }
+    }
+    private void disableAll(){
+        for(MethodEntryRequest e: entryToToggle){
+            e.disable();
+        }
+        for(MethodExitRequest e : exitToToggle){
+            e.disable();
+        }
+    }
 
-    public TraceMainLoop(int port, EventProcessor eventProcessor, List<String> filters) {
+    public TraceMainLoop(int port, EventProcessor eventProcessor, List<String> filters, String appPackage) {
         this.port = port;
         this.eventProcessor = eventProcessor;
         this.filters = filters;
+        this.appPackage = appPackage;
 
     }
     public void mainLoop() throws IOException, IllegalConnectorArgumentsException, InterruptedException {
@@ -67,6 +87,12 @@ public class TraceMainLoop {
 
             //Method entry notification
             List<String> classExclusions = ClassExclusions.getClassExlusions();
+            MethodEntryRequest packageEntry = evtReqMgr.createMethodEntryRequest();
+            packageEntry.addClassFilter(appPackage);
+            packageEntry.enable();
+            MethodExitRequest packageExit = evtReqMgr.createMethodExitRequest();
+            packageExit.enable();
+
 
             for (String filter : filters) {
                 MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
@@ -79,8 +105,11 @@ public class TraceMainLoop {
                     methodExitRequest.addClassExclusionFilter(exclusion);
                 }
 
-                methodEntryRequest.enable();
-                methodExitRequest.enable();
+                entryToToggle.add(methodEntryRequest);
+                exitToToggle.add(methodExitRequest);
+
+//                methodEntryRequest.enable();
+//                methodExitRequest.enable();
             }
             ExceptionRequest exceptionRequest;
             exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true);
@@ -96,6 +125,8 @@ public class TraceMainLoop {
 
 
             //Process breakpoints main loop
+            Method callback = null; //Null until callback hit
+
             try {
                 while (true) {
                     EventSet evtSet = evtQueue.remove();
@@ -106,7 +137,10 @@ public class TraceMainLoop {
                             if (evt instanceof BreakpointEvent) {
                                 eventProcessor.processMessage((BreakpointEvent)evt);
                             }else if (evt instanceof MethodEntryEvent){
-                                eventProcessor.processInvoke((MethodEntryEvent)evt);
+                                MethodEntryEvent mevt = (MethodEntryEvent) evt;
+                                Method m = mevt.method();
+                                String name = m.declaringType().name();
+                                eventProcessor.processInvoke(mevt);
                             }else if (evt instanceof MethodExitEvent){
                                 eventProcessor.processMethodExit((MethodExitEvent)evt);
                             }else if (evt instanceof ExceptionEvent){

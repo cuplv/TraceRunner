@@ -5,7 +5,7 @@ message Callback
 	optional PValue when = 2;
 	optional PValue target = 3;
 	optional PValue callback = 4;
-	repeated EventInCallback eventsInCallback = 5;
+	//repeated EventInCallback eventsInCallback = 5;
 
 }
 enum EventType {
@@ -13,10 +13,11 @@ enum EventType {
 	METHODEXIT = 1;
 }
 message EventInCallback {
+	optional bool interrupted = 1;
 	oneof eventType{
-		MethodEvent methodEvent = 1;
-		ExceptionEvent exceptionEvent = 2;
-
+		MethodEvent methodEvent = 2;
+		ExceptionEvent exceptionEvent = 3;
+		Callback callback = 4;
 	}
 }
 message PMethod{

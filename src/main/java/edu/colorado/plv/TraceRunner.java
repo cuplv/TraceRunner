@@ -25,11 +25,12 @@ public class TraceRunner {
         String logOutput = args[1];
         int port = Integer.parseInt(args[0]);
         List<String> filters = new ArrayList<>();
-        for(int j=2; j< args.length; ++j){
+        String appPackage = args[2];
+        for(int j=3; j< args.length; ++j){
             filters.add(args[j]);
         }
         EventProcessor eventProcessor = new ProtoProcessor(new FileOutputStream(logOutput));
-        TraceMainLoop traceMainLoop = new TraceMainLoop(port,  eventProcessor, filters);
+        TraceMainLoop traceMainLoop = new TraceMainLoop(port,  eventProcessor, filters, appPackage);
         traceMainLoop.mainLoop();
     }
 

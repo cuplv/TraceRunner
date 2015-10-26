@@ -20,17 +20,17 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class ProtoProcessor implements EventProcessor {
     FileOutputStream output;
-    BlockingQueue<CallbackOuterClass.Callback> toWrite = new LinkedBlockingQueue<>();
+    BlockingQueue<CallbackOuterClass.EventInCallback.Builder> toWrite = new LinkedBlockingQueue<>();
     Thread writerThread;
 
     ProtoProcessor(FileOutputStream output){
         this.output = output;
         writerThread = new Thread(new FileWriter(output, toWrite));
         writerThread.start();
-        eventsInCurrentCallback = new ArrayList<>();
+        //eventsInCurrentCallback = new ArrayList<>();
     }
     Map<String, Value> currentMessage = null;
-    List<CallbackOuterClass.EventInCallback> eventsInCurrentCallback;
+    //List<CallbackOuterClass.EventInCallback.Builder> eventsInCurrentCallback;
 
 
 
@@ -51,7 +51,8 @@ public class ProtoProcessor implements EventProcessor {
 
     public static void readInputStream(InputStream fileInputStream) throws IOException {
         while(true) {
-            CallbackOuterClass.Callback callback = CallbackOuterClass.Callback.parseDelimitedFrom(fileInputStream);
+            CallbackOuterClass.EventInCallback callback =
+                    CallbackOuterClass.EventInCallback.parseDelimitedFrom(fileInputStream);
             if(callback == null){
                 return;
             }
@@ -62,9 +63,9 @@ public class ProtoProcessor implements EventProcessor {
 
     private class FileWriter implements Runnable{
         private final FileOutputStream outfile;
-        private final BlockingQueue<CallbackOuterClass.Callback> toWrite;
+        private final BlockingQueue<CallbackOuterClass.EventInCallback.Builder> toWrite;
 
-        FileWriter(FileOutputStream outfile, BlockingQueue<CallbackOuterClass.Callback> toWrite){
+        FileWriter(FileOutputStream outfile, BlockingQueue<CallbackOuterClass.EventInCallback.Builder> toWrite){
 
             this.toWrite = toWrite;
             this.outfile = outfile;
@@ -73,10 +74,10 @@ public class ProtoProcessor implements EventProcessor {
         @Override
         public void run() {
             for(;;) {
-                CallbackOuterClass.Callback callback = null;
+                CallbackOuterClass.EventInCallback callback = null;
                 try {
-                    callback = toWrite.take();
-                    System.out.println("wrote record, " + toWrite.size() + " to go");
+                    callback = toWrite.take().build();
+                    //System.out.println("wrote record, " + toWrite.size() + " to go");
                 } catch (InterruptedException e) {
                     return;
                 }
@@ -117,39 +118,46 @@ public class ProtoProcessor implements EventProcessor {
         }
         //Do something with data:
         System.out.println(retrievedValues);
-        finalizeLastMessage();
-        currentMessage = retrievedValues;
-    }
+        CallbackOuterClass.Callback.Builder builder = CallbackOuterClass.Callback.newBuilder();
+        builder.setWhat(((IntegerValue) retrievedValues.get("what")).value());
+        builder.setWhen(valueToProtobuf(retrievedValues.get("Message.when"), false));
+        builder.setTarget(valueToProtobuf(retrievedValues.get("target"), false));
+        builder.setCallback(valueToProtobuf(retrievedValues.get("callback"), false));
 
-    private void finalizeLastMessage() {
-        if (currentMessage != null) {
-
-            CallbackOuterClass.Callback.Builder builder = CallbackOuterClass.Callback.newBuilder();
-            builder.setWhat(((IntegerValue) currentMessage.get("what")).value());
-            builder.setWhen(valueToProtobuf(currentMessage.get("Message.when"), false));
-            builder.setTarget(valueToProtobuf(currentMessage.get("target"), false));
-            builder.setCallback(valueToProtobuf(currentMessage.get("callback"), false));
-            builder.addAllEventsInCallback(eventsInCurrentCallback);
-            //TODO: serialize messages
-            try {
-                toWrite.put(builder.build());
-            } catch (InterruptedException e) {
-                //should never happen
-            }
-            //TODO: add to  queue
-            eventsInCurrentCallback.clear();
-
-
-
-        }
+        CallbackOuterClass.EventInCallback.Builder evt =
+                CallbackOuterClass.EventInCallback.newBuilder().setCallback(builder);
+        toWrite.add(evt);
 
     }
+
+//    private void finalizeLastMessage() {
+//        if (currentMessage != null) {
+//
+//            CallbackOuterClass.Callback.Builder builder = CallbackOuterClass.Callback.newBuilder();
+//            builder.setWhat(((IntegerValue) currentMessage.get("what")).value());
+//            builder.setWhen(valueToProtobuf(currentMessage.get("Message.when"), false));
+//            builder.setTarget(valueToProtobuf(currentMessage.get("target"), false));
+//            builder.setCallback(valueToProtobuf(currentMessage.get("callback"), false));
+//            //TODO: serialize messages
+//            try {
+//                toWrite.put(builder.build());
+//            } catch (InterruptedException e) {
+//                //should never happen
+//            }
+//            //TODO: add to  queue
+//            eventsInCurrentCallback.clear();
+//
+//
+//
+//        }
+//
+//    }
 
     @Override
     public void processInvoke(MethodEntryEvent evt) {
 
         Method method = evt.method();
-        String methodname = (method.toString());
+        System.out.println(method);
         boolean isStatic = evt.method().isStatic();
         ThreadReference threadRef = evt.thread();
         long threadID = threadRef.uniqueID();
@@ -184,7 +192,7 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
-        eventsInCurrentCallback.add(CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
+        CallbackOuterClass.EventInCallback.Builder nevt = CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
                 CallbackOuterClass.MethodEvent.newBuilder()
                         .setFullname(evt.method().name())
                         .setIsStatic(isStatic)
@@ -194,23 +202,21 @@ public class ProtoProcessor implements EventProcessor {
                         .setCaller(caller)
                         .setDeclaringType(declaringType.toString())
                         .addAllParameters(arguments)
-                        .setEventType(CallbackOuterClass.EventType.METHODENTRY)
-                        .build())
-                .build());
+                        .setEventType(CallbackOuterClass.EventType.METHODENTRY));
+        toWrite.add(nevt);
     }
 
     @Override
     public void done() {
-        finalizeLastMessage();
         while(toWrite.size() > 0){
             System.out.println("waiting for write to finish");
             try {
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            writerThread.interrupt();
         }
+        writerThread.interrupt();
     }
 
     @Override
@@ -251,7 +257,7 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
-        eventsInCurrentCallback.add(CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
+        CallbackOuterClass.EventInCallback.Builder nevt = CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
                 CallbackOuterClass.MethodEvent.newBuilder()
                         .setFullname(evt.method().name())
                         .setIsStatic(isStatic)
@@ -262,7 +268,9 @@ public class ProtoProcessor implements EventProcessor {
                         .setDeclaringType(declaringType.toString())
                         .addAllParameters(arguments)
                         .setEventType(CallbackOuterClass.EventType.METHODEXIT)
-                        .build()).build());
+
+        );
+        toWrite.add(nevt);
     }
 
     @Override
@@ -287,12 +295,9 @@ public class ProtoProcessor implements EventProcessor {
                 .setSourceName(sourceName)
                 .setException(exception)
                 .build();
-        CallbackOuterClass.EventInCallback event =
-                CallbackOuterClass.EventInCallback.newBuilder().setExceptionEvent(exceptionEvent).build();
-        eventsInCurrentCallback.add(event);
-
-
-
+        CallbackOuterClass.EventInCallback.Builder event =
+                CallbackOuterClass.EventInCallback.newBuilder().setExceptionEvent(exceptionEvent);
+        toWrite.add(event);
     }
 
     private static List<Method> getMethods(VirtualMachine vm, String clazz){
