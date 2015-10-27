@@ -12,6 +12,10 @@ public class ClassExclusions {
         List<String> exclusions = new ArrayList<>();
         exclusions.add("android.media.MediaHTTPConnection");
         exclusions.add("android.util.Log");
+        exclusions.add("android.os.Parcel");
+        exclusions.add("android.content.res.*");
+        exclusions.add("android.util.SparseArray");
+        exclusions.add("android.util.LongSparseArray");
         return exclusions;
     }
     public static List<String> exceptionExclusions() {

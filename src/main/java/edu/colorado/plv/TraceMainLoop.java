@@ -111,6 +111,7 @@ public class TraceMainLoop {
                     methodExitRequest.addClassExclusionFilter(exclusion);
                 }
 
+
                 entryToToggle.add(methodEntryRequest);
                 exitToToggle.add(methodExitRequest);
 
@@ -132,6 +133,8 @@ public class TraceMainLoop {
 
             //Process breakpoints main loop
             Method callback = null; //Null until callback hit
+//            Method callIn = null;
+//            ThreadReference activityThread = null;
 
             try {
                 while (true) {
@@ -144,6 +147,7 @@ public class TraceMainLoop {
                                 eventProcessor.processMessage((BreakpointEvent)evt);
                                 callback = null; //TODO: if additional breakpoints add check for msg here
                             }else if (evt instanceof MethodEntryEvent){
+
                                 MethodEntryEvent mevt = (MethodEntryEvent) evt;
                                 boolean isCallback = false;
                                 if(callback == null) {
@@ -157,6 +161,9 @@ public class TraceMainLoop {
                                         }
                                     }
                                 }
+//                                if(callback != null){
+//
+//                                }
                                 eventProcessor.processInvoke(mevt, isCallback);
                             }else if (evt instanceof MethodExitEvent){
                                 MethodExitEvent mxe = (MethodExitEvent) evt;
