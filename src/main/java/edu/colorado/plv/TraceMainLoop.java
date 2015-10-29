@@ -134,7 +134,7 @@ public class TraceMainLoop {
             //Process breakpoints main loop
             Method callback = null; //Null until callback hit
 //            Method callIn = null;
-//            ThreadReference activityThread = null;
+            ThreadReference activityThread = null;
 
             try {
                 while (true) {
@@ -144,6 +144,15 @@ public class TraceMainLoop {
                         try {
                             Event evt = evtIter.next();
                             if (evt instanceof BreakpointEvent) {
+                                if(activityThread == null){
+                                    activityThread = ((BreakpointEvent) evt).thread();
+                                    packageEntry.addThreadFilter(activityThread);
+                                    packageExit.addThreadFilter(activityThread);
+                                }else{
+                                    if(!(activityThread.equals(((BreakpointEvent) evt).thread()))){
+                                        throw new IllegalStateException("Looper looped from wrong thread");
+                                    }
+                                }
                                 eventProcessor.processMessage((BreakpointEvent)evt);
                                 callback = null; //TODO: if additional breakpoints add check for msg here
                             }else if (evt instanceof MethodEntryEvent){
