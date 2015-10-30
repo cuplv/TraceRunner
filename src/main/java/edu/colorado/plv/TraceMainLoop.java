@@ -189,7 +189,9 @@ public class TraceMainLoop {
 //                                }
                                 eventProcessor.processMethodExit(mxe, isCallback);
                             }else if (evt instanceof ExceptionEvent){
-                                eventProcessor.processException((ExceptionEvent)evt);
+                                ExceptionEvent exn = (ExceptionEvent) evt;
+                                exn.location().method();
+                                eventProcessor.processException(exn);
                             }
 //                            Map<String, Value> eventdetails = eventProcessor.processEvent(evt, mentered);
 //                            if (eventdetails.size() > 0) {
