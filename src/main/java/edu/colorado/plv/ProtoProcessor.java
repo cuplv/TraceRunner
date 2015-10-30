@@ -168,26 +168,37 @@ public class ProtoProcessor implements EventProcessor {
         CallbackOuterClass.PValue calle = null;
         List<CallbackOuterClass.PValue> arguments = new ArrayList<>();
         try {
-            stackFrames = threadRef.frames();
-            int level = 0;
-            for(StackFrame stackFrame : stackFrames){
-                ObjectReference objectReference = stackFrame.thisObject();
-
-                if (level == 0) {
-                    calle = valueToProtobuf(objectReference, false);
-                    List<Value> argumentsVals = stackFrame.getArgumentValues();
-                    for(Value value : argumentsVals){
-                        arguments.add(valueToProtobuf(value, false));
-                    }
-
-                }
-                if (level == 1) {
-                    caller = valueToProtobuf(objectReference, false);
-                }
-                level++;
-                if (level > 1) {
-                    break;
-                }
+//            stackFrames = threadRef.frames();
+//            int level = 0;
+//            for(StackFrame stackFrame : stackFrames){
+//                ObjectReference objectReference = stackFrame.thisObject();
+//
+//                if (level == 0) {
+//                    calle = valueToProtobuf(objectReference, false);
+//                    List<Value> argumentsVals = stackFrame.getArgumentValues();
+//                    for(Value value : argumentsVals){
+//                        arguments.add(valueToProtobuf(value, false));
+//                    }
+//
+//                }
+//                if (level == 1) {
+//                    caller = valueToProtobuf(objectReference, false);
+//                }
+//                level++;
+//                if (level > 1) {
+//                    break;
+//                }
+//            }
+            StackFrame stackFrame = threadRef.frame(0);
+            ObjectReference objectReference = stackFrame.thisObject();
+            calle = valueToProtobuf(objectReference, false);
+            List<Value> argumentsVals = stackFrame.getArgumentValues();
+            for(Value value : argumentsVals){
+                arguments.add(valueToProtobuf(value,false));
+            }
+            if(threadRef.frameCount()>1) {
+                stackFrame = threadRef.frame(1);
+                caller = valueToProtobuf(stackFrame.thisObject(),false);
             }
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
@@ -234,26 +245,37 @@ public class ProtoProcessor implements EventProcessor {
         CallbackOuterClass.PValue calle = null;
         List<CallbackOuterClass.PValue> arguments = new ArrayList<>();
         try {
-            stackFrames = threadRef.frames();
-            int level = 0;
-            for(StackFrame stackFrame : stackFrames){
-                ObjectReference objectReference = stackFrame.thisObject();
-
-                if (level == 0) {
-                    calle = valueToProtobuf(objectReference, false);
-                    List<Value> argumentsVals = stackFrame.getArgumentValues();
-                    for(Value value : argumentsVals){
-                        arguments.add(valueToProtobuf(value, false));
-                    }
-
-                }
-                if (level == 1) {
-                    caller = valueToProtobuf(objectReference, false);
-                }
-                level++;
-                if (level > 1) {
-                    break;
-                }
+//            stackFrames = threadRef.frames();
+//            int level = 0;
+//            for(StackFrame stackFrame : stackFrames){
+//                ObjectReference objectReference = stackFrame.thisObject();
+//
+//                if (level == 0) {
+//                    calle = valueToProtobuf(objectReference, false);
+//                    List<Value> argumentsVals = stackFrame.getArgumentValues();
+//                    for(Value value : argumentsVals){
+//                        arguments.add(valueToProtobuf(value, false));
+//                    }
+//
+//                }
+//                if (level == 1) {
+//                    caller = valueToProtobuf(objectReference, false);
+//                }
+//                level++;
+//                if (level > 1) {
+//                    break;
+//                }
+//            }
+            StackFrame stackFrame = threadRef.frame(0);
+            ObjectReference objectReference = stackFrame.thisObject();
+            calle = valueToProtobuf(objectReference, false);
+            List<Value> argumentsVals = stackFrame.getArgumentValues();
+            for(Value value : argumentsVals){
+                arguments.add(valueToProtobuf(value,false));
+            }
+            if(threadRef.frameCount()>1) {
+                stackFrame = threadRef.frame(1);
+                caller = valueToProtobuf(stackFrame.thisObject(),false);
             }
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();

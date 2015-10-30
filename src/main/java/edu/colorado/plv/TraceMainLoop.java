@@ -27,6 +27,7 @@ public class TraceMainLoop {
     private List<String> filters;
     private List<MethodEntryRequest> entryToToggle;
     private List<MethodExitRequest> exitToToggle;
+    private boolean enabledAndroidStar = false;
     private void enableAll(){
         for(MethodEntryRequest e: entryToToggle){
             e.enable();
@@ -165,7 +166,10 @@ public class TraceMainLoop {
                                     if(appPackageRegex.matcher(name).matches()){//set callback value when app package is first hit
                                         if(m.name() != "<init>") {
                                             callback = m;
-                                            enableAll();
+                                            if(enabledAndroidStar == false) {
+                                                enableAll();
+                                                enabledAndroidStar = true;
+                                            }
                                             isCallback = true;
                                         }
                                     }
@@ -178,11 +182,11 @@ public class TraceMainLoop {
                                 MethodExitEvent mxe = (MethodExitEvent) evt;
                                 Method m = mxe.method();
                                 boolean isCallback = false;
-                                if(m == callback){
-                                    callback = null;
-                                    disableAll();
-                                    isCallback = true;
-                                }
+//                                if(m == callback){
+//                                    callback = null;
+//                                    disableAll();
+//                                    isCallback = true;
+//                                }
                                 eventProcessor.processMethodExit(mxe, isCallback);
                             }else if (evt instanceof ExceptionEvent){
                                 eventProcessor.processException((ExceptionEvent)evt);

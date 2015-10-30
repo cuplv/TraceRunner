@@ -17,6 +17,7 @@ public class ClassExclusions {
         exclusions.add("android.util.SparseArray");
         exclusions.add("android.util.LongSparseArray");
         exclusions.add("android.animation.*");
+        exclusions.add("android.graphics.*");
         return exclusions;
     }
     public static List<String> exceptionExclusions() {
