@@ -175,6 +175,7 @@ public class TraceMainLoop {
 
             //Process breakpoints main loop
             Map<ThreadReference,Method> callback = new HashMap<>(); //Null until callback hit
+            Map<ThreadReference,Method> callin = new HashMap<>();
             ThreadReference activityThread = null;
 //            Method callIn = null;
 
@@ -190,8 +191,8 @@ public class TraceMainLoop {
                                 ThreadReference thrf = ((BreakpointEvent) evt).thread();
                                 if(activityThread == null){
                                     activityThread = ((BreakpointEvent) evt).thread();
-                                    packageEntry.addThreadFilter(activityThread);
-                                    packageExit.addThreadFilter(activityThread);
+//                                    packageEntry.addThreadFilter(activityThread);
+//                                    packageExit.addThreadFilter(activityThread);
                                 }else{
                                     if(!(activityThread.equals(((BreakpointEvent) evt).thread()))){
                                         throw new IllegalStateException("Looper looped from wrong thread");
@@ -205,9 +206,10 @@ public class TraceMainLoop {
                                 MethodEntryEvent mevt = (MethodEntryEvent) evt;
                                 ThreadReference thref = mevt.thread();
                                 boolean isCallback = false;
+                                Method m = mevt.method();
+                                String name = m.declaringType().name();
                                 if(!callback.containsKey(thref)) {
-                                    Method m = mevt.method();
-                                    String name = m.declaringType().name();
+                                    //setting callback
                                     if(appPackageRegex.matcher(name).matches()){
                                         //set callback value when app package is first hit
                                         if(!m.name().contains("<init>")) {
@@ -219,11 +221,19 @@ public class TraceMainLoop {
                                             isCallback = true;
                                         }
                                     }
+                                }else{
+                                    //callback hit check for call in
+                                    if((!appPackageRegex.matcher(name).matches()) && (!callin.containsKey(thref))){
+                                        callin.put(thref, m);
+                                    }
+
                                 }
 //                                if(callback != null){
 //
 //                                }
-                                eventProcessor.processInvoke(mevt, isCallback);
+                                if(!callin.containsKey(thref)) {
+                                    eventProcessor.processInvoke(mevt, isCallback);
+                                }
                             }else if (evt instanceof MethodExitEvent){
                                 MethodExitEvent mxe = (MethodExitEvent) evt;
                                 ThreadReference thrf = mxe.thread();
@@ -233,12 +243,17 @@ public class TraceMainLoop {
                                     disableAll(thrf);
                                     callback.remove(thrf);
                                 }
+                                if(callin.containsKey(thrf) && callin.get(thrf).equals(m)){
+                                    callin.remove(thrf);
+                                }
 //                                if(m == callback){
 //                                    callback = null;
 //                                    disableAll();
 //                                    isCallback = true;
 //                                }
-                                eventProcessor.processMethodExit(mxe, isCallback);
+                                if(!callin.containsKey(thrf)) {
+                                    eventProcessor.processMethodExit(mxe, isCallback);
+                                }
                             }else if (evt instanceof ExceptionEvent){
                                 ExceptionEvent exn = (ExceptionEvent) evt;
                                 exn.location().method();
