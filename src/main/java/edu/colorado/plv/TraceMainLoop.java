@@ -10,6 +10,7 @@ import com.sun.jdi.request.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -25,23 +26,80 @@ public class TraceMainLoop {
 
     private EventProcessor eventProcessor;
     private List<String> filters;
-    private List<MethodEntryRequest> entryToToggle;
-    private List<MethodExitRequest> exitToToggle;
+    private HashMap<ThreadReference,List<MethodEntryRequest>> entryToToggle;
+    private HashMap<ThreadReference,List<MethodExitRequest>> exitToToggle;
     private boolean enabledAndroidStar = false;
-    private void enableAll(){
-        for(MethodEntryRequest e: entryToToggle){
-            e.enable();
+    EventRequestManager evtReqMgr;
+
+    /**
+     * MethodEntryRequests and MethodExitRequests for thread of @param threadReference will be enabled allowing logging
+     */
+    private void enableAll(ThreadReference threadReference){
+        if(entryToToggle.containsKey(threadReference)) {
+            List<MethodEntryRequest> entryToTogglel = entryToToggle.get(threadReference);
+            for (MethodEntryRequest e : entryToTogglel) {
+                e.enable();
+            }
+        }else {
+            List<MethodEntryRequest> mer = new ArrayList<>();
+            for (String filter : filters) {
+                MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
+                methodEntryRequest.addClassFilter(filter);
+
+                List<String> classExclusions = ClassExclusions.getClassExlusions();
+
+                for(String exclusion: classExclusions){
+                    methodEntryRequest.addClassExclusionFilter(exclusion);
+                }
+                methodEntryRequest.addThreadFilter(threadReference);
+                methodEntryRequest.enable();
+
+                mer.add(methodEntryRequest);
+            }
+            entryToToggle.put(threadReference, mer);
         }
-        for(MethodExitRequest e: exitToToggle){
-            e.enable();
+        if(exitToToggle.containsKey(threadReference)) {
+            List<MethodExitRequest> exitToTogglel = exitToToggle.get(threadReference);
+            for (MethodExitRequest e : exitToTogglel) {
+                e.enable();
+            }
+        }else {
+            List<MethodExitRequest> mxr = new ArrayList<>();
+            for (String filter : filters) {
+                MethodExitRequest methodExitRequest = evtReqMgr.createMethodExitRequest();
+                methodExitRequest.addClassFilter(filter);
+
+                List<String> classExclusions = ClassExclusions.getClassExlusions();
+
+                for(String exclusion: classExclusions){
+                    methodExitRequest.addClassExclusionFilter(exclusion);
+                }
+                //entryToToggle.add(threadReference, methodEntryRequest);
+                methodExitRequest.addThreadFilter(threadReference);
+                methodExitRequest.enable();
+                mxr.add(methodExitRequest);
+            }
+            exitToToggle.put(threadReference, mxr);
         }
+
     }
-    private void disableAll(){
-        for(MethodEntryRequest e: entryToToggle){
-            e.disable();
+
+    /**
+     * MethodEntryRequest and MethodExitRequests for thread of @param threadReference will be disabled
+     * @param threadReference
+     */
+    private void disableAll(ThreadReference threadReference){
+        if(entryToToggle.containsKey(threadReference)) {
+            List<MethodEntryRequest> entryToTogglel = entryToToggle.get(threadReference);
+            for (MethodEntryRequest e : entryToTogglel) {
+                e.disable();
+            }
         }
-        for(MethodExitRequest e : exitToToggle){
-            e.disable();
+        if(exitToToggle.containsKey(threadReference)) {
+            List<MethodExitRequest> exitToTogglel = exitToToggle.get(threadReference);
+            for (MethodExitRequest e : exitToTogglel) {
+                e.disable();
+            }
         }
     }
 
@@ -50,8 +108,8 @@ public class TraceMainLoop {
         this.eventProcessor = eventProcessor;
         this.filters = filters;
         this.appPackage = appPackage;
-        this.entryToToggle = new ArrayList<>();
-        this.exitToToggle = new ArrayList<>();
+        this.entryToToggle = new HashMap<>();
+        this.exitToToggle = new HashMap<>();
         this.appPackageRegex = GlobUtil.createRegexFromGlob(appPackage);
 
     }
@@ -85,14 +143,14 @@ public class TraceMainLoop {
             //Set breakpoint
             Location breakpointLocation = dispatchMessage.location();
 
-            EventRequestManager evtReqMgr = vm.eventRequestManager();
+            evtReqMgr = vm.eventRequestManager();
             BreakpointRequest bReq
                     = evtReqMgr.createBreakpointRequest(breakpointLocation);
             bReq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
             bReq.enable();
 
             //Method entry notification
-            List<String> classExclusions = ClassExclusions.getClassExlusions();
+
             MethodEntryRequest packageEntry = evtReqMgr.createMethodEntryRequest();
             packageEntry.addClassFilter(appPackage);
             packageEntry.enable();
@@ -101,24 +159,7 @@ public class TraceMainLoop {
             packageExit.enable();
 
 
-            for (String filter : filters) {
-                MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
-                methodEntryRequest.addClassFilter(filter);
-                MethodExitRequest methodExitRequest = evtReqMgr.createMethodExitRequest();
-                methodExitRequest.addClassFilter(filter);
 
-                for(String exclusion: classExclusions){
-                    methodEntryRequest.addClassExclusionFilter(exclusion);
-                    methodExitRequest.addClassExclusionFilter(exclusion);
-                }
-
-
-                entryToToggle.add(methodEntryRequest);
-                exitToToggle.add(methodExitRequest);
-
-//                methodEntryRequest.enable();
-//                methodExitRequest.enable();
-            }
             ExceptionRequest exceptionRequest;
             exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true);
 //            exceptionRequest.addClassExclusionFilter("java.lang.ClassNotFoundException");
@@ -133,9 +174,10 @@ public class TraceMainLoop {
 
 
             //Process breakpoints main loop
-            Method callback = null; //Null until callback hit
-//            Method callIn = null;
+            Map<ThreadReference,Method> callback = new HashMap<>(); //Null until callback hit
             ThreadReference activityThread = null;
+//            Method callIn = null;
+
 
             try {
                 while (true) {
@@ -145,6 +187,7 @@ public class TraceMainLoop {
                         try {
                             Event evt = evtIter.next();
                             if (evt instanceof BreakpointEvent) {
+                                ThreadReference thrf = ((BreakpointEvent) evt).thread();
                                 if(activityThread == null){
                                     activityThread = ((BreakpointEvent) evt).thread();
                                     packageEntry.addThreadFilter(activityThread);
@@ -153,21 +196,24 @@ public class TraceMainLoop {
                                     if(!(activityThread.equals(((BreakpointEvent) evt).thread()))){
                                         throw new IllegalStateException("Looper looped from wrong thread");
                                     }
+                                    disableAll(((BreakpointEvent) evt).thread());
                                 }
                                 eventProcessor.processMessage((BreakpointEvent)evt);
-                                callback = null; //TODO: if additional breakpoints add check for msg here
+                                callback.remove(thrf); //TODO: if additional breakpoints add check for msg here
                             }else if (evt instanceof MethodEntryEvent){
 
                                 MethodEntryEvent mevt = (MethodEntryEvent) evt;
+                                ThreadReference thref = mevt.thread();
                                 boolean isCallback = false;
-                                if(callback == null) {
+                                if(!callback.containsKey(thref)) {
                                     Method m = mevt.method();
                                     String name = m.declaringType().name();
-                                    if(appPackageRegex.matcher(name).matches()){//set callback value when app package is first hit
-                                        if(m.name() != "<init>") {
-                                            callback = m;
+                                    if(appPackageRegex.matcher(name).matches()){
+                                        //set callback value when app package is first hit
+                                        if(!m.name().contains("<init>")) {
+                                            callback.put(thref,m);
                                             if(enabledAndroidStar == false) {
-                                                enableAll();
+                                                enableAll(thref);
                                                 enabledAndroidStar = true;
                                             }
                                             isCallback = true;
@@ -180,8 +226,13 @@ public class TraceMainLoop {
                                 eventProcessor.processInvoke(mevt, isCallback);
                             }else if (evt instanceof MethodExitEvent){
                                 MethodExitEvent mxe = (MethodExitEvent) evt;
+                                ThreadReference thrf = mxe.thread();
                                 Method m = mxe.method();
                                 boolean isCallback = false;
+                                if(callback.containsKey(thrf) && callback.get(thrf).equals(m)){
+                                    disableAll(thrf);
+                                    callback.remove(thrf);
+                                }
 //                                if(m == callback){
 //                                    callback = null;
 //                                    disableAll();
