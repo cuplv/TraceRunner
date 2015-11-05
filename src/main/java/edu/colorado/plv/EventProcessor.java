@@ -15,7 +15,8 @@ import java.util.Map;
 public interface EventProcessor {
     //Map<String, Value> processEvent(Event evt, List<String> mentered) throws AbsentInformationException, IncompatibleThreadStateException;
     void processMessage(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException;
-    void processInvoke(MethodEntryEvent evt, boolean isCallback);
+    void processErrorLog(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException;
+    void processInvoke(MethodEntryEvent evt, boolean isCallback, boolean isCallIn);
     void done();
     void processMethodExit(MethodExitEvent evt, boolean isCallback);
 

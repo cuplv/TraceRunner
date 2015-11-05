@@ -7,7 +7,7 @@ import java.util.List;
  * Created by s on 10/22/15.
  * TODO: probably encode this in a resource file at some point
  */
-public class ClassExclusions {
+public class Resources {
     public static List<String> getClassExlusions() {
         List<String> exclusions = new ArrayList<>();
         exclusions.add("android.media.MediaHTTPConnection");
@@ -24,5 +24,11 @@ public class ClassExclusions {
         List<String> exclusions = new ArrayList<>();
         exclusions.add("java.lang.ClassNotFoundException");
         return exclusions;
+    }
+    public static List<String> getLogeSigs(){
+        List<String> sigs = new ArrayList<>();
+        sigs.add("(Ljava/lang/String;Ljava/lang/String;)I");
+        sigs.add("(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I");
+        return sigs;
     }
 }

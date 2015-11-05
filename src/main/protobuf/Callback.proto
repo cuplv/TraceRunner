@@ -5,6 +5,7 @@ message Callback
 	optional PValue when = 2;
 	optional PValue target = 3;
 	optional PValue callback = 4;
+	optional int64 threadID=5;
 	//repeated EventInCallback eventsInCallback = 5;
 
 }
@@ -18,7 +19,13 @@ message EventInCallback {
 		MethodEvent methodEvent = 2;
 		ExceptionEvent exceptionEvent = 3;
 		Callback callback = 4;
+		Loge loge = 5;
 	}
+}
+message Loge{
+	optional PValue msg = 1;
+	optional PValue tag = 2;
+	optional int64 threadID = 3;
 }
 message PMethod{
 	optional string name = 1;
@@ -30,8 +37,6 @@ message ExceptionEvent {
 	optional PMethod method = 2;
 	optional int32 lineNumber = 3;
 	optional string sourceName = 4;
-
-
 }
 message MethodEvent
 {
@@ -46,6 +51,7 @@ message MethodEvent
 	optional PValue calle = 9;
 	optional EventType eventType = 10;
 	optional bool isCallback = 11;
+	optional bool isCallIn = 12;
 
 }
 message ConcreteObject

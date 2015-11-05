@@ -9,10 +9,7 @@ import com.sun.jdi.event.*;
 import com.sun.jdi.request.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -31,6 +28,7 @@ public class TraceMainLoop {
     private boolean enabledAndroidStar = false;
     EventRequestManager evtReqMgr;
 
+
     /**
      * MethodEntryRequests and MethodExitRequests for thread of @param threadReference will be enabled allowing logging
      */
@@ -46,7 +44,7 @@ public class TraceMainLoop {
                 MethodEntryRequest methodEntryRequest = evtReqMgr.createMethodEntryRequest();
                 methodEntryRequest.addClassFilter(filter);
 
-                List<String> classExclusions = ClassExclusions.getClassExlusions();
+                List<String> classExclusions = Resources.getClassExlusions();
 
                 for(String exclusion: classExclusions){
                     methodEntryRequest.addClassExclusionFilter(exclusion);
@@ -69,7 +67,7 @@ public class TraceMainLoop {
                 MethodExitRequest methodExitRequest = evtReqMgr.createMethodExitRequest();
                 methodExitRequest.addClassFilter(filter);
 
-                List<String> classExclusions = ClassExclusions.getClassExlusions();
+                List<String> classExclusions = Resources.getClassExlusions();
 
                 for(String exclusion: classExclusions){
                     methodExitRequest.addClassExclusionFilter(exclusion);
@@ -140,14 +138,26 @@ public class TraceMainLoop {
             //List<Method> targetMethods = getMethods(vm, clazz);
 
 
-            //Set breakpoint
+            //Set breakpoint for dispatchMessage
             Location breakpointLocation = dispatchMessage.location();
 
             evtReqMgr = vm.eventRequestManager();
-            BreakpointRequest bReq
+            BreakpointRequest bReqDispatch
                     = evtReqMgr.createBreakpointRequest(breakpointLocation);
-            bReq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
-            bReq.enable();
+            bReqDispatch.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
+            bReqDispatch.enable();
+
+
+            //Set breakpoints for error log
+            List<String> sigs = Resources.getLogeSigs();
+            Set<BreakpointRequest> breakpointRequests = new HashSet<>();
+            for(String sig : sigs) {
+                breakpointLocation = getMethodLoc(vm, "android.util.Log", "e", sig).location();
+                BreakpointRequest brq = evtReqMgr.createBreakpointRequest(breakpointLocation);
+                brq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
+                brq.enable();
+                breakpointRequests.add(brq);
+            }
 
             //Method entry notification
 
@@ -163,7 +173,7 @@ public class TraceMainLoop {
             ExceptionRequest exceptionRequest;
             exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true);
 //            exceptionRequest.addClassExclusionFilter("java.lang.ClassNotFoundException");
-            List<String> exceptionExclusions = ClassExclusions.exceptionExclusions();
+            List<String> exceptionExclusions = Resources.exceptionExclusions();
             for(String exclusion : exceptionExclusions){
                 exceptionRequest.addClassExclusionFilter(exclusion);
             }
@@ -199,8 +209,12 @@ public class TraceMainLoop {
                                     }
                                     disableAll(((BreakpointEvent) evt).thread());
                                 }
-                                eventProcessor.processMessage((BreakpointEvent)evt);
-                                callback.remove(thrf); //TODO: if additional breakpoints add check for msg here
+                                if(evt.request() == bReqDispatch) {
+                                    eventProcessor.processMessage((BreakpointEvent) evt);
+                                    callback.remove(thrf); //TODO: if additional breakpoints add check for msg here
+                                }else if(breakpointRequests.contains(evt.request())){
+                                    eventProcessor.processErrorLog((BreakpointEvent)evt);
+                                }
                             }else if (evt instanceof MethodEntryEvent){
 
                                 MethodEntryEvent mevt = (MethodEntryEvent) evt;
@@ -208,15 +222,16 @@ public class TraceMainLoop {
                                 boolean isCallback = false;
                                 Method m = mevt.method();
                                 String name = m.declaringType().name();
+
                                 if(!callback.containsKey(thref)) {
                                     //setting callback
                                     if(appPackageRegex.matcher(name).matches()){
                                         //set callback value when app package is first hit
                                         if(!m.name().contains("<init>")) {
-                                            callback.put(thref,m);
-                                            if(enabledAndroidStar == false) {
+                                            if(!callback.containsKey(thref)) {
+                                                callback.put(thref,m);
                                                 enableAll(thref);
-                                                enabledAndroidStar = true;
+
                                             }
                                             isCallback = true;
                                         }
@@ -224,16 +239,18 @@ public class TraceMainLoop {
                                 }else{
                                     //callback hit check for call in
                                     if((!appPackageRegex.matcher(name).matches()) && (!callin.containsKey(thref))){
+                                        eventProcessor.processInvoke(mevt, isCallback, true);
                                         callin.put(thref, m);
                                     }
 
                                 }
+                                if(!callin.containsKey(thref)) {
+                                    eventProcessor.processInvoke(mevt, isCallback, false);
+                                }
 //                                if(callback != null){
 //
 //                                }
-                                if(!callin.containsKey(thref)) {
-                                    eventProcessor.processInvoke(mevt, isCallback);
-                                }
+
                             }else if (evt instanceof MethodExitEvent){
                                 MethodExitEvent mxe = (MethodExitEvent) evt;
                                 ThreadReference thrf = mxe.thread();
@@ -281,6 +298,36 @@ public class TraceMainLoop {
 
             }
         }
+    }
+    private static Method getMethodLoc(VirtualMachine vm, String clazz, String methodName, String sig){
+        List<ReferenceType> refTypes = vm.allClasses();
+        ReferenceType handlerClass = null;
+        for (ReferenceType refType: refTypes) {
+            //System.out.println(refType.name());
+            if (refType.name().equals(clazz)) {
+                if (handlerClass != null) {
+                    throw new IllegalStateException("more than one class found: " + clazz);
+                }else{
+                    handlerClass = refType;
+                }
+            }
+        }
+        List<Method> methods = handlerClass.allMethods();
+        Method dispatchMessage = null;
+        for(Method method : methods){
+            if(method.name().equals(methodName)){
+                if(method.signature().equals(sig)){
+                    if(dispatchMessage != null){
+                        throw new IllegalStateException("");
+                    }
+                    dispatchMessage = method;
+                }
+
+            }
+        }
+        return dispatchMessage;
+
+
     }
     private static Method getDispatchMessage(VirtualMachine vm) {
         List<ReferenceType> refTypes = vm.allClasses();

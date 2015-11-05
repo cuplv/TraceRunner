@@ -123,11 +123,38 @@ public class ProtoProcessor implements EventProcessor {
         builder.setWhen(valueToProtobuf(retrievedValues.get("Message.when"), false));
         builder.setTarget(valueToProtobuf(retrievedValues.get("target"), false));
         builder.setCallback(valueToProtobuf(retrievedValues.get("callback"), false));
+        builder.setThreadID(threadRef.uniqueID());
 
         CallbackOuterClass.EventInCallback.Builder evt =
                 CallbackOuterClass.EventInCallback.newBuilder().setCallback(builder);
         toWrite.add(evt);
 
+    }
+
+    @Override
+    public void processErrorLog(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException {
+        ThreadReference threadRef = evt.thread();
+        StackFrame stackFrame = threadRef.frame(0);
+        List<LocalVariable> visVars = stackFrame.visibleVariables();
+        CallbackOuterClass.PValue tag = null;
+        CallbackOuterClass.PValue msg = null;
+        for(LocalVariable l : visVars){
+            if(l.name().equals("tag")){
+                Value tagv = stackFrame.getValue(l);
+                tag = valueToProtobuf(tagv,false);
+            }else if(l.name().equals("msg")){
+                Value msgv = stackFrame.getValue(l);
+                msg = valueToProtobuf(msgv, false);
+            }
+
+        }
+        CallbackOuterClass.Loge.Builder builder = CallbackOuterClass.Loge.newBuilder();
+        builder.setMsg(msg);
+        builder.setTag(tag);
+        builder.setThreadID(threadRef.uniqueID());
+        CallbackOuterClass.EventInCallback.Builder ebuilder =
+                CallbackOuterClass.EventInCallback.newBuilder().setLoge(builder);
+        toWrite.add(ebuilder);
     }
 
 //    private void finalizeLastMessage() {
@@ -154,7 +181,7 @@ public class ProtoProcessor implements EventProcessor {
 //    }
 
     @Override
-    public void processInvoke(MethodEntryEvent evt, boolean isCallback) {
+    public void processInvoke(MethodEntryEvent evt, boolean isCallback, boolean isCallIn) {
 
         Method method = evt.method();
         System.out.println(method);
@@ -214,6 +241,7 @@ public class ProtoProcessor implements EventProcessor {
                         .setDeclaringType(declaringType.toString())
                         .addAllParameters(arguments)
                         .setIsCallback(isCallback)
+                        .setIsCallIn(isCallIn)
                         .setEventType(CallbackOuterClass.EventType.METHODENTRY));
         toWrite.add(nevt);
     }

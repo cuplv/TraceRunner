@@ -60,7 +60,12 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processInvoke(MethodEntryEvent evt, boolean isCallback) {
+    public void processErrorLog(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException {
+
+    }
+
+    @Override
+    public void processInvoke(MethodEntryEvent evt, boolean isCallback, boolean isCallIn) {
 
         String method = (evt.method().toString());
         System.out.println(method);
