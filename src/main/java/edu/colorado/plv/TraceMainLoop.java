@@ -150,13 +150,31 @@ public class TraceMainLoop {
 
             //Set breakpoints for error log
             List<String> sigs = Resources.getLogeSigs();
-            Set<BreakpointRequest> breakpointRequests = new HashSet<>();
+            Set<BreakpointRequest> logeBp = new HashSet<>();
             for(String sig : sigs) {
                 breakpointLocation = getMethodLoc(vm, "android.util.Log", "e", sig).location();
                 BreakpointRequest brq = evtReqMgr.createBreakpointRequest(breakpointLocation);
                 brq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
                 brq.enable();
-                breakpointRequests.add(brq);
+                logeBp.add(brq);
+            }
+            Set<BreakpointRequest> logWBreakpoint = new HashSet<>();
+            //TODO:
+            Set<Method> wlocations = getMethodLocs(vm, "android.util.Log", "w");
+            for(Method location : wlocations) {
+                breakpointLocation = location.location();
+                BreakpointRequest brq = evtReqMgr.createBreakpointRequest(breakpointLocation);
+                brq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
+                brq.enable();
+                logWBreakpoint.add(brq);
+            }
+            Set<BreakpointRequest> logWTFBreakpoint = new HashSet<>();
+            Set<Method> wtfLocations = getMethodLocs(vm, "android.util.Log", "wtf");
+            for(Method method: wtfLocations) {
+                BreakpointRequest brq = evtReqMgr.createBreakpointRequest(method.location());
+                brq.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
+                brq.enable();
+                logWTFBreakpoint.add(brq);
             }
 
             //Method entry notification
@@ -209,11 +227,16 @@ public class TraceMainLoop {
                                     }
                                     disableAll(((BreakpointEvent) evt).thread());
                                 }
-                                if(evt.request() == bReqDispatch) {
+                                EventRequest request = evt.request();
+                                if(request == bReqDispatch) {
                                     eventProcessor.processMessage((BreakpointEvent) evt);
                                     callback.remove(thrf); //TODO: if additional breakpoints add check for msg here
-                                }else if(breakpointRequests.contains(evt.request())){
-                                    eventProcessor.processErrorLog((BreakpointEvent)evt);
+                                }else if(logeBp.contains(request)){
+                                    eventProcessor.processErrorLog((BreakpointEvent)evt, "e");
+                                }else if(logWBreakpoint.contains(request)){
+                                    eventProcessor.processErrorLog((BreakpointEvent)evt, "w");
+                                }else if(logWTFBreakpoint.contains(request)){
+                                    eventProcessor.processErrorLog((BreakpointEvent)evt, "wtf");
                                 }
                             }else if (evt instanceof MethodEntryEvent){
 
@@ -298,6 +321,28 @@ public class TraceMainLoop {
 
             }
         }
+    }
+    private static Set<Method> getMethodLocs(VirtualMachine vm, String clazz, String methodName){
+        List<ReferenceType> refTypes = vm.allClasses();
+        ReferenceType handlerClass = null;
+        for (ReferenceType refType: refTypes) {
+            //System.out.println(refType.name());
+            if (refType.name().equals(clazz)) {
+                if (handlerClass != null) {
+                    throw new IllegalStateException("more than one class found: " + clazz);
+                }else{
+                    handlerClass = refType;
+                }
+            }
+        }
+        List<Method> methods = handlerClass.allMethods();
+        Set<Method> dispatchMessage = new HashSet<>();
+        for(Method method : methods){
+            if(method.name().equals(methodName)){
+                dispatchMessage.add(method);
+            }
+        }
+        return dispatchMessage;
     }
     private static Method getMethodLoc(VirtualMachine vm, String clazz, String methodName, String sig){
         List<ReferenceType> refTypes = vm.allClasses();

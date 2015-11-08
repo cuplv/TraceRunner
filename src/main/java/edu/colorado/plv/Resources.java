@@ -31,4 +31,21 @@ public class Resources {
         sigs.add("(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I");
         return sigs;
     }
+
+    public static List<String> getWSigs() {
+        List<String> sigs = new ArrayList<>();
+        sigs.add("(Ljava/lang/String;Ljava/lang/String;)I");
+        sigs.add("(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I");
+        sigs.add("(Ljava/lang/String;Ljava/lang/Throwable;)I");
+        return sigs;
+    }
+
+    public static List<String> getWTFSigs() {
+        List<String> sigs = new ArrayList<>();
+        sigs.add("(ILjava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;ZZ)I");
+        sigs.add("(Ljava/lang/String;Ljava/lang/String;)I");
+        sigs.add("Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I");
+        sigs.add("(Ljava/lang/String;Ljava/lang/Throwable;)I");
+        return sigs;
+    }
 }

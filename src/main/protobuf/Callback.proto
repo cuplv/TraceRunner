@@ -26,6 +26,12 @@ message Loge{
 	optional PValue msg = 1;
 	optional PValue tag = 2;
 	optional int64 threadID = 3;
+	enum LogType {
+		LOGE = 0;
+		LOGW = 1;
+		LOGWTF = 2;
+	}
+	optional LogType logType = 4;
 }
 message PMethod{
 	optional string name = 1;

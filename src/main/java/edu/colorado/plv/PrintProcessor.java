@@ -60,9 +60,10 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processErrorLog(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException {
+    public void processErrorLog(BreakpointEvent evt, String type) throws IncompatibleThreadStateException, AbsentInformationException {
 
     }
+
 
     @Override
     public void processInvoke(MethodEntryEvent evt, boolean isCallback, boolean isCallIn) {

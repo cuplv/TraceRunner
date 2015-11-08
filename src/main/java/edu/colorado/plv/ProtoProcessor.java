@@ -132,7 +132,7 @@ public class ProtoProcessor implements EventProcessor {
     }
 
     @Override
-    public void processErrorLog(BreakpointEvent evt) throws IncompatibleThreadStateException, AbsentInformationException {
+    public void processErrorLog(BreakpointEvent evt, String type) throws IncompatibleThreadStateException, AbsentInformationException {
         ThreadReference threadRef = evt.thread();
         StackFrame stackFrame = threadRef.frame(0);
         List<LocalVariable> visVars = stackFrame.visibleVariables();
@@ -149,9 +149,18 @@ public class ProtoProcessor implements EventProcessor {
 
         }
         CallbackOuterClass.Loge.Builder builder = CallbackOuterClass.Loge.newBuilder();
-        builder.setMsg(msg);
-        builder.setTag(tag);
+        if(msg != null)
+            builder.setMsg(msg);
+        if(tag != null)
+            builder.setTag(tag);
+
         builder.setThreadID(threadRef.uniqueID());
+        if(type.equals("e"))
+            builder.setLogType(CallbackOuterClass.Loge.LogType.valueOf(CallbackOuterClass.Loge.LogType.LOGE_VALUE));
+        else if(type.equals("w"))
+            builder.setLogType(CallbackOuterClass.Loge.LogType.valueOf(CallbackOuterClass.Loge.LogType.LOGW_VALUE));
+        else if(type.equals("wtf"))
+            builder.setLogType(CallbackOuterClass.Loge.LogType.valueOf(CallbackOuterClass.Loge.LogType.LOGWTF_VALUE));
         CallbackOuterClass.EventInCallback.Builder ebuilder =
                 CallbackOuterClass.EventInCallback.newBuilder().setLoge(builder);
         toWrite.add(ebuilder);

@@ -36,10 +36,10 @@ res = subprocess.Popen(['adb', 'shell', 'ps'],stdout=subprocess.PIPE)
 res.wait()
 
 lines = res.stdout.readlines()
-print "-------------"
-for line in lines:
-	print line
-print "-------------"
+#print "-------------"
+#for line in lines:
+	#print line
+#print "-------------"
 psline = ""
 for line in lines:
 	if package in line:
@@ -64,6 +64,16 @@ if 0 != res:
 	raise Exception("bridge failed")
 
 
+#get path of tracerunner jar
+scriptPath = os.path.dirname(os.path.realpath(__file__))
+if(scriptPath[-5:] != "utils"):
+	raise Exception("launch from utils directory")
+jarpath = scriptPath[0:-5] + "build/libs/TraceRunner-all-1.0.jar"
+
+if not os.path.isfile(jarpath):
+	raise Exception("Tracerunner jar not found")
+
+res = subprocess.call(['java','-jar',jarpath, "7778", "/Users/s/Desktop/" + package + appname + ".proto", package + "*", "android.*"])
 
 
 #print dir(VirtualMachine)
