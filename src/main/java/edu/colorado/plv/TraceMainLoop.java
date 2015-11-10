@@ -222,9 +222,9 @@ public class TraceMainLoop {
 //                                    packageEntry.addThreadFilter(activityThread);
 //                                    packageExit.addThreadFilter(activityThread);
                                 }else{
-                                    if(!(activityThread.equals(((BreakpointEvent) evt).thread()))){
-                                        throw new IllegalStateException("Looper looped from wrong thread");
-                                    }
+//                                    if(!(activityThread.equals(((BreakpointEvent) evt).thread()))){
+//                                        throw new IllegalStateException("Looper looped from wrong thread");
+//                                    }
                                     disableAll(((BreakpointEvent) evt).thread());
                                 }
                                 EventRequest request = evt.request();

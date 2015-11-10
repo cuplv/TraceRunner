@@ -9,6 +9,8 @@ srcdir = sys.argv[1]
 manifests = []
 for root, dirs, files in os.walk(srcdir):
 	for f in files:
+		if f.endswith(".apk"):
+			print "apk: " + root + "/" + f
 		if f == "AndroidManifest.xml":
 			manifests.append(root + '/' + f)
 
@@ -27,20 +29,24 @@ for manifest in manifests:
 		mainActivity = ""
 		for activity in activities:
 			intentfilters = activity.findall('intent-filter')
-			if len(intentfilters) != 1:
+			if len(intentfilters) > 1:
 				raise AttributeError("too many intent filters in activity")
-			intentfilter = intentfilters[0]
-			actions = intentfilter.findall('action')
-			if len(actions) != 1:
-				raise AttributeError("wrong number of actions")
-			action = actions[0]
-			if(action.attrib['{http://schemas.android.com/apk/res/android}name'] == 'android.intent.action.MAIN'):
-				mainActivity = activity
+			if len(intentfilters) == 1:
+				intentfilter = intentfilters[0]
+				actions = intentfilter.findall('action')
+				if len(actions) != 1:
+					raise AttributeError("wrong number of actions")
+				action = actions[0]
+				if(action.attrib['{http://schemas.android.com/apk/res/android}name'] == 'android.intent.action.MAIN'):
+					mainActivity = activity
 		mainActivityName = mainActivity.attrib['{http://schemas.android.com/apk/res/android}name']
-		print "--------------------"
+		print "==================="
 		print manifest
 		print "--"
 		print "package: " + package
 		print "main activity name: " + mainActivityName
-	except AttributeError:
-		print "bad manifest"
+	except AttributeError as e:
+		if False:
+			print "--------------------"
+			print manifest
+			print "bad manifest: " + str(e)
