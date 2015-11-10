@@ -12,14 +12,21 @@ import java.util.*;
 public class TraceRunner {
     public static void main(String[] args) throws Exception
     {
-        if (args.length == 1) {
-            FileInputStream fileInputStream = new FileInputStream(args[0]);
+        if (args[0].equals("dataProj")){
+            FileInputStream fileInputStream = new FileInputStream(args[1]);
+            TraceUtilities.deserialize(fileInputStream);
+
+            //TraceUtilities.dataProjection
+        }
+        if (args[0].equals("read")) {
+            FileInputStream fileInputStream = new FileInputStream(args[1]);
             ProtoProcessor.readInputStream(fileInputStream);
             return;
 
         }
         if (args.length < 3){
-            throw new IllegalArgumentException("usage: [port] [log output file] [class filter] or [log input file]");
+            throw new IllegalArgumentException("usage: [port] [log output file] [class filter] or [log input file]\n" +
+                    "or read [file]");
         }
 
         String logOutput = args[1];
