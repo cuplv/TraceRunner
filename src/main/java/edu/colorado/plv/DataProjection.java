@@ -1,16 +1,19 @@
 package edu.colorado.plv;
 
 import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by s on 11/10/15.
+ * Class to take a stream of events and split them up based on involved objects.
  */
 public class DataProjection {
+    private Map<MObject, List<CallbackOuterClass.EventInCallback>> objects = new HashMap<>();
     /**
      * object with just type and id counting for hashcode and eq
      */
+
     public static class MObject{
         private long id;
         /**
@@ -65,8 +68,67 @@ public class DataProjection {
             return pValue;
         }
     }
-    private Map<MObject, CallbackOuterClass.PObjectReference> objects = new HashMap<>();
-    public static DataProjection fromFileInputStream(FileInputStream fileInputStream) {
-        return null;
+
+    public static DataProjection fromFileInputStream(FileInputStream fileInputStream) throws IOException {
+        List<CallbackOuterClass.EventInCallback> events = TraceUtilities.deserialize(fileInputStream);
+        return fromEventList(events);
     }
+    public static DataProjection fromEventList(List<CallbackOuterClass.EventInCallback> eventsInCallback){
+        DataProjection dataProjection = new DataProjection();
+
+        //Get all involved objects
+        for(CallbackOuterClass.EventInCallback e : eventsInCallback){
+            for(MObject mObject : allObjectsInEvent(e)) {
+                dataProjection.objects.put(mObject,new ArrayList<CallbackOuterClass.EventInCallback>());
+            }
+        }
+
+        for(CallbackOuterClass.EventInCallback e : eventsInCallback){
+            //TODO:check if milemarker event (Events that stay regardless of involved objects)
+            if(isMileMarker(e)){
+                for(List<CallbackOuterClass.EventInCallback> l : dataProjection.objects.values()){
+                    l.add(e);
+                }
+            }
+            //TODO:add event to each MObjects in map
+            for(MObject mObject: allObjectsInEvent(e)){
+                dataProjection.objects.get(mObject).add(e);
+            }
+        }
+        return dataProjection;
+    }
+    public static boolean isMileMarker(CallbackOuterClass.EventInCallback e){
+        if(e.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)) {
+            return true;
+        }
+        return false;
+    }
+    public static Set<MObject> allObjectsInEvent(CallbackOuterClass.EventInCallback eventInCallback){
+        if(eventInCallback.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)) {
+            CallbackOuterClass.Callback callback = eventInCallback.getCallback();
+            throw new UnsupportedOperationException();
+        }else if(eventInCallback.getEventTypeCase()
+                .equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)){
+            CallbackOuterClass.MethodEvent methodEvent = eventInCallback.getMethodEvent();
+
+            Set<MObject> mObjects = new HashSet<>();
+            for( CallbackOuterClass.PValue pValue :methodEvent.getParametersList()){
+                mObjects.add(MObject.fromPValue(pValue));
+            }
+            mObjects.add(MObject.fromPValue(methodEvent.getCalle()));
+
+
+            return mObjects;
+        }
+        throw new UnsupportedOperationException();
+
+    }
+    public Set<CallbackOuterClass.PValue> getInvolvedObjects(){
+        Set<CallbackOuterClass.PValue> involvedObjects = new HashSet<>();
+        for(MObject m :objects.keySet()){
+            involvedObjects.add(m.getpValue());
+        }
+        return involvedObjects;
+    }
+
 }
