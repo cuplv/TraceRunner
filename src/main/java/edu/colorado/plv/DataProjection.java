@@ -1,5 +1,11 @@
 package edu.colorado.plv;
 
+import com.sun.xml.internal.bind.api.Bridge;
+import com.sun.xml.internal.ws.api.model.CheckedException;
+import com.sun.xml.internal.ws.api.model.ExceptionType;
+import com.sun.xml.internal.ws.api.model.JavaMethod;
+import com.sun.xml.internal.ws.api.model.SEIModel;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
@@ -78,8 +84,12 @@ public class DataProjection {
 
         //Get all involved objects
         for(CallbackOuterClass.EventInCallback e : eventsInCallback){
-            for(MObject mObject : allObjectsInEvent(e)) {
-                dataProjection.objects.put(mObject,new ArrayList<CallbackOuterClass.EventInCallback>());
+            if(!isMileMarker(e)) {
+                for (MObject mObject : allObjectsInEvent(e)) {
+                    if(mObject != null) {
+                        dataProjection.objects.put(mObject, new ArrayList<CallbackOuterClass.EventInCallback>());
+                    }
+                }
             }
         }
 
@@ -91,14 +101,31 @@ public class DataProjection {
                 }
             }
             //TODO:add event to each MObjects in map
-            for(MObject mObject: allObjectsInEvent(e)){
-                dataProjection.objects.get(mObject).add(e);
+            if(!isMileMarker(e)) {
+                Set<MObject> mObjects = allObjectsInEvent(e);
+                for (MObject mObject : mObjects) {
+                    if(e == null){
+                        throw new IllegalStateException("object is null");
+                    }
+
+                    List<CallbackOuterClass.EventInCallback> event = dataProjection.objects.get(mObject);
+                    if(event == null){
+                        throw new IllegalStateException("event list is null");
+                    }
+                    event.add(e);
+                }
             }
         }
         return dataProjection;
     }
     public static boolean isMileMarker(CallbackOuterClass.EventInCallback e){
         if(e.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)) {
+            return true;
+        }
+        if(e.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.EXCEPTIONEVENT)) {
+            return true;
+        }
+        if(e.getEventTypeCase().compareTo(CallbackOuterClass.EventInCallback.EventTypeCase.LOGE) == 0){
             return true;
         }
         return false;
@@ -112,23 +139,40 @@ public class DataProjection {
             CallbackOuterClass.MethodEvent methodEvent = eventInCallback.getMethodEvent();
 
             Set<MObject> mObjects = new HashSet<>();
-            for( CallbackOuterClass.PValue pValue :methodEvent.getParametersList()){
-                mObjects.add(MObject.fromPValue(pValue));
+            List<CallbackOuterClass.PValue> params = methodEvent.getParametersList();
+            for( CallbackOuterClass.PValue pValue :params){
+                MObject mObject = MObject.fromPValue(pValue);
+                if(mObject != null) {
+                    mObjects.add(mObject);
+                }
             }
-            mObjects.add(MObject.fromPValue(methodEvent.getCalle()));
+
+
+            MObject calle = MObject.fromPValue(methodEvent.getCalle());
+            if(calle != null) {
+                mObjects.add(calle);
+            }
 
 
             return mObjects;
+        }else if(eventInCallback.getEventTypeCase()
+                .equals(CallbackOuterClass.EventInCallback.EventTypeCase.EXCEPTIONEVENT)){
+            throw new UnsupportedOperationException();
+            //return new HashSet<>();
         }
+
         throw new UnsupportedOperationException();
 
     }
     public Set<CallbackOuterClass.PValue> getInvolvedObjects(){
         Set<CallbackOuterClass.PValue> involvedObjects = new HashSet<>();
         for(MObject m :objects.keySet()){
-            involvedObjects.add(m.getpValue());
+            if(m != null) {
+                involvedObjects.add(m.getpValue());
+            }else{
+                involvedObjects.add(null);
+            }
         }
         return involvedObjects;
     }
-
 }

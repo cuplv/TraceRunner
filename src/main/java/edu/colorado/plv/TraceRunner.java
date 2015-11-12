@@ -1,4 +1,5 @@
 package edu.colorado.plv;
+import javax.xml.crypto.Data;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.*;
@@ -14,7 +15,11 @@ public class TraceRunner {
     {
         if (args[0].equals("dataProj")){
             FileInputStream fileInputStream = new FileInputStream(args[1]);
-            TraceUtilities.deserialize(fileInputStream);
+            DataProjection dataProjection = DataProjection.fromFileInputStream(fileInputStream);
+            for(CallbackOuterClass.PValue pValue :dataProjection.getInvolvedObjects()){
+                System.out.println(pValue);
+            }
+            return;
 
             //TraceUtilities.dataProjection
         }
