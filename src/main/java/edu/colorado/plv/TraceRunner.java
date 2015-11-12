@@ -1,5 +1,6 @@
 package edu.colorado.plv;
 import javax.xml.crypto.Data;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.*;
@@ -19,6 +20,7 @@ public class TraceRunner {
             for(CallbackOuterClass.PValue pValue :dataProjection.getInvolvedObjects()){
                 System.out.println(pValue);
             }
+            dataProjection.expandToDirectory(new File("/Users/s/Desktop/Data1"));
             return;
 
             //TraceUtilities.dataProjection

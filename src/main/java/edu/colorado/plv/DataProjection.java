@@ -6,8 +6,7 @@ import com.sun.xml.internal.ws.api.model.ExceptionType;
 import com.sun.xml.internal.ws.api.model.JavaMethod;
 import com.sun.xml.internal.ws.api.model.SEIModel;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -174,5 +173,81 @@ public class DataProjection {
             }
         }
         return involvedObjects;
+    }
+    public List<CallbackOuterClass.EventInCallback> filterExceptionsFromEvents(
+            List<CallbackOuterClass.EventInCallback> events){
+        boolean inRelevantCall = false;
+        List<CallbackOuterClass.EventInCallback> out = new ArrayList<>();
+        for(CallbackOuterClass.EventInCallback evt : events){
+            if(evt.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)){
+                if(evt.getMethodEvent().getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)){
+                    inRelevantCall = true;
+                }
+                if(evt.getMethodEvent().getEventType().equals(CallbackOuterClass.EventType.METHODEXIT)){
+                    inRelevantCall = false;
+                }
+            }
+            if(evt.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.EXCEPTIONEVENT)){
+                if(inRelevantCall){
+                    out.add(evt);
+                }
+            }else if(evt.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.LOGE)){
+                if(inRelevantCall){
+                    out.add(evt);
+                }
+            }else{
+                out.add(evt);
+            }
+
+        }
+        return out;
+    }
+    public void expandToDirectory(File f) throws IOException {
+        if(!f.isDirectory()){
+            throw new IllegalArgumentException("Must take dir");
+        }
+        Set<CallbackOuterClass.PValue> involvedobjectsset = getInvolvedObjects();
+        List<CallbackOuterClass.PValue> involvedObjects = new ArrayList<>();
+        for(CallbackOuterClass.PValue involvedObj : involvedobjectsset){
+            involvedObjects.add(involvedObj);
+        }
+        //Write objects file (TODO)
+        String absolutePath = f.getAbsolutePath();
+        String name = absolutePath + "/ObjectsList.proto";
+        FileOutputStream fo = new FileOutputStream(name);
+        for(Object o : involvedObjects){
+            CallbackOuterClass.PValue ob = (CallbackOuterClass.PValue) o;
+            ob.writeDelimitedTo(fo);
+        }
+        fo.close();
+        name = absolutePath + "/ObjectList.txt";
+        FileWriter fw = new FileWriter(name);
+        int count = 0;
+        for(Object o : involvedObjects){
+            fw.append(Integer.toString(count));
+            fw.append("\n");
+            fw.append(o.toString());
+            ++count;
+        }
+        fw.close();
+
+        for(int i = 0; i< involvedObjects.size(); ++i){
+            CallbackOuterClass.PValue involvedObject = involvedObjects.get(i);
+            List<CallbackOuterClass.EventInCallback> eventsu = objects.get(MObject.fromPValue(involvedObject));
+            List<CallbackOuterClass.EventInCallback> events = filterExceptionsFromEvents(eventsu);
+            String s = Integer.toString(i);
+            FileOutputStream fos = new FileOutputStream(absolutePath + "/" + s + ".proto");
+            FileWriter fwr = new FileWriter(absolutePath + "/" + s + ".txt");
+            for (CallbackOuterClass.EventInCallback event : events) {
+                event.writeDelimitedTo(fos);
+                fwr.append(event.toString());
+            }
+            fos.close();
+            fwr.close();
+
+        }
+
+        //Write
+
     }
 }
