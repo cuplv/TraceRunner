@@ -73,7 +73,10 @@ jarpath = scriptPath[0:-5] + "build/libs/TraceRunner-all-1.0.jar"
 if not os.path.isfile(jarpath):
 	raise Exception("Tracerunner jar not found")
 
-res = subprocess.call(['java','-jar',jarpath, "7778", "/Users/s/Desktop/" + package + appname + ".proto", package + "*", "android.*"])
+filt = package.split(".")
+filts = ".".join(filt[0:2]) + ".*"
+print "Package filter: " + filts
+res = subprocess.call(['java','-jar',jarpath, "7778", "/Users/s/Desktop/" + package + appname + ".proto", filts, "android.*"])
 
 
 #print dir(VirtualMachine)
