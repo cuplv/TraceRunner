@@ -206,6 +206,7 @@ public class DataProjection {
         return out;
     }
     public void expandToDirectory(File f) throws IOException {
+        //TODO: detect callin by finding calls where calling object matches app glob and calle does not
         if(!f.isDirectory()){
             throw new IllegalArgumentException("Must take dir");
         }
