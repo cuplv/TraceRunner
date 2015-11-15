@@ -1,10 +1,5 @@
 package edu.colorado.plv;
 
-import com.sun.xml.internal.bind.api.Bridge;
-import com.sun.xml.internal.ws.api.model.CheckedException;
-import com.sun.xml.internal.ws.api.model.ExceptionType;
-import com.sun.xml.internal.ws.api.model.JavaMethod;
-import com.sun.xml.internal.ws.api.model.SEIModel;
 
 import java.io.*;
 import java.util.*;
@@ -18,6 +13,11 @@ public class DataProjection {
     /**
      * object with just type and id counting for hashcode and eq
      */
+    private final String appPackageGlob;
+
+    public DataProjection(String appPackageGlob) {
+        this.appPackageGlob = appPackageGlob;
+    }
 
     public static class MObject{
         private long id;
@@ -74,12 +74,14 @@ public class DataProjection {
         }
     }
 
-    public static DataProjection fromFileInputStream(FileInputStream fileInputStream) throws IOException {
+    public static DataProjection fromFileInputStream(FileInputStream fileInputStream,
+                                                     String appPackageGlob) throws IOException {
         List<CallbackOuterClass.EventInCallback> events = TraceUtilities.deserialize(fileInputStream);
-        return fromEventList(events);
+        return fromEventList(events, appPackageGlob);
     }
-    public static DataProjection fromEventList(List<CallbackOuterClass.EventInCallback> eventsInCallback){
-        DataProjection dataProjection = new DataProjection();
+    public static DataProjection fromEventList(List<CallbackOuterClass.EventInCallback> eventsInCallback,
+                                               String appPackageGlob){
+        DataProjection dataProjection = new DataProjection(appPackageGlob);
 
         //Get all involved objects
         for(CallbackOuterClass.EventInCallback e : eventsInCallback){
@@ -115,6 +117,7 @@ public class DataProjection {
                 }
             }
         }
+        dataProjection.generateNestedTraces();
         return dataProjection;
     }
     public static boolean isMileMarker(CallbackOuterClass.EventInCallback e){
@@ -250,4 +253,91 @@ public class DataProjection {
         //Write
 
     }
+    private Map<MObject,List<DPEvent>> nestedTraces = new HashMap<>();
+    public void generateNestedTraces(){
+        Set<MObject> involvedObjects = objects.keySet();
+        for(MObject mObject : involvedObjects){
+            List<CallbackOuterClass.EventInCallback> events = objects.get(mObject);
+            int callCount = 0;
+            List<DPEvent> dpEvents = new ArrayList<>();
+            DPEvent currentEvent = new DPEvent(); //first event is all method invocations that come before
+            for(CallbackOuterClass.EventInCallback event : events){
+                if(event.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)){
+                    dpEvents.add(currentEvent);
+                    currentEvent = new DPEvent();
+                    currentEvent.eventInCallback = event;
+                    callCount = 0;
+                }else if(event.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)){
+                    CallbackOuterClass.MethodEvent methodEvent = event.getMethodEvent();
+                    if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)){
+                        if(methodEvent.getIsCallback()){
+                            currentEvent.callbacks.add(new DPCallback(methodEvent));
+                        }else{
+                            if(!(isInClass(appPackageGlob, methodEvent))){
+                                if(callCount == 0){
+                                    currentEvent.events.add(new DPCallin(methodEvent));
+                                }
+                                ++callCount;
+                            }
+                        }
+                    }else if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODEXIT)){
+                        if(!(isInClass(appPackageGlob, methodEvent))) {
+                            --callCount;
+                        }
+                    }else{
+                        //This should never happen
+                        throw new IllegalStateException("method event doesn't have event type");
+                    }
+                }else if(event.getEventTypeCase()
+                        .equals(CallbackOuterClass.EventInCallback.EventTypeCase.EXCEPTIONEVENT)){
+                    DPException exceptionEvent = new DPException(event.getExceptionEvent());
+                    currentEvent.events.add(exceptionEvent);
+                }
+            }
+        nestedTraces.put(mObject, dpEvents);
+        }
+    }
+    public static boolean isInClass(String clazzGlob, CallbackOuterClass.MethodEvent methodEvent){
+        String declaringType = methodEvent.getDeclaringType();
+        return GlobUtil.matchGlob(clazzGlob, declaringType.split(" ")[1]);
+    }
+    public static class DPEvent{
+        public CallbackOuterClass.EventInCallback eventInCallback;
+        public List<DPCallback> callbacks = new ArrayList<>();
+        public List<DPCallbackEvent> events = new ArrayList<>();
+    }
+
+    private static class DPCallback{
+        private CallbackOuterClass.MethodEvent methodEvent;
+        DPCallback(CallbackOuterClass.MethodEvent methodEvent){
+            this.methodEvent = methodEvent;
+        }
+        public CallbackOuterClass.MethodEvent getMethodEvent(){
+            return methodEvent;
+        }
+    }
+    private static class DPCallin extends DPCallbackEvent{
+        private final CallbackOuterClass.MethodEvent methodEvent;
+
+        DPCallin(CallbackOuterClass.MethodEvent methodEvent){
+            this.methodEvent = methodEvent;
+        }
+
+        public CallbackOuterClass.MethodEvent getMethodEvent() {
+            return methodEvent;
+        }
+    }
+    public static class DPException extends DPCallbackEvent{
+        private final CallbackOuterClass.ExceptionEvent exceptionEvent;
+
+        public DPException(CallbackOuterClass.ExceptionEvent exceptionEvent) {
+            this.exceptionEvent = exceptionEvent;
+        }
+
+        public CallbackOuterClass.ExceptionEvent getExceptionEvent() {
+            return exceptionEvent;
+        }
+    }
+
+    private static class DPCallbackEvent {}
 }

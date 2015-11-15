@@ -18,6 +18,7 @@ public class Resources {
         exclusions.add("android.util.LongSparseArray");
         exclusions.add("android.animation.*");
         exclusions.add("android.graphics.*");
+        exclusions.add("com.google.inject.*");
         return exclusions;
     }
     public static List<String> exceptionExclusions() {

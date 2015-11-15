@@ -24,4 +24,8 @@ public class GlobUtil {
         out += '$';
         return Pattern.compile(out);
     }
+    public static boolean matchGlob(String glob, String s){
+        Pattern regex = createRegexFromGlob(glob);
+        return regex.matcher(s).matches();
+    }
 }

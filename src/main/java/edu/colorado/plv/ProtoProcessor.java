@@ -337,6 +337,7 @@ public class ProtoProcessor implements EventProcessor {
     @Override
     public void processException(ExceptionEvent evt) {
         Location location = evt.location();
+        ThreadReference threadReference = evt.thread();
         Method method = location.method();
 
         int lineNumber = location.lineNumber();
@@ -355,6 +356,7 @@ public class ProtoProcessor implements EventProcessor {
                 .setLineNumber(lineNumber)
                 .setSourceName(sourceName)
                 .setException(exception)
+                .setThreadID(threadReference.uniqueID())
                 .build();
         CallbackOuterClass.EventInCallback.Builder event =
                 CallbackOuterClass.EventInCallback.newBuilder().setExceptionEvent(exceptionEvent);

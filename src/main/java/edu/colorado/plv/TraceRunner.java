@@ -14,13 +14,20 @@ import java.util.*;
 public class TraceRunner {
     public static void main(String[] args) throws Exception
     {
+        if (args.length == 0){
+            System.out.println("usage: [port] [log output file] [class filter] or [log input file]\n" +
+                    "usage: read [file]\n" +
+                    "usage: dataProj [proto file] [directory] [appPackage glob]");
+
+        }
         if (args[0].equals("dataProj")){
             FileInputStream fileInputStream = new FileInputStream(args[1]);
-            DataProjection dataProjection = DataProjection.fromFileInputStream(fileInputStream);
+            DataProjection dataProjection = DataProjection.fromFileInputStream(fileInputStream, args[3]);
             for(CallbackOuterClass.PValue pValue :dataProjection.getInvolvedObjects()){
                 System.out.println(pValue);
             }
-            dataProjection.expandToDirectory(new File("/Users/s/Desktop/Data1"));
+            dataProjection.generateNestedTraces();
+            dataProjection.expandToDirectory(new File(args[2]));
             return;
 
             //TraceUtilities.dataProjection
@@ -31,10 +38,7 @@ public class TraceRunner {
             return;
 
         }
-        if (args.length < 3){
-            throw new IllegalArgumentException("usage: [port] [log output file] [class filter] or [log input file]\n" +
-                    "or read [file]");
-        }
+
 
         String logOutput = args[1];
         int port = Integer.parseInt(args[0]);

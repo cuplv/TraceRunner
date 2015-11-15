@@ -43,6 +43,7 @@ message ExceptionEvent {
 	optional PMethod method = 2;
 	optional int32 lineNumber = 3;
 	optional string sourceName = 4;
+	optional int64 threadID = 5;
 }
 message MethodEvent
 {

@@ -267,7 +267,7 @@ public class TraceMainLoop {
                                     }
 
                                 }
-                                if(!callin.containsKey(thref)) {
+                                if(true || !callin.containsKey(thref)) {
                                     eventProcessor.processInvoke(mevt, isCallback, false);
                                 }
 //                                if(callback != null){
@@ -291,7 +291,7 @@ public class TraceMainLoop {
 //                                    disableAll();
 //                                    isCallback = true;
 //                                }
-                                if(!callin.containsKey(thrf)) {
+                                if(true || !callin.containsKey(thrf)) {
                                     eventProcessor.processMethodExit(mxe, isCallback);
                                 }
                             }else if (evt instanceof ExceptionEvent){
