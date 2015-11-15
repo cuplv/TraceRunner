@@ -214,7 +214,7 @@ public class DataProjection {
         for(CallbackOuterClass.PValue involvedObj : involvedobjectsset){
             involvedObjects.add(involvedObj);
         }
-        //Write objects file (TODO)
+        //Write objects file
         String absolutePath = f.getAbsolutePath();
         String name = absolutePath + "/ObjectsList.proto";
         FileOutputStream fo = new FileOutputStream(name);
@@ -236,17 +236,44 @@ public class DataProjection {
 
         for(int i = 0; i< involvedObjects.size(); ++i){
             CallbackOuterClass.PValue involvedObject = involvedObjects.get(i);
-            List<CallbackOuterClass.EventInCallback> eventsu = objects.get(MObject.fromPValue(involvedObject));
+            MObject mObject = MObject.fromPValue(involvedObject);
+            List<CallbackOuterClass.EventInCallback> eventsu = objects.get(mObject);
             List<CallbackOuterClass.EventInCallback> events = filterExceptionsFromEvents(eventsu);
             String s = Integer.toString(i);
             FileOutputStream fos = new FileOutputStream(absolutePath + "/" + s + ".proto");
             FileWriter fwr = new FileWriter(absolutePath + "/" + s + ".txt");
+            FileWriter humanfwr = new FileWriter(absolutePath + "/" + s + "-human.txt");
             for (CallbackOuterClass.EventInCallback event : events) {
                 event.writeDelimitedTo(fos);
                 fwr.append(event.toString());
             }
+            List<DPEvent> dpEvents = nestedTraces.get(mObject);
+            for (DPEvent event: dpEvents){
+                if(event.callbacks.size() != 0 || event.events.size() !=0) {
+                    humanfwr.append("=============================================================================\n");
+                    if (event.eventInCallback != null) {
+                        humanfwr.append(event.eventInCallback.toString());
+                    } else {
+                        humanfwr.append("Initial event\n");
+                    }
+                    humanfwr.append("--Callbacks--\n");
+                    for (DPCallback dpCallback : event.callbacks) {
+                        humanfwr.append(dpCallback.getMethodEvent().toString());
+                    }
+                    humanfwr.append("--Events--\n");
+                    for (DPCallbackEvent dpEvent : event.events) {
+                        if (dpEvent instanceof DPCallin) {
+                            //TODO: fix exception event thing
+                            humanfwr.append("-----");
+                            humanfwr.append(dpEvent.toString());
+                        }
+                    }
+                }
+
+            }
             fos.close();
             fwr.close();
+            humanfwr.close();
 
         }
 
@@ -326,6 +353,11 @@ public class DataProjection {
         public CallbackOuterClass.MethodEvent getMethodEvent() {
             return methodEvent;
         }
+
+        @Override
+        public String toString() {
+            return methodEvent.toString();
+        }
     }
     public static class DPException extends DPCallbackEvent{
         private final CallbackOuterClass.ExceptionEvent exceptionEvent;
@@ -337,7 +369,14 @@ public class DataProjection {
         public CallbackOuterClass.ExceptionEvent getExceptionEvent() {
             return exceptionEvent;
         }
+
+        @Override
+        public String toString() {
+            return exceptionEvent.toString();
+        }
     }
 
-    private static class DPCallbackEvent {}
+    abstract private static class DPCallbackEvent {
+        public abstract String toString();
+    }
 }
