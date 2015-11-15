@@ -265,8 +265,12 @@ public class DataProjection {
                     for (DPCallbackEvent dpEvent : event.events) {
                         if (dpEvent instanceof DPCallin) {
                             //TODO: fix exception event thing
-                            humanfwr.append("-----");
+                            humanfwr.append("-----Callin");
                             humanfwr.append(dpEvent.toString());
+                        }else{
+                            humanfwr.append("-----Exception");
+                            humanfwr.append(dpEvent.toString());
+
                         }
                     }
                 }
@@ -286,31 +290,30 @@ public class DataProjection {
         Set<MObject> involvedObjects = objects.keySet();
         for(MObject mObject : involvedObjects){
             List<CallbackOuterClass.EventInCallback> events = objects.get(mObject);
-            int callCount = 0;
             List<DPEvent> dpEvents = new ArrayList<>();
             DPEvent currentEvent = new DPEvent(); //first event is all method invocations that come before
+            boolean inCallin = false;
             for(CallbackOuterClass.EventInCallback event : events){
                 if(event.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)){
                     dpEvents.add(currentEvent);
                     currentEvent = new DPEvent();
                     currentEvent.eventInCallback = event;
-                    callCount = 0;
+                    inCallin = false;
                 }else if(event.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)){
                     CallbackOuterClass.MethodEvent methodEvent = event.getMethodEvent();
                     if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)){
                         if(methodEvent.getIsCallback()){
                             currentEvent.callbacks.add(new DPCallback(methodEvent));
                         }else{
-                            if(!(isInClass(appPackageGlob, methodEvent))){
-                                if(callCount == 0){
-                                    currentEvent.events.add(new DPCallin(methodEvent));
-                                }
-                                ++callCount;
+                            if(!(isInClass(appPackageGlob, methodEvent)) &&
+                                    isCallerInClass(appPackageGlob, methodEvent)){
+                                currentEvent.events.add(new DPCallin(methodEvent));
+                                inCallin = true;
                             }
                         }
                     }else if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODEXIT)){
                         if(!(isInClass(appPackageGlob, methodEvent))) {
-                            --callCount;
+                            inCallin = false;
                         }
                     }else{
                         //This should never happen
@@ -318,16 +321,30 @@ public class DataProjection {
                     }
                 }else if(event.getEventTypeCase()
                         .equals(CallbackOuterClass.EventInCallback.EventTypeCase.EXCEPTIONEVENT)){
-                    DPException exceptionEvent = new DPException(event.getExceptionEvent());
-                    currentEvent.events.add(exceptionEvent);
+                    //TODO: tack this onto the last method if in callin
+                    if(inCallin) {
+                        DPException exceptionEvent = new DPException(event.getExceptionEvent());
+                        currentEvent.events.add(exceptionEvent);
+                    }
                 }
             }
+            dpEvents.add(currentEvent);
         nestedTraces.put(mObject, dpEvents);
         }
     }
     public static boolean isInClass(String clazzGlob, CallbackOuterClass.MethodEvent methodEvent){
         String declaringType = methodEvent.getDeclaringType();
         return GlobUtil.matchGlob(clazzGlob, declaringType.split(" ")[1]);
+    }
+    public static boolean isCallerInClass(String clazzGlob, CallbackOuterClass.MethodEvent methodEvent){
+        CallbackOuterClass.PValue caller = methodEvent.getCaller();
+        if(caller.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
+            CallbackOuterClass.PObjectReference pValue = caller.getPObjctReferenc();
+            boolean b = GlobUtil.matchGlob(clazzGlob, pValue.getType().split(" ")[1]);
+            return b;
+        }else{
+            return false;
+        }
     }
     public static class DPEvent{
         public CallbackOuterClass.EventInCallback eventInCallback;
