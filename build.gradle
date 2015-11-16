@@ -21,21 +21,22 @@ repositories{
     mavenCentral()
 }
 buildscript {
-
+    repositories {
+        mavenCentral()
+    }
     dependencies {
         //println("${System.properties['java.home']}/../lib/tools.jar")
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.7.0'
 
+    }
 
-    }
-    repositories {
-        mavenCentral()
-    }
 
 }
 dependencies {
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile files("${System.properties['java.home']}/../lib/tools.jar")
     compile 'com.google.protobuf:protobuf-java:2.6.1'
+
 }
 
 

@@ -1,6 +1,8 @@
 package edu.colorado.plv;
 
 
+import org.json.simple.JSONObject;
+
 import java.io.*;
 import java.util.*;
 
@@ -396,5 +398,71 @@ public class DataProjection {
 
     abstract private static class DPCallbackEvent {
         public abstract String toString();
+    }
+    public static JSONObject mObjectToJson(MObject mObject){
+        JSONObject obj = new JSONObject();
+        if(mObject.pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
+            CallbackOuterClass.PObjectReference pobj = mObject.getpValue().getPObjctReferenc();
+            obj.put("type", pobj.getType());
+        }else{
+            obj.put("other", "NonObjRef");
+        }
+        return obj;
+    }
+    public static JSONObject eventToJson(DPEvent dpEvent){
+
+        JSONObject obj = new JSONObject();
+        LinkedList<JSONObject> callbacks = new LinkedList<>();
+
+        for(DPCallback cb : dpEvent.callbacks){
+            JSONObject jcb = new JSONObject();
+            jcb.put("method", cb.getMethodEvent().getFullname());
+            jcb.put("declaringType", cb.getMethodEvent().getDeclaringType());
+            callbacks.add(jcb);
+        }
+
+        LinkedList<JSONObject> events = new LinkedList<>();
+        for (DPCallbackEvent event : dpEvent.events) {
+            JSONObject jev = new JSONObject();
+            if(event instanceof DPCallin){
+                DPCallin callinEvent = (DPCallin) event;
+                jev.put("eventtype", "callin");
+                jev.put("name", callinEvent.getMethodEvent().getFullname());
+                jev.put("type", callinEvent.getMethodEvent().getDeclaringType());
+            }else{
+                DPException exceptionEvent = (DPException) event;
+                jev.put("eventtype", "exception");
+                jev.put("exception", exceptionEvent.getExceptionEvent().getException().getPObjctReferenc().getType());
+
+            }
+            events.add(jev);
+        }
+        obj.put("callbacks", callbacks);
+        //TODO: what target and callback fields
+        CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
+        obj.put("what", callback.getWhat());
+        obj.put("callbackField", callback.getCallback().getPObjctReferenc().getType());
+        obj.put("targetField", callback.getTarget().getPObjctReferenc().getType());
+        
+        return obj;
+    }
+    public void writeJsonObject(FileWriter fileWriter) throws IOException {
+        JSONObject objectsInClass = new JSONObject();
+        LinkedHashMap objectTraces = new LinkedHashMap();
+        Set<MObject> mObjects = nestedTraces.keySet();
+        JSONObject currentObject;
+        for(MObject mObject : mObjects){
+            currentObject = mObjectToJson(mObject);
+            List<JSONObject> events = new ArrayList<>();
+            List<DPEvent> dpEvents = nestedTraces.get(mObject);
+            for(DPEvent event : dpEvents){
+                events.add(eventToJson(event));
+
+            }
+            objectTraces.put(currentObject, dpEvents);
+        }
+        objectsInClass.put("ObjectTraces", objectTraces);
+        fileWriter.append(objectsInClass.toJSONString());
+
     }
 }
