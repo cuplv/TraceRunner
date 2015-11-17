@@ -427,8 +427,10 @@ public class DataProjection {
             if(event instanceof DPCallin){
                 DPCallin callinEvent = (DPCallin) event;
                 jev.put("eventtype", "callin");
-                jev.put("name", callinEvent.getMethodEvent().getFullname());
-                jev.put("type", callinEvent.getMethodEvent().getDeclaringType());
+                CallbackOuterClass.MethodEvent methodEvent = callinEvent.getMethodEvent();
+                jev.put("name", methodEvent.getFullname());
+                jev.put("type", methodEvent.getDeclaringType());
+                jev.put("signature", methodEvent.getSignature());
             }else{
                 DPException exceptionEvent = (DPException) event;
                 jev.put("eventtype", "exception");
@@ -439,30 +441,41 @@ public class DataProjection {
         }
         obj.put("callbacks", callbacks);
         //TODO: what target and callback fields
-        CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
-        obj.put("what", callback.getWhat());
-        obj.put("callbackField", callback.getCallback().getPObjctReferenc().getType());
-        obj.put("targetField", callback.getTarget().getPObjctReferenc().getType());
-        
+        if(dpEvent.eventInCallback != null) {
+            CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
+            obj.put("what", callback.getWhat());
+            obj.put("callbackField", callback.getCallback().getPObjctReferenc().getType());
+            obj.put("targetField", callback.getTarget().getPObjctReferenc().getType());
+        }else{
+            obj.put("Message", "initial");
+        }
+
         return obj;
     }
-    public void writeJsonObject(FileWriter fileWriter) throws IOException {
-        JSONObject objectsInClass = new JSONObject();
-        LinkedHashMap objectTraces = new LinkedHashMap();
+    public void writeJsonObject(File file) throws IOException {
+
         Set<MObject> mObjects = nestedTraces.keySet();
-        JSONObject currentObject;
+        int count = 0;
         for(MObject mObject : mObjects){
-            currentObject = mObjectToJson(mObject);
+            JSONObject currentObject = mObjectToJson(mObject);
+
             List<JSONObject> events = new ArrayList<>();
+
             List<DPEvent> dpEvents = nestedTraces.get(mObject);
             for(DPEvent event : dpEvents){
                 events.add(eventToJson(event));
 
             }
-            objectTraces.put(currentObject, dpEvents);
+            currentObject.put("events", events);
+
+            String absolutePath = file.getParent();
+            FileWriter fileWriter = new FileWriter(absolutePath +
+                    File.separator +
+                    Integer.toString(count) + ".json");
+            currentObject.writeJSONString(fileWriter);
+            fileWriter.close();
+            ++count;
         }
-        objectsInClass.put("ObjectTraces", objectTraces);
-        fileWriter.append(objectsInClass.toJSONString());
 
     }
 }

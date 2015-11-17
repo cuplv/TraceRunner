@@ -3,6 +3,7 @@ import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.*;
 
 
@@ -17,8 +18,21 @@ public class TraceRunner {
         if (args.length == 0){
             System.out.println("usage: [port] [log output file] [class filter] or [log input file]\n" +
                     "usage: read [file]\n" +
-                    "usage: dataProj [proto file] [directory] [appPackage glob]");
+                    "usage: dataProj [proto file] [directory] [appPackage glob]\n" +
+                    "usage: dataProjJson [proto file] [appPackage glob]");
 
+        }
+        if (args[0].equals("dataProjJson")){
+            FileInputStream fileInputStream = new FileInputStream(args[1]);
+            DataProjection dataProjection = DataProjection.fromFileInputStream(fileInputStream, args[2]);
+            for(CallbackOuterClass.PValue pValue :dataProjection.getInvolvedObjects()){
+                System.out.println(pValue);
+            }
+            String file = args[1];
+
+            dataProjection.writeJsonObject(new File(file));
+
+            return;
         }
         if (args[0].equals("dataProj")){
             FileInputStream fileInputStream = new FileInputStream(args[1]);
