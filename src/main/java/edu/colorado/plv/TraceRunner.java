@@ -19,16 +19,17 @@ public class TraceRunner {
             System.out.println("usage: [port] [log output file] [class filter] or [log input file]\n" +
                     "usage: read [file]\n" +
                     "usage: dataProj [proto file] [directory] [appPackage glob]\n" +
-                    "usage: dataProjJson [proto file] [appPackage glob]");
+                    "usage: dataProjJson [proto file] [appPackage glob] [outputDir]");
 
         }
         if (args[0].equals("dataProjJson")){
+
             FileInputStream fileInputStream = new FileInputStream(args[1]);
             DataProjection dataProjection = DataProjection.fromFileInputStream(fileInputStream, args[2]);
             for(CallbackOuterClass.PValue pValue :dataProjection.getInvolvedObjects()){
-                System.out.println(pValue);
+                //System.out.println(pValue);
             }
-            String file = args[1];
+            String file = args[3];
 
             dataProjection.writeJsonObject(new File(file));
 
