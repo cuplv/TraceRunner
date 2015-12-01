@@ -38,7 +38,7 @@ public class DataProjection {
         private MObject(CallbackOuterClass.PValue pValue){
             this.pValue = pValue;
             CallbackOuterClass.PValue.ValueTypeCase vtc = pValue.getValueTypeCase();
-            if(vtc == CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC){
+            if(vtc.equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
                 CallbackOuterClass.PObjectReference pObjectReference = pValue.getPObjctReferenc();
                 this.type = pObjectReference.getType();
                 this.id = pObjectReference.getId();
@@ -289,6 +289,7 @@ public class DataProjection {
     }
     private Map<MObject,List<DPEvent>> nestedTraces = new HashMap<>();
     public void generateNestedTraces(){
+        System.out.println("generateNestedTraces");
         Set<MObject> involvedObjects = objects.keySet();
         for(MObject mObject : involvedObjects){
             List<CallbackOuterClass.EventInCallback> events = objects.get(mObject);
@@ -333,6 +334,24 @@ public class DataProjection {
             dpEvents.add(currentEvent);
         nestedTraces.put(mObject, dpEvents);
         }
+        //TODO remove following print code
+        Set<MObject> mObjects = nestedTraces.keySet();
+        for (MObject mObject : mObjects) {
+            int size = 0;
+            List<DPEvent> dpEvents = nestedTraces.get(mObject);
+            for (DPEvent dpEvent : dpEvents) {
+                List<DPCallbackEvent> events = dpEvent.events;
+                for (DPCallbackEvent event : events) {
+                    if(event instanceof DPCallin){
+                        size++;
+                    }
+                }
+
+            }
+
+            System.out.println("Trace size: " + size);
+        }
+
     }
     public static boolean isInClass(String clazzGlob, CallbackOuterClass.MethodEvent methodEvent){
         String declaringType = methodEvent.getDeclaringType();
@@ -409,38 +428,14 @@ public class DataProjection {
         }
         return obj;
     }
-    public static JSONObject eventToJson(DPEvent dpEvent){
+    public static List<JSONObject> eventToJson(DPEvent dpEvent){
 
-        JSONObject obj = new JSONObject();
-        LinkedList<JSONObject> callbacks = new LinkedList<>();
 
-        for(DPCallback cb : dpEvent.callbacks){
-            JSONObject jcb = new JSONObject();
-            jcb.put("method", cb.getMethodEvent().getFullname());
-            jcb.put("declaringType", cb.getMethodEvent().getDeclaringType());
-            callbacks.add(jcb);
-        }
 
         LinkedList<JSONObject> events = new LinkedList<>();
-        for (DPCallbackEvent event : dpEvent.events) {
-            JSONObject jev = new JSONObject();
-            if(event instanceof DPCallin){
-                DPCallin callinEvent = (DPCallin) event;
-                jev.put("eventtype", "callin");
-                CallbackOuterClass.MethodEvent methodEvent = callinEvent.getMethodEvent();
-                jev.put("name", methodEvent.getFullname());
-                jev.put("type", methodEvent.getDeclaringType());
-                jev.put("signature", methodEvent.getSignature());
-            }else{
-                DPException exceptionEvent = (DPException) event;
-                jev.put("eventtype", "exception");
-                jev.put("exception", exceptionEvent.getExceptionEvent().getException().getPObjctReferenc().getType());
 
-            }
-            events.add(jev);
-        }
-        obj.put("callbacks", callbacks);
-        //TODO: what target and callback fields
+        JSONObject obj = new JSONObject();
+        obj.put("eventtype", "event");
         if(dpEvent.eventInCallback != null) {
             CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
             obj.put("what", callback.getWhat());
@@ -450,32 +445,80 @@ public class DataProjection {
             obj.put("Message", "initial");
         }
 
-        return obj;
+        events.add(obj);
+        List<DPCallbackEvent> events1 = dpEvent.events;
+        for (DPCallbackEvent event : events1) {
+            JSONObject jev = new JSONObject();
+            if(event instanceof DPCallin){
+                DPCallin callinEvent = (DPCallin) event;
+                jev.put("eventtype", "callin");
+                CallbackOuterClass.MethodEvent methodEvent = callinEvent.getMethodEvent();
+                jev.put("name", methodEvent.getFullname());
+                jev.put("type", methodEvent.getDeclaringType());
+                jev.put("signature", methodEvent.getSignature());
+                List<CallbackOuterClass.PValue> args = methodEvent.getParametersList();
+                List<Boolean> boolArgs = new LinkedList<>();
+                for (CallbackOuterClass.PValue arg : args) {
+                    CallbackOuterClass.PValue.ValueTypeCase valueTypeCase = arg.getValueTypeCase();
+                    if(valueTypeCase.equals(CallbackOuterClass.PValue.ValueTypeCase.PBOOLVALUE)){
+                        boolean pBoolValue = arg.getPBoolValue();
+                        boolArgs.add(pBoolValue);
+                    }
+                }
+                jev.put("booleanArgs", boolArgs);
+
+            }else{
+                DPException exceptionEvent = (DPException) event;
+                jev.put("eventtype", "exception");
+                jev.put("exception", exceptionEvent.getExceptionEvent().getException().getPObjctReferenc().getType());
+
+            }
+            events.add(jev);
+        }
+        //TODO: what target and callback fields
+
+
+        return events;
     }
     public void writeJsonObject(File file) throws IOException {
 
         Set<MObject> mObjects = nestedTraces.keySet();
         int count = 0;
-        for(MObject mObject : mObjects){
+        String parent = file.getPath();
+        System.out.println("Output directory: " + parent);
+        System.out.println("Number of Objects: " + mObjects.size());
+        for(MObject mObject : mObjects) {
             JSONObject currentObject = mObjectToJson(mObject);
 
             List<JSONObject> events = new ArrayList<>();
 
             List<DPEvent> dpEvents = nestedTraces.get(mObject);
-            for(DPEvent event : dpEvents){
-                events.add(eventToJson(event));
+            if (containsCallins(dpEvents)) {
+                System.out.println("InIf");
+                for (DPEvent event : dpEvents) {
+                    List<JSONObject> c = eventToJson(event);
+                    events.addAll(c);
+                }
+                currentObject.put("events", events);
 
+                String absolutePath = parent;
+                String fileName = absolutePath +
+                        File.separator +
+                        Integer.toString(count) + ".json";
+                System.out.println("File: " + fileName);
+                FileWriter fileWriter = new FileWriter(fileName);
+                currentObject.writeJSONString(fileWriter);
+                fileWriter.close();
+                ++count;
             }
-            currentObject.put("events", events);
-
-            String absolutePath = file.getParent();
-            FileWriter fileWriter = new FileWriter(absolutePath +
-                    File.separator +
-                    Integer.toString(count) + ".json");
-            currentObject.writeJSONString(fileWriter);
-            fileWriter.close();
-            ++count;
         }
 
+    }
+    public static boolean containsCallins(List<DPEvent> events){
+        boolean res = false;
+        for (DPEvent event : events) {
+            res = res || event.events.size() > 0;
+        }
+        return res;
     }
 }

@@ -77,7 +77,7 @@ if not os.path.isfile(jarpath):
 filt = package.split(".")
 filts = ".".join(filt[0:2]) + ".*"
 print "Package filter: " + filts
-res = subprocess.call(['java','-jar',jarpath, "7778", "/Users/s/Desktop/" + package + appname + ".proto", filts, "android.*"])
+res = subprocess.call(['java','-jar',jarpath, "7778", "/Users/s/Desktop/android_star_filter_data/" + package + appname + ".proto", filts, "android.*"])
 
 
 #print dir(VirtualMachine)
