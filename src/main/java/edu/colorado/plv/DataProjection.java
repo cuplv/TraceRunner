@@ -6,6 +6,8 @@ import org.json.simple.JSONObject;
 import java.io.*;
 import java.util.*;
 
+import static edu.colorado.plv.GlobUtil.matchGlob;
+
 /**
  * Created by s on 11/10/15.
  * Class to take a stream of events and split them up based on involved objects.
@@ -355,13 +357,13 @@ public class DataProjection {
     }
     public static boolean isInClass(String clazzGlob, CallbackOuterClass.MethodEvent methodEvent){
         String declaringType = methodEvent.getDeclaringType();
-        return GlobUtil.matchGlob(clazzGlob, declaringType.split(" ")[1]);
+        return matchGlob(clazzGlob, declaringType.split(" ")[1]);
     }
     public static boolean isCallerInClass(String clazzGlob, CallbackOuterClass.MethodEvent methodEvent){
         CallbackOuterClass.PValue caller = methodEvent.getCaller();
         if(caller.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
             CallbackOuterClass.PObjectReference pValue = caller.getPObjctReferenc();
-            boolean b = GlobUtil.matchGlob(clazzGlob, pValue.getType().split(" ")[1]);
+            boolean b = matchGlob(clazzGlob, pValue.getType().split(" ")[1]);
             return b;
         }else{
             return false;
@@ -428,7 +430,47 @@ public class DataProjection {
         }
         return obj;
     }
-    public static List<JSONObject> eventToJson(DPEvent dpEvent){
+    public static boolean notInAppPackage(DPEvent dpEvent, String appPackageGlob){
+        CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
+        CallbackOuterClass.PValue callback1 = callback.getCallback();
+        if(callback1.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
+            CallbackOuterClass.PObjectReference pObjctReferenc = callback1.getPObjctReferenc();
+            String type = pObjctReferenc.getType();
+            if(matchGlob(appPackageGlob, type)){
+                return false;
+            }
+
+        }
+        CallbackOuterClass.PValue target = callback.getTarget();
+        if(target.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
+            CallbackOuterClass.PObjectReference pObjctReferenc = target.getPObjctReferenc();
+            String type = pObjctReferenc.getType();
+            if(matchGlob(appPackageGlob, type)){
+                return false;
+            }
+        }
+        return true;
+
+    }
+    public static boolean isDataRelevantEvent(DPEvent dpEvent, MObject mObject){
+
+        List<DPCallback> callbacks = dpEvent.callbacks;
+        List<CallbackOuterClass.PValue> pvalues = new ArrayList<>();
+        for (DPCallback callback : callbacks) {
+            CallbackOuterClass.PValue calle = callback.methodEvent.getCalle();
+            List<CallbackOuterClass.PValue> parametersList = callback.methodEvent.getParametersList();
+            pvalues.add(calle);
+            pvalues.addAll(parametersList);
+        }
+
+        for (CallbackOuterClass.PValue pvalue : pvalues) {
+            if(pvalue.equals(mObject.pValue)){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static List<JSONObject> eventToJson(DPEvent dpEvent, MObject mObject, String appPackageGlob){
 
 
 
@@ -445,7 +487,9 @@ public class DataProjection {
             obj.put("Message", "initial");
         }
 
-        events.add(obj);
+        if(isDataRelevantEvent(dpEvent, mObject) && notInAppPackage(dpEvent, appPackageGlob)) {
+            events.add(obj);
+        }
         List<DPCallbackEvent> events1 = dpEvent.events;
         for (DPCallbackEvent event : events1) {
             JSONObject jev = new JSONObject();
@@ -493,10 +537,10 @@ public class DataProjection {
             List<JSONObject> events = new ArrayList<>();
 
             List<DPEvent> dpEvents = nestedTraces.get(mObject);
+
             if (containsCallins(dpEvents)) {
-                System.out.println("InIf");
                 for (DPEvent event : dpEvents) {
-                    List<JSONObject> c = eventToJson(event);
+                    List<JSONObject> c = eventToJson(event, mObject, appPackageGlob);
                     events.addAll(c);
                 }
                 currentObject.put("events", events);
