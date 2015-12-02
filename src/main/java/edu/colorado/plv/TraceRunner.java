@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.net.SocketException;
 import java.util.*;
 
 
@@ -64,7 +65,11 @@ public class TraceRunner {
         }
         EventProcessor eventProcessor = new ProtoProcessor(new FileOutputStream(logOutput));
         TraceMainLoop traceMainLoop = new TraceMainLoop(port,  eventProcessor, filters, appPackage);
-        traceMainLoop.mainLoop();
+        try {
+            traceMainLoop.mainLoop();
+        }catch (SocketException exception){
+            System.exit(-1);
+        }
     }
 
 
