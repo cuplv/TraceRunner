@@ -32,6 +32,10 @@ install 32 bit libs
 
 find target: 
 	android list targets
+
+change groups for kvm:
+	sudo chown ubuntu:root /dev/kvm
+
 create emulator (45 comes from 5.1.1 target with google apis):
 	android create avd --force -n gapi_64 -t 45 --abi google_apis/x86
 
