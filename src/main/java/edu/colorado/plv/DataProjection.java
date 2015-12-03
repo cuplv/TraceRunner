@@ -431,7 +431,11 @@ public class DataProjection {
         return obj;
     }
     public static boolean notInAppPackage(DPEvent dpEvent, String appPackageGlob){
-        CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
+        CallbackOuterClass.EventInCallback eventInCallback = dpEvent.eventInCallback;
+        if(eventInCallback == null){
+            return true;
+        }
+        CallbackOuterClass.Callback callback = eventInCallback.getCallback();
         CallbackOuterClass.PValue callback1 = callback.getCallback();
         if(callback1.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
             CallbackOuterClass.PObjectReference pObjctReferenc = callback1.getPObjctReferenc();

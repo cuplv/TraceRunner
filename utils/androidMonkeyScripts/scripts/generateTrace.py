@@ -38,13 +38,17 @@ res = subprocess.call(['./gradlew', 'assembleDebug'])
 
 ###get application info###
 (apk, pkg, mainAct) = parseManifest.getManifest('/home/ubuntu/working')
+print "apk: " + apk
+print "pkg: " + pkg
+print "main activity: " + mainAct
 
 cmd = ['python', '/home/ubuntu/scripts/startAndBridge.py', apk, pkg, mainAct]
 print cmd
 #subprocess.Popen(cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
 traceLog = open('/home/ubuntu/tracelog.txt', 'w')
 monkey = subprocess.Popen(['python','/home/ubuntu/scripts/monkey.py',pkg])
-subprocess.call(cmd, stdout=traceLog)
+sbres = subprocess.call(cmd, stdout=traceLog)
+print sbres
 try:
 	monkey.kill()
 except OSError:

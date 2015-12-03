@@ -2,15 +2,14 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 
-def getManifest(srcdir):
+def parseManifest(srcdir):
 	manifests = []
-	apk = ""
-	pkg = ""
-	mainActivity = ""
+	apk = []
+	pkgAndMain = []
 	for root, dirs, files in os.walk(srcdir):
 		for f in files:
 			if f.endswith(".apk"):
-				apk = root + "/" + f
+				apk.append(root + "/" + f)
 			if f == "AndroidManifest.xml":
 				manifests.append(root + '/' + f)
 	
@@ -38,9 +37,27 @@ def getManifest(srcdir):
 					action = actions[0]
 					if(action.attrib['{http://schemas.android.com/apk/res/android}name'] == 'android.intent.action.MAIN'):
 						mainActivity = activity
+			#print mainActivity.attrib.keys
 			mainActivityName = mainActivity.attrib['{http://schemas.android.com/apk/res/android}name']
-			pkg = package
-			mainActivity = mainActivityName
+			#pkg = package
+			#mainActivity = mainActivityName
+			pkgAndMain.append((package,mainActivityName))
 		except AttributeError as e:
 			pass
-	return (apk, pkg, mainActivity)
+	return (apk, pkgAndMain)
+#@Noneable
+def getManifest(srcdir):
+	(apkList, pmList) = parseManifest(srcdir)
+	#choose apk
+	apkk = ""
+	if len(apkList) ==0:
+		return None
+	for apk in apkList:
+		if "unaligned" not in apk:
+			apkk = apk
+	if(apkk == ""):
+		apkk = apkList[0]
+	
+	pmListSorted = sorted(pmList,key=lambda a: len(a[0]+a[1]))	
+	pm = pmListSorted[-1]
+	return (apkk,pm[0],pm[1])

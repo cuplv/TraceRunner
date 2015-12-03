@@ -77,7 +77,13 @@ filt = package.split(".")
 filts = ".".join(filt[0:2]) + ".*"
 print "Package filter: " + filts
 uniqueID = ''.join(str(time.time()).split("."))
+
+failureLog = open('/home/ubuntu/failureLog.txt','a')
+
 res = subprocess.call(['java','-jar',jarpath, "7778", "/home/ubuntu/traces/" + package + appname + uniqueID + ".proto", filts, "android.*"])
+if res == -1:
+	failureLog.write(package + appname + uniqueID)
+	exit(-1)
 
 
 #print dir(VirtualMachine)

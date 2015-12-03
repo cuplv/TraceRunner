@@ -1,4 +1,13 @@
+set up machines:
+	androidmonkey
+in process:
+	androidmonkey1 androidmonkey2-1
+
+
+
 create volume ubuntu wily with muse2_16 with a public network interface (create volume)
+
+sudo apt-get update
 
 apt-get install build-essential 
 
@@ -13,21 +22,17 @@ add tools directory to path:
 
 install android sdk:
 	android list sdk --all
-	export ALLTHINGS="1"
-	for i in {2..159}; do ALLTHINGS=$ALLTHINGS,$i; done
+	export ALLTHINGS="1";for i in {2..159}; do ALLTHINGS=$ALLTHINGS,$i; done
 	android update sdk -u -a -t $ALLTHINGS
 
 add platform tools directory to path:
-	add /home/ubuntu/android-sdk-linux/platform-tools to pwd
+	add /home/ubuntu/android-sdk-linux/platform-tools to path
 
 set ANDROID_HOME
 	export ANDROID_HOME=/home/ubuntu/android-sdk-linux
 
 install 32 bit libs
-	sudo dpkg --add-architecture i386
-	sudo apt-get update
-	sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386
-	sudo apt-get install lib32z1 lib32ncurses5
+	sudo dpkg --add-architecture i386;sudo apt-get update;sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386;sudo apt-get install lib32z1 lib32ncurses5
 
 
 find target: 
