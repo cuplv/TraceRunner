@@ -46,9 +46,9 @@ print pid
 
 #open bridge
 print "***Open Bridge***"
-#res = subprocess.call(['adb', 'forward', 'tcp:7778', 'jdwp:' + str(pid)])
-#if 0 != res:
-#	raise Exception("bridge failed")
+res = subprocess.call(['adb', 'forward', 'tcp:7778', 'jdwp:' + str(pid)])
+if 0 != res:
+	raise Exception("bridge failed")
 
 
 
