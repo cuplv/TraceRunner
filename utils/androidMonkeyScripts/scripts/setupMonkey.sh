@@ -2,11 +2,12 @@
 ##copy scripts directory to machine
 ##copy android-sdk_r24.4.1-linux.tgz to home directory
 ##copy Tracerunner jar to scripts directory
+##untar android sdk manually
+#tar -xvvzf android-sdk_r24.4.1-linux.tgz
 
 cp /home/ubuntu/scripts/.bashrc /home/ubuntu/.bashrc
 source .bashrc
 cd /home/ubuntu
-tar -xvvzf android-sdk_r24.4.1-linux.tgz
 sudo apt-get update
 sudo apt-get install build-essential
 sudo apt-get install openjdk-7-jre openjdk-7-jdk
