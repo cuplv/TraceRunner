@@ -42,7 +42,7 @@ def parseManifest(srcdir):
 			#pkg = package
 			#mainActivity = mainActivityName
 			pkgAndMain.append((package,mainActivityName))
-		except AttributeError as e:
+		except:
 			pass
 	return (apk, pkgAndMain)
 #@Noneable
