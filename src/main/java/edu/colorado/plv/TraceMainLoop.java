@@ -341,7 +341,8 @@ public class TraceMainLoop {
                     Stack<Method> threadCallStack = callStack.get(threadReference);
                     if(threadCallStack.size() != 0){
                         ExceptionCache exceptionEvent = lastExceptionOnThread.get(threadReference);
-                        eventProcessor.processException(exceptionEvent);
+                        if(exceptionEvent != null)
+                            eventProcessor.processException(exceptionEvent);
                     }
                 }
 

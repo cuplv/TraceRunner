@@ -443,7 +443,8 @@ public class ProtoProcessor implements EventProcessor {
                 frameworkParent = getFirstFrameworkParent(referenceType1);
                 interfaceTypes = referenceType1.allInterfaces();
             }else{
-                throw new IllegalStateException();
+                frameworkParent = null;
+                interfaceTypes = new ArrayList<>();
             }
 
             List<String> interfaces = new ArrayList<>();
