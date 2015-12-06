@@ -83,6 +83,8 @@ message PObjectReference
 	optional int64 id = 1;
 	optional string type = 2;
 	repeated PField primitiveFields = 3;
+	optional string firstFrameworkSuper = 4;
+	repeated string interfaces = 5;
 
 }
 message PField

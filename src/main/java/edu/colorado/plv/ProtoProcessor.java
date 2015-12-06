@@ -13,12 +13,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Pattern;
 
 /**
  * Created by s on 10/13/15.
  * Processor that writes a protobuffer to a file
  */
 public class ProtoProcessor implements EventProcessor {
+    private static Pattern appPackageRegex = null;
+
     FileOutputStream output;
     BlockingQueue<CallbackOuterClass.EventInCallback.Builder> toWrite = new LinkedBlockingQueue<>();
     Thread writerThread;
@@ -89,6 +92,11 @@ public class ProtoProcessor implements EventProcessor {
             }
 
         }
+    }
+
+    @Override
+    public void setAppPackageRegex(Pattern appPackageRegex) {
+        this.appPackageRegex = appPackageRegex;
     }
 
     @Override
@@ -395,6 +403,18 @@ public class ProtoProcessor implements EventProcessor {
         return rClazz.allMethods();
     }
 
+    public static ClassType getFirstFrameworkParent(ClassType c){
+        ClassType superclass = c.superclass();
+        if(superclass == null){
+            return null;
+        }
+        String s = c.toString().split(" ")[1];
+        if (appPackageRegex.matcher(s).matches()) {
+            return getFirstFrameworkParent(superclass);
+        } else {
+            return c;
+        }
+    }
 
     public static CallbackOuterClass.PValue valueToProtobuf(Value value, boolean logPrims){
         if(value instanceof IntegerValue) {
@@ -415,6 +435,22 @@ public class ProtoProcessor implements EventProcessor {
             long id = objectReference.uniqueID();
             String type = objectReference.type().toString();
             ReferenceType referenceType = objectReference.referenceType();
+
+            ClassType frameworkParent;
+            List<InterfaceType> interfaceTypes;
+            if(referenceType instanceof ClassType){
+                ClassType referenceType1 = (ClassType) referenceType;
+                frameworkParent = getFirstFrameworkParent(referenceType1);
+                interfaceTypes = referenceType1.allInterfaces();
+            }else{
+                throw new IllegalStateException();
+            }
+
+            List<String> interfaces = new ArrayList<>();
+            for (InterfaceType interfaceType : interfaceTypes) {
+                interfaces.add(interfaceType.toString());
+            }
+
 
             List<CallbackOuterClass.PField> primitiveFields = null;
             if(logPrims) {
@@ -449,6 +485,10 @@ public class ProtoProcessor implements EventProcessor {
             }
             //TODO: add class hierachy
 
+            String value1 = "";
+            if(frameworkParent != null)
+                value1 = frameworkParent.toString();
+
             if(primitiveFields != null) {
                 return CallbackOuterClass.PValue.newBuilder()
                         .setPObjctReferenc(
@@ -456,6 +496,8 @@ public class ProtoProcessor implements EventProcessor {
                                         .setId(id)
                                         .setType(type)
                                         .addAllPrimitiveFields(primitiveFields)
+                                        .setFirstFrameworkSuper(value1)
+                                        .addAllInterfaces(interfaces)
                                         .build())
                         .build();
             }else {
@@ -464,6 +506,8 @@ public class ProtoProcessor implements EventProcessor {
                                 CallbackOuterClass.PObjectReference.newBuilder()
                                         .setId(id)
                                         .setType(type)
+                                        .setFirstFrameworkSuper(value1)
+                                        .addAllInterfaces(interfaces)
                                         .build())
                         .build();
             }

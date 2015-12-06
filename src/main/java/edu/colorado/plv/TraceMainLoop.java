@@ -109,11 +109,10 @@ public class TraceMainLoop {
         this.entryToToggle = new HashMap<>();
         this.exitToToggle = new HashMap<>();
         this.appPackageRegex = GlobUtil.createRegexFromGlob(appPackage);
+        eventProcessor.setAppPackageRegex(appPackageRegex);
 
     }
     public void mainLoop() throws IOException, IllegalConnectorArgumentsException, InterruptedException {
-
-
 
         VirtualMachineManager vmMgr = Bootstrap.virtualMachineManager();
         AttachingConnector socketConnector = null;
@@ -202,7 +201,14 @@ public class TraceMainLoop {
 
 
             //get class hierarchy
-            vm.allClasses();
+
+            List<ReferenceType> objects = vm.classesByName("java.lang.Object");
+
+            if(objects.size() != 1){
+                throw new IllegalStateException("multiple java.lang.Object???");
+            }
+            ReferenceType object = objects.get(0);
+            List<ReferenceType> referenceTypes = object.nestedTypes();
 
 
             //Process breakpoints main loop

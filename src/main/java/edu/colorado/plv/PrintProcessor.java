@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by s on 10/13/15.
@@ -26,6 +27,11 @@ public class PrintProcessor implements EventProcessor {
         out.add("target");
         out.add("callback");
         return out;
+    }
+
+    @Override
+    public void setAppPackageRegex(Pattern appPackageRegex) {
+
     }
 
     @Override
