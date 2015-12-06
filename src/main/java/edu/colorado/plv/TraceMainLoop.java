@@ -25,7 +25,7 @@ public class TraceMainLoop {
     private List<String> filters;
     private HashMap<ThreadReference,List<MethodEntryRequest>> entryToToggle;
     private HashMap<ThreadReference,List<MethodExitRequest>> exitToToggle;
-    private boolean enabledAndroidStar = false;
+    //private boolean enabledAndroidStar = false;
     EventRequestManager evtReqMgr;
 
 
@@ -201,11 +201,17 @@ public class TraceMainLoop {
             EventQueue evtQueue = vm.eventQueue();
 
 
+            //get class hierarchy
+            vm.allClasses();
+
+
             //Process breakpoints main loop
-            Map<ThreadReference,Method> callback = new HashMap<>(); //Null until callback hit
-            Map<ThreadReference,Method> callin = new HashMap<>();
+            Map<ThreadReference,Stack<Method>> callStack = new HashMap<>(); //Null until callback hit
             ThreadReference activityThread = null;
 //            Method callIn = null;
+
+            //Exception handling
+            Map<ThreadReference, ExceptionCache> lastExceptionOnThread = new HashMap<>();
 
 
             try {
@@ -230,7 +236,7 @@ public class TraceMainLoop {
                                 EventRequest request = evt.request();
                                 if(request == bReqDispatch) {
                                     eventProcessor.processMessage((BreakpointEvent) evt);
-                                    callback.remove(thrf); //TODO: if additional breakpoints add check for msg here
+                                    callStack.remove(thrf); //TODO: if additional breakpoints add check for msg here
                                 }else if(logeBp.contains(request)){
                                     eventProcessor.processErrorLog((BreakpointEvent)evt, "e");
                                 }else if(logWBreakpoint.contains(request)){
@@ -242,73 +248,81 @@ public class TraceMainLoop {
 
                                 MethodEntryEvent mevt = (MethodEntryEvent) evt;
                                 ThreadReference thref = mevt.thread();
-                                boolean isCallback = false;
+
                                 Method m = mevt.method();
                                 String name = m.declaringType().name();
+                                Stack<Method> threadCallStack = callStack.get(thref);
 
-                                if(!callback.containsKey(thref)) {
+                                if(threadCallStack == null || threadCallStack.size() == 0) {
                                     //setting callback
                                     if(appPackageRegex.matcher(name).matches()){
                                         //set callback value when app package is first hit
-                                        if(!m.name().contains("<init>")) {
-                                            if(!callback.containsKey(thref)) {
-                                                callback.put(thref,m);
-                                                enableAll(thref);
-
-                                            }
-                                            isCallback = true;
-                                        }
+                                        enableAll(thref);
+                                        threadCallStack = new Stack<>();
+                                        callStack.put(thref, threadCallStack);
+                                    }else{
+                                        throw new IllegalStateException("should never happen");
                                     }
-                                }else{
-                                    //callback hit check for call in
-                                    if((!appPackageRegex.matcher(name).matches()) && (!callin.containsKey(thref))){
-                                        eventProcessor.processInvoke(mevt, isCallback, true);
-                                        callin.put(thref, m);
-                                    }
-
                                 }
-                                if(true || !callin.containsKey(thref)) {
+
+
+                                boolean isCallback = threadCallStack.size() == 0;
+
+                                //TODO: check callin
+                                if(headIsInPackage(threadCallStack)) {
                                     eventProcessor.processInvoke(mevt, isCallback, false);
                                 }
-//                                if(callback != null){
-//
-//                                }
+
+                                threadCallStack.push(m);
 
                             }else if (evt instanceof MethodExitEvent){
                                 MethodExitEvent mxe = (MethodExitEvent) evt;
-                                ThreadReference thrf = mxe.thread();
+                                ThreadReference thref = mxe.thread();
                                 Method m = mxe.method();
-                                boolean isCallback = false;
-                                if(callback.containsKey(thrf) && callback.get(thrf).equals(m)){
-                                    disableAll(thrf);
-                                    callback.remove(thrf);
+
+                                Stack<Method> threadCallStack = callStack.get(thref);
+
+                                boolean exnStartedInFramework = !headIsInPackage(threadCallStack);
+                                boolean exnCaughtInApp = false;
+
+                                Method pop = threadCallStack.pop();
+
+                                //If an exception is thrown there will
+                                while(!m.equals(pop) && threadCallStack.size() > 0){
+                                    exnCaughtInApp = headIsInPackage(threadCallStack);
+                                    pop = threadCallStack.pop();
+
                                 }
-                                if(callin.containsKey(thrf) && callin.get(thrf).equals(m)){
-                                    callin.remove(thrf);
+
+                                if(exnStartedInFramework && exnCaughtInApp){
+                                    ExceptionCache exn = lastExceptionOnThread.get(thref);
+                                    eventProcessor.processException(exn);
                                 }
-//                                if(m == callback){
-//                                    callback = null;
-//                                    disableAll();
-//                                    isCallback = true;
+//                                if(!m.equals(pop)){
+//                                    throw new IllegalStateException(); //TODO: mismatched entry/exit bug
 //                                }
-                                if(true || !callin.containsKey(thrf)) {
+                                boolean isCallback = threadCallStack.size() == 0;
+                                if(isCallback) {
+                                    disableAll(thref);
+                                }
+
+                                if(headIsInPackage(threadCallStack)) {
                                     eventProcessor.processMethodExit(mxe, isCallback);
                                 }
                             }else if (evt instanceof ExceptionEvent){
                                 ExceptionEvent exn = (ExceptionEvent) evt;
                                 exn.location().method();
-                                eventProcessor.processException(exn);
+                                ThreadReference threadReference = exn.thread();
+//                                Stack<Method> threadCallStack = callStack.get(threadReference);
+                                lastExceptionOnThread.put(threadReference,
+                                        new ExceptionCache(exn, threadReference));
+
+
                             }
-//                            Map<String, Value> eventdetails = eventProcessor.processEvent(evt, mentered);
-//                            if (eventdetails.size() > 0) {
-//                                System.out.println(eventdetails);
-//                                for (String method : mentered) {
-//                                    System.out.println("     " + method);
-//                                }
-//                                mentered.clear();
-//                            }
                         } catch (Exception exc) {
+                            exc.printStackTrace();
                             System.out.println(exc.getClass().getName() + ": " + exc.getMessage());
+                            System.exit(-1);
                         } finally {
                             evtSet.resume();
                         }
@@ -316,12 +330,44 @@ public class TraceMainLoop {
                 }
                 //TODO: https://dzone.com/articles/generating-minable-event
             } catch (VMDisconnectedException e) {
+                Set<ThreadReference> threadReferences = callStack.keySet();
+                for (ThreadReference threadReference : threadReferences) {
+                    Stack<Method> threadCallStack = callStack.get(threadReference);
+                    if(threadCallStack.size() != 0){
+                        ExceptionCache exceptionEvent = lastExceptionOnThread.get(threadReference);
+                        eventProcessor.processException(exceptionEvent);
+                    }
+                }
+
                 eventProcessor.done();
                 System.out.println("Process exited");
 
             }
         }
     }
+
+    /**
+     *
+     *
+     * @param threadCallStack sparse call stack for android application
+     * @return true if stack is empty
+     * @return true if top of stack is in the application package
+     * @return false if top of stack is in framework
+     */
+    private boolean headIsInPackage(Stack<Method> threadCallStack) {
+        if(threadCallStack.size() < 1){
+            return true;
+        }
+        Method head = threadCallStack.peek();
+        ReferenceType referenceType = head.declaringType();
+        String type = referenceType.toString().split(" ")[1];
+        if(appPackageRegex.matcher(type).matches()){
+            return true;
+        }
+        return false;
+
+    }
+
     private static Set<Method> getMethodLocs(VirtualMachine vm, String clazz, String methodName){
         List<ReferenceType> refTypes = vm.allClasses();
         ReferenceType handlerClass = null;

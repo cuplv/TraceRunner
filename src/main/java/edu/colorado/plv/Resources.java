@@ -19,11 +19,12 @@ public class Resources {
         exclusions.add("android.animation.*");
         exclusions.add("android.graphics.*");
         exclusions.add("com.google.inject.*");
+        exclusions.add("com.android.dex.*");
         return exclusions;
     }
     public static List<String> exceptionExclusions() {
         List<String> exclusions = new ArrayList<>();
-        exclusions.add("java.lang.ClassNotFoundException");
+//        exclusions.add("java.lang.ClassNotFoundException");
         return exclusions;
     }
     public static List<String> getLogeSigs(){

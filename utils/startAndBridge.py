@@ -69,7 +69,7 @@ if 0 != res:
 scriptPath = os.path.dirname(os.path.realpath(__file__))
 if(scriptPath[-5:] != "utils"):
 	raise Exception("launch from utils directory")
-jarpath = scriptPath[0:-5] + "build/libs/TraceRunner-all-1.0.jar"
+jarpath = scriptPath[0:-5] + "build/libs/TraceRunner-all-2.0.jar"
 
 if not os.path.isfile(jarpath):
 	raise Exception("Tracerunner jar not found")

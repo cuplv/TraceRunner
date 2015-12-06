@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'com.google.protobuf'
 
-version = '1.0'
+version = '2.0'
 
 
 
@@ -10,7 +10,7 @@ version = '1.0'
 task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'TraceRunner',
-                'Implementation-Version': 1.0,
+                'Implementation-Version': 2.0,
                 'Main-Class': 'edu.colorado.plv.TraceRunner'
     }
     baseName = project.name + '-all'

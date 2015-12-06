@@ -2,6 +2,7 @@ package edu.colorado.plv;
 
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.IncompatibleThreadStateException;
+import com.sun.jdi.ThreadReference;
 import com.sun.jdi.Value;
 import com.sun.jdi.event.*;
 import com.sun.jdi.request.BreakpointRequest;
@@ -20,5 +21,5 @@ public interface EventProcessor {
     void done();
     void processMethodExit(MethodExitEvent evt, boolean isCallback);
 
-    void processException(ExceptionEvent evt);
+    void processException(ExceptionCache exceptionCache);
 }

@@ -59,6 +59,7 @@ message MethodEvent
 	optional EventType eventType = 10;
 	optional bool isCallback = 11;
 	optional bool isCallIn = 12;
+	optional string method_location = 13;
 
 }
 message ConcreteObject

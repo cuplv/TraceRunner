@@ -193,6 +193,7 @@ public class ProtoProcessor implements EventProcessor {
     public void processInvoke(MethodEntryEvent evt, boolean isCallback, boolean isCallIn) {
 
         Method method = evt.method();
+        Location location = method.location();
         System.out.println(method);
         boolean isStatic = evt.method().isStatic();
         ThreadReference threadRef = evt.thread();
@@ -239,6 +240,7 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
+        String methodLocation = location.method().toString();
         CallbackOuterClass.EventInCallback.Builder nevt = CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
                 CallbackOuterClass.MethodEvent.newBuilder()
                         .setFullname(evt.method().name())
@@ -251,7 +253,10 @@ public class ProtoProcessor implements EventProcessor {
                         .addAllParameters(arguments)
                         .setIsCallback(isCallback)
                         .setIsCallIn(isCallIn)
-                        .setEventType(CallbackOuterClass.EventType.METHODENTRY));
+                        .setEventType(CallbackOuterClass.EventType.METHODENTRY)
+                        .setMethodLocation(methodLocation)
+        );
+
         toWrite.add(nevt);
     }
 
@@ -272,6 +277,7 @@ public class ProtoProcessor implements EventProcessor {
     public void processMethodExit(MethodExitEvent evt, boolean isCallback) {
         Method method = evt.method();
         String methodname = (method.toString());
+        Location location = method.location();
         boolean isStatic = evt.method().isStatic();
         ThreadReference threadRef = evt.thread();
         long threadID = threadRef.uniqueID();
@@ -317,6 +323,7 @@ public class ProtoProcessor implements EventProcessor {
         } catch (IncompatibleThreadStateException e) {
             e.printStackTrace();
         }
+        String methodLocation = location.method().toString();
         CallbackOuterClass.EventInCallback.Builder nevt = CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
                 CallbackOuterClass.MethodEvent.newBuilder()
                         .setFullname(evt.method().name())
@@ -329,38 +336,48 @@ public class ProtoProcessor implements EventProcessor {
                         .addAllParameters(arguments)
                         .setIsCallback(isCallback)
                         .setEventType(CallbackOuterClass.EventType.METHODEXIT)
+                        .setMethodLocation(methodLocation)
 
         );
         toWrite.add(nevt);
     }
 
     @Override
-    public void processException(ExceptionEvent evt) {
-        Location location = evt.location();
-        ThreadReference threadReference = evt.thread();
-        Method method = location.method();
+    public void processException(ExceptionCache exceptionCache) {
+        long altUniqueId = exceptionCache.getUniqueID();
+        if(exceptionCache.isExceptionInfo()) {
 
-        int lineNumber = location.lineNumber();
-        String sourceName;
-        try {
-            sourceName = location.sourceName();
-        } catch (AbsentInformationException e) {
-            sourceName = "<<None>>";
+            String name = exceptionCache.getName();
+            String declaringType = exceptionCache.getDeclaringType();
+            long uniqueID = exceptionCache.getUniqueID();
+            CallbackOuterClass.PValue exception = exceptionCache.getException();
+
+
+            int lineNumber1 = exceptionCache.getLineNumber();
+            int lineNumber = lineNumber1;
+            String sourceName = exceptionCache.getSourceName();
+
+
+            CallbackOuterClass.ExceptionEvent exceptionEvent = CallbackOuterClass.ExceptionEvent.newBuilder()
+                    .setMethod(CallbackOuterClass.PMethod.newBuilder()
+                            .setName(name)
+                            .setClass_(declaringType)
+                            .build())
+                    .setLineNumber(lineNumber)
+                    .setSourceName(sourceName)
+                    .setException(exception)
+                    .setThreadID(uniqueID)
+                    .build();
+            CallbackOuterClass.EventInCallback.Builder event =
+                    CallbackOuterClass.EventInCallback.newBuilder().setExceptionEvent(exceptionEvent);
+            toWrite.add(event);
+        }else{
+            //Empty exception (will happen if exception happens but isn't observed)
+
+            toWrite.add(CallbackOuterClass.EventInCallback.newBuilder()
+                    .setExceptionEvent(CallbackOuterClass.ExceptionEvent.newBuilder()
+                            .setThreadID(altUniqueId)));
         }
-        CallbackOuterClass.PValue exception = valueToProtobuf(evt.exception(), true);
-        CallbackOuterClass.ExceptionEvent exceptionEvent = CallbackOuterClass.ExceptionEvent.newBuilder()
-                .setMethod(CallbackOuterClass.PMethod.newBuilder()
-                        .setName(method.name())
-                        .setClass_(method.declaringType().name())
-                        .build())
-                .setLineNumber(lineNumber)
-                .setSourceName(sourceName)
-                .setException(exception)
-                .setThreadID(threadReference.uniqueID())
-                .build();
-        CallbackOuterClass.EventInCallback.Builder event =
-                CallbackOuterClass.EventInCallback.newBuilder().setExceptionEvent(exceptionEvent);
-        toWrite.add(event);
     }
 
     private static List<Method> getMethods(VirtualMachine vm, String clazz){
@@ -430,6 +447,8 @@ public class ProtoProcessor implements EventProcessor {
                     }
                 }
             }
+            //TODO: add class hierachy
+
             if(primitiveFields != null) {
                 return CallbackOuterClass.PValue.newBuilder()
                         .setPObjctReferenc(

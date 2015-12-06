@@ -83,7 +83,7 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processException(ExceptionEvent evt) {
+    public void processException(ExceptionCache evt) {
 
     }
 

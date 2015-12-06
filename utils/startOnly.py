@@ -31,12 +31,29 @@ if  0 != res:
 
 #get pid
 print "***Get PID***"
-res = subprocess.Popen(['adb', 'jdwp'],stdout=subprocess.PIPE)
+#res = subprocess.Popen(['adb', 'jdwp'],stdout=subprocess.PIPE)
+res = subprocess.Popen(['adb', 'shell', 'ps'],stdout=subprocess.PIPE)
+res.wait()
 
-pid = res.stdout.readline()
-res.terminate() #TODO: this will probably fail if two debuggable processes are running
-pid = int(pid)
-
+lines = res.stdout.readlines()
+#print "-------------"
+#for line in lines:
+        #print line
+#print "-------------"
+psline = ""
+for line in lines:
+        if package in line:
+                psline = line
+                break
+splitline = line.split(' ')
+print splitline
+#pid = res.stdout.readline()
+for s in splitline:
+        try:
+                pid = int(s)
+                break
+        except ValueError:
+                pass
 print pid
 
 
