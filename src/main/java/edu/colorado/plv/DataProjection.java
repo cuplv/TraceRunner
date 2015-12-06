@@ -425,6 +425,7 @@ public class DataProjection {
         if(mObject.pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
             CallbackOuterClass.PObjectReference pobj = mObject.getpValue().getPObjctReferenc();
             obj.put("type", pobj.getType());
+            obj.put("framework_super", pobj.getFirstFrameworkSuper());
         }else{
             obj.put("other", "NonObjRef");
         }
