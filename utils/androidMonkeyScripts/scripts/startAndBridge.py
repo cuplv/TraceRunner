@@ -66,7 +66,7 @@ if 0 != res:
 
 #get path of tracerunner jar
 scriptPath = os.path.dirname(os.path.realpath(__file__))
-jarpath = scriptPath + "/TraceRunner-all-1.0.jar"
+jarpath = scriptPath + "/TraceRunner-all-2.0.jar"
 
 print "jarpath: " + jarpath
 

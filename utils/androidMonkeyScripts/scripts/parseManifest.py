@@ -42,7 +42,7 @@ def parseManifest(srcdir):
 			#pkg = package
 			#mainActivity = mainActivityName
 			pkgAndMain.append((package,mainActivityName))
-		except:
+		except AttributeError as e:
 			pass
 	return (apk, pkgAndMain)
 #@Noneable
@@ -59,5 +59,10 @@ def getManifest(srcdir):
 		apkk = apkList[0]
 	
 	pmListSorted = sorted(pmList,key=lambda a: len(a[0]+a[1]))	
-	pm = pmListSorted[-1]
-	return (apkk,pm[0],pm[1])
+	#pm = pmListSorted[-1]
+	#return (apkk,pm[0],pm[1])
+	if(len(pmListSorted) > 0):
+		pm = pmListSorted[-1]
+		return (apkk,pm[0],pm[1])
+	else:
+		return None

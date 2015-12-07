@@ -14,6 +14,7 @@ if len(sys.argv) != 2:
 
 ######delete contents of working directory#####
 folder = '/home/ubuntu/working/'
+#TODO: uncomment code to clear working dir
 for the_file in os.listdir(folder):
 	file_path = os.path.join(folder, the_file)
 	try:
@@ -28,6 +29,9 @@ for the_file in os.listdir(folder):
 truncPath = sys.argv[1]
 sdir = '/'.join(truncPath.split('/')[0:-1])
 fdir = "ftc@192.12.242.126:/media/data/git/" + sdir + '/*'
+
+
+#TODO: uncomment code to download new app
 res = subprocess.call(['scp', '-r', fdir, workingDir])
 
 ###Build application###
