@@ -41,10 +41,6 @@ public class ProtoProcessor implements EventProcessor {
 
     public static List<String> getfields(){
         List<String> out = new ArrayList<>();
-//        out.add("android.os.MessageZ.what");
-//        out.add("android.os.Message.when");
-//        out.add("android.os.Message.target");
-//        out.add("android.os.Message.callback");
         out.add("what");
         out.add("Message.when");
         out.add("target");
@@ -213,27 +209,6 @@ public class ProtoProcessor implements EventProcessor {
         CallbackOuterClass.PValue calle = null;
         List<CallbackOuterClass.PValue> arguments = new ArrayList<>();
         try {
-//            stackFrames = threadRef.frames();
-//            int level = 0;
-//            for(StackFrame stackFrame : stackFrames){
-//                ObjectReference objectReference = stackFrame.thisObject();
-//
-//                if (level == 0) {
-//                    calle = valueToProtobuf(objectReference, false);
-//                    List<Value> argumentsVals = stackFrame.getArgumentValues();
-//                    for(Value value : argumentsVals){
-//                        arguments.add(valueToProtobuf(value, false));
-//                    }
-//
-//                }
-//                if (level == 1) {
-//                    caller = valueToProtobuf(objectReference, false);
-//                }
-//                level++;
-//                if (level > 1) {
-//                    break;
-//                }
-//            }
             StackFrame stackFrame = threadRef.frame(0);
             ObjectReference objectReference = stackFrame.thisObject();
             calle = valueToProtobuf(objectReference, false);
@@ -296,27 +271,6 @@ public class ProtoProcessor implements EventProcessor {
         CallbackOuterClass.PValue calle = null;
         List<CallbackOuterClass.PValue> arguments = new ArrayList<>();
         try {
-//            stackFrames = threadRef.frames();
-//            int level = 0;
-//            for(StackFrame stackFrame : stackFrames){
-//                ObjectReference objectReference = stackFrame.thisObject();
-//
-//                if (level == 0) {
-//                    calle = valueToProtobuf(objectReference, false);
-//                    List<Value> argumentsVals = stackFrame.getArgumentValues();
-//                    for(Value value : argumentsVals){
-//                        arguments.add(valueToProtobuf(value, false));
-//                    }
-//
-//                }
-//                if (level == 1) {
-//                    caller = valueToProtobuf(objectReference, false);
-//                }
-//                level++;
-//                if (level > 1) {
-//                    break;
-//                }
-//            }
             StackFrame stackFrame = threadRef.frame(0);
             ObjectReference objectReference = stackFrame.thisObject();
             calle = valueToProtobuf(objectReference, false);
