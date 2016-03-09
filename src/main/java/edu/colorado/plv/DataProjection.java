@@ -470,7 +470,9 @@ public class DataProjection {
         for (DPCallback callback : callbacks) {
             CallbackOuterClass.PValue calle = callback.methodEvent.getCalle();
             List<CallbackOuterClass.PValue> parametersList = callback.methodEvent.getParametersList();
-            if(dpEvent.eventInCallback.getCallback().getThreadID() == callback.getMethodEvent().getThreadID()) {
+
+
+            if(dpEvent.eventInCallback == null || dpEvent.eventInCallback.getCallback().getThreadID() == callback.getMethodEvent().getThreadID()) {
                 pvalues.add(calle);
                 pvalues.addAll(parametersList);
             }
