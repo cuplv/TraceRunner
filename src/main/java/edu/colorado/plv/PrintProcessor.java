@@ -18,10 +18,6 @@ import java.util.regex.Pattern;
 public class PrintProcessor implements EventProcessor {
     public static List<String> getfields(){
         List<String> out = new ArrayList<>();
-//        out.add("android.os.MessageZ.what");
-//        out.add("android.os.Message.when");
-//        out.add("android.os.Message.target");
-//        out.add("android.os.Message.callback");
         out.add("what");
         out.add("Message.when");
         out.add("target");
