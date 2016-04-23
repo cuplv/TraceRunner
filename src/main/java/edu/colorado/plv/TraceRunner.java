@@ -28,8 +28,8 @@ public class TraceRunner {
         for(int j=2; j< args.length; ++j){
             filters.add(args[j]);
         }
-        EventProcessor eventProcessor = new ProtoProcessor(new FileOutputStream(logOutput));
-        TraceMainLoop traceMainLoop = new TraceMainLoop(port,  eventProcessor, filters);
+        EventProcessor eventProcessor = new PrintProcessor();
+        TraceMainLoop traceMainLoop = new TraceMainLoop(port, eventProcessor, filters);
         traceMainLoop.mainLoop();
     }
 

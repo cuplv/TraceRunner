@@ -19,6 +19,7 @@ import java.util.Map;
 
 public class TraceMainLoop {
     private final int port;
+    private String hostname;
 
     private EventProcessor eventProcessor;
     private List<String> filters;
@@ -27,8 +28,15 @@ public class TraceMainLoop {
         this.port = port;
         this.eventProcessor = eventProcessor;
         this.filters = filters;
-
     }
+
+    public TraceMainLoop(int port, String hostname, EventProcessor eventProcessor, List<String> filters) {
+        this.port = port;
+        this.hostname = hostname;
+        this.eventProcessor = eventProcessor;
+        this.filters = filters;
+    }
+
     public void mainLoop() throws IOException, IllegalConnectorArgumentsException, InterruptedException {
 
 
@@ -48,6 +56,11 @@ public class TraceMainLoop {
             Map<String, Connector.Argument> paramsMap = socketConnector.defaultArguments();
             Connector.IntegerArgument portArg = (Connector.IntegerArgument) paramsMap.get("port");
             portArg.setValue(port);
+            if(hostname.length()>0){
+                Connector.Argument hostName = (Connector.Argument)paramsMap.get("hostname");
+                hostName.setValue(hostname);
+            }
+
             VirtualMachine vm = socketConnector.attach(paramsMap);
             System.out.println("Attached to process '" + vm.name() + "'");
 
@@ -105,9 +118,9 @@ public class TraceMainLoop {
                             Event evt = evtIter.next();
                             if (evt instanceof BreakpointEvent) {
                                 eventProcessor.processMessage((BreakpointEvent)evt);
-                            }else if (evt instanceof MethodEntryEvent){
+                            } else if (evt instanceof MethodEntryEvent){
                                 eventProcessor.processInvoke((MethodEntryEvent)evt);
-                            }else if (evt instanceof MethodExitEvent){
+                            } else if (evt instanceof MethodExitEvent){
                                 eventProcessor.processMethodExit((MethodExitEvent)evt);
                             }else if (evt instanceof ExceptionEvent){
                                 eventProcessor.processException((ExceptionEvent)evt);
