@@ -92,7 +92,22 @@ public class PrintProcessor implements EventProcessor {
         }
         //Do something with data:
         System.out.println("Retrieved values " + retrievedValues);
-        processTraceInformation(retrievedValues);
+        boolean flag = false;
+        if (retrievedValues != null) {
+            if (retrievedValues.size() > 0) {
+                Value targetField = retrievedValues.get("target");
+                for (String filter : filters) {
+                    filter = filter.replace("*", "");
+                    if (targetField.toString().contains(filter)) {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if(flag){
+            processTraceInformation(retrievedValues);
+        }
     }
 
     private void processTraceInformation(Map<String, Value> retrievedValues){
@@ -110,13 +125,18 @@ public class PrintProcessor implements EventProcessor {
                         Map.Entry<String, List<Value>> element = it.next();
                         StringBuffer buffer = new StringBuffer();
                         buffer.append("Parameter ");
-                        buffer.append(element.getKey()+" ");
-                        for (Value value : element.getValue()) {
-                            if (value != null) {
-                                buffer.append(value.toString() + " ");
+                        buffer.append(element.getKey() + " ");
+                        try{
+                            for (Value value : element.getValue()) {
+                                if (value != null) {
+                                    buffer.append(value.toString() + " ");
+                                }
                             }
+                        }catch(ObjectCollectedException oce){
+
+                        } finally{
+                            traceRunnerMsgs.add(buffer.toString().trim());
                         }
-                        traceRunnerMsgs.add(buffer.toString().trim());
                     }
                     //Terminate Sending messages
                     traceRunnerMsgs.add("END");
