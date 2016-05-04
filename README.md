@@ -1,5 +1,6 @@
 To import into Intellij
 =======================
+This branch is for measuring performance of TraceRunner, please use master for anything else.
 
 Download json-simple-1.1.1.jar into libs directory:
 https://search.maven.org/#artifactdetails%7Ccom.googlecode.json-simple%7Cjson-simple%7C1.1.1%7Cbundle
