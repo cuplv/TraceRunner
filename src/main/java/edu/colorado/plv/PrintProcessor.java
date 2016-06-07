@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by s on 10/13/15.
@@ -17,15 +18,16 @@ import java.util.Map;
 public class PrintProcessor implements EventProcessor {
     public static List<String> getfields(){
         List<String> out = new ArrayList<>();
-//        out.add("android.os.MessageZ.what");
-//        out.add("android.os.Message.when");
-//        out.add("android.os.Message.target");
-//        out.add("android.os.Message.callback");
         out.add("what");
         out.add("Message.when");
         out.add("target");
         out.add("callback");
         return out;
+    }
+
+    @Override
+    public void setAppPackageRegex(Pattern appPackageRegex) {
+
     }
 
     @Override
@@ -60,7 +62,13 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processInvoke(MethodEntryEvent evt) {
+    public void processErrorLog(BreakpointEvent evt, String type) throws IncompatibleThreadStateException, AbsentInformationException {
+
+    }
+
+
+    @Override
+    public void processInvoke(MethodEntryEvent evt, boolean isCallback, boolean isCallIn) {
 
         String method = (evt.method().toString());
         System.out.println(method);
@@ -72,12 +80,12 @@ public class PrintProcessor implements EventProcessor {
     }
 
     @Override
-    public void processMethodExit(MethodExitEvent evt) {
+    public void processMethodExit(MethodExitEvent evt, boolean isCallback) {
 
     }
 
     @Override
-    public void processException(ExceptionEvent evt) {
+    public void processException(ExceptionCache evt) {
 
     }
 

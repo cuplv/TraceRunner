@@ -5,7 +5,8 @@ message Callback
 	optional PValue when = 2;
 	optional PValue target = 3;
 	optional PValue callback = 4;
-	repeated EventInCallback eventsInCallback = 5;
+	optional int64 threadID=5;
+	//repeated EventInCallback eventsInCallback = 5;
 
 }
 enum EventType {
@@ -13,11 +14,24 @@ enum EventType {
 	METHODEXIT = 1;
 }
 message EventInCallback {
+	optional bool interrupted = 1;
 	oneof eventType{
-		MethodEvent methodEvent = 1;
-		ExceptionEvent exceptionEvent = 2;
-
+		MethodEvent methodEvent = 2;
+		ExceptionEvent exceptionEvent = 3;
+		Callback callback = 4;
+		Loge loge = 5;
 	}
+}
+message Loge{
+	optional PValue msg = 1;
+	optional PValue tag = 2;
+	optional int64 threadID = 3;
+	enum LogType {
+		LOGE = 0;
+		LOGW = 1;
+		LOGWTF = 2;
+	}
+	optional LogType logType = 4;
 }
 message PMethod{
 	optional string name = 1;
@@ -29,8 +43,7 @@ message ExceptionEvent {
 	optional PMethod method = 2;
 	optional int32 lineNumber = 3;
 	optional string sourceName = 4;
-
-
+	optional int64 threadID = 5;
 }
 message MethodEvent
 {
@@ -44,6 +57,9 @@ message MethodEvent
 	optional PValue caller = 8;
 	optional PValue calle = 9;
 	optional EventType eventType = 10;
+	optional bool isCallback = 11;
+	optional bool isCallIn = 12;
+	optional string method_location = 13;
 
 }
 message ConcreteObject
@@ -67,6 +83,8 @@ message PObjectReference
 	optional int64 id = 1;
 	optional string type = 2;
 	repeated PField primitiveFields = 3;
+	optional string firstFrameworkSuper = 4;
+	repeated string interfaces = 5;
 
 }
 message PField

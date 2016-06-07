@@ -24,7 +24,7 @@ if 0 != res:
 
 #run apk
 print "***Run APK***"
-res = subprocess.call(['adb', 'shell', 'am', 'start', '-D', '-n', package + '/.' + appname])
+res = subprocess.call(['adb', 'shell', 'am', 'start', '-D', '-n', package + '/' + appname])
 if  0 != res:
 	raise Exception("starting failed")
 
@@ -38,16 +38,11 @@ pid = int(pid)
 
 print pid
 
-
-#use netcat to open bridge
-#print "***Open Bridge***"
-#res = subprocess.call(['/bin/bash', 'nc', '-l', '7778' ,
-
 #open bridge
 print "***Open Bridge***"
-#res = subprocess.call(['adb', 'forward', 'tcp:7778', 'jdwp:' + str(pid)])
-#if 0 != res:
-#	raise Exception("bridge failed")
+res = subprocess.call(['adb', 'forward', 'tcp:7778', 'jdwp:' + str(pid)])
+if 0 != res:
+	raise Exception("bridge failed")
 
 
 

@@ -1,0 +1,68 @@
+set up machines:
+	androidmonkey
+in process:
+	androidmonkey1 androidmonkey2-1
+
+
+
+create volume ubuntu wily with muse2_16 with a public network interface (create volume)
+
+sudo apt-get update
+
+apt-get install build-essential 
+
+apt-get install openjdk-7-jre openjdk-7-jdk
+
+copy android-sdk_r24.4.1-linux.tgz to home directory
+
+untar android-sdk
+
+add tools directory to path:
+	export PATH=$PATH:/home/ubuntu/android-sdk-linux/tools
+
+install android sdk:
+	android list sdk --all
+	export ALLTHINGS="1";for i in {2..159}; do ALLTHINGS=$ALLTHINGS,$i; done
+	android update sdk -u -a -t $ALLTHINGS
+
+add platform tools directory to path:
+	add /home/ubuntu/android-sdk-linux/platform-tools to path
+
+set ANDROID_HOME
+	export ANDROID_HOME=/home/ubuntu/android-sdk-linux
+
+install 32 bit libs
+	sudo dpkg --add-architecture i386;sudo apt-get update;sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386;sudo apt-get install lib32z1 lib32ncurses5
+
+
+find target: 
+	android list targets
+
+change groups for kvm:
+	sudo chown ubuntu:root /dev/kvm
+
+create emulator (45 comes from 5.1.1 target with google apis):
+	android create avd --force -n gapi_64 -t 45 --abi google_apis/x86
+
+
+set emulator ram:
+	vim /home/ubuntu/.android/avd/gapi_64.avd/config.ini
+	(hw.ramSize=2048)
+
+create sdcard for emulator:
+	mkdir ~/emulator
+	cd ~/emulator
+	mksdcard -l e 512M sdcard.img
+launch emulator headless:
+	sudo /home/ubuntu/android-sdk-linux/tools/emulator -avd gapi_64 -no-audio -no-window -sdcard /home/ubuntu/emulator/sdcard.img
+	(takes 1 min 52 seconds to get to home screen)
+
+get emulator into home screen:
+	adb shell input keyevent 82 #unlock
+	adb shell input keyevent 3 #home screen
+
+kill app based on package:
+	adb shell ps |grep com.donnfelker.android.bootstrap.debug | awk '{print $2}' | xargs adb shell kill
+
+android monkey:
+	adb shell monkey 1000 --throttle 200
