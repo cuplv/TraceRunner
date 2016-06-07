@@ -38,8 +38,29 @@ for line in lines:
 	
 	#emulatorPID = emulatorPID.pid
 	
-	time.sleep(130) #it takes about 2 minutes for the emulator to come up on muse_2_16
+	#wait for shell
+	subprocess.call(['adb', 'wait-for-device'])
 	
+	#wait for sdcard to mount
+	while(True):
+	    res = subprocess.Popen(['bash', '-c', 'adb shell mount |grep sdcard |wc -l'], stdout=subprocess.PIPE)
+	    (out,something) = res.communicate()
+	    outi = int(out)
+	    print "sdcard: " + out
+	    if outi > 1:
+	        break
+	    time.sleep(10)
+	#wait for boot animation to go away
+	while(True):
+	    res = subprocess.Popen(['bash', '-c', 'adb shell ps |grep bootanimation |wc -l'], stdout=subprocess.PIPE)
+	    (out,something) = res.communicate()
+	    outi = int(out)
+	    print "bootanimation: " + out
+	    if outi == 0:
+	        break
+	    time.sleep(10)
+	
+	time.sleep(20)
 	
 	subprocess.call(['adb', 'shell', 'input', 'keyevent', '82'])
 	subprocess.call(['adb', 'shell', 'input', 'keyevent', '3'])

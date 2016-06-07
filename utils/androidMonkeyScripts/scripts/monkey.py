@@ -8,10 +8,10 @@ if len(sys.argv) != 2:
 
 pkg = sys.argv[1]
 monkeyLog = open('/home/ubuntu/monkeylog.txt', 'w')
-time.sleep(60)
+time.sleep(180)
 #adb shell monkey -p com.flatsoft.base -v 500
-for i in xrange(20):
-	subprocess.call(['adb', 'shell', 'monkey', '-p', pkg, '-v', '50'], stdout=monkeyLog)
+for i in xrange(40):
+	subprocess.call(['adb', 'shell', 'monkey', '-p', pkg,'--pct-touch', '70', '-v', '50'], stdout=monkeyLog)
 	time.sleep(30)
 
 

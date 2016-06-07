@@ -334,7 +334,7 @@ public class DataProjection {
                 }
             }
             dpEvents.add(currentEvent);
-        nestedTraces.put(mObject, dpEvents);
+            nestedTraces.put(mObject, dpEvents);
         }
         //TODO remove following print code
         Set<MObject> mObjects = nestedTraces.keySet();
@@ -369,6 +369,12 @@ public class DataProjection {
             return false;
         }
     }
+
+    /**
+     * Event that runs through the event queue of Looper
+     * contains the event info {what ...}
+     * contains callbacks (first place for the control flow to pass to the application)
+     */
     public static class DPEvent{
         public CallbackOuterClass.EventInCallback eventInCallback;
         public List<DPCallback> callbacks = new ArrayList<>();
@@ -425,6 +431,7 @@ public class DataProjection {
         if(mObject.pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)){
             CallbackOuterClass.PObjectReference pobj = mObject.getpValue().getPObjctReferenc();
             obj.put("type", pobj.getType());
+            obj.put("framework_super", pobj.getFirstFrameworkSuper());
         }else{
             obj.put("other", "NonObjRef");
         }
@@ -463,11 +470,16 @@ public class DataProjection {
         for (DPCallback callback : callbacks) {
             CallbackOuterClass.PValue calle = callback.methodEvent.getCalle();
             List<CallbackOuterClass.PValue> parametersList = callback.methodEvent.getParametersList();
-            pvalues.add(calle);
-            pvalues.addAll(parametersList);
+
+
+            if(dpEvent.eventInCallback == null || dpEvent.eventInCallback.getCallback().getThreadID() == callback.getMethodEvent().getThreadID()) {
+                pvalues.add(calle);
+                pvalues.addAll(parametersList);
+            }
         }
 
         for (CallbackOuterClass.PValue pvalue : pvalues) {
+            //TODO: check if event is on same thread as callback
             if(pvalue.equals(mObject.pValue)){
                 return true;
             }
@@ -485,7 +497,8 @@ public class DataProjection {
         if(dpEvent.eventInCallback != null) {
             CallbackOuterClass.Callback callback = dpEvent.eventInCallback.getCallback();
             obj.put("what", callback.getWhat());
-            obj.put("callbackField", callback.getCallback().getPObjctReferenc().getType());
+            String type = callback.getCallback().getPObjctReferenc().getType();
+            obj.put("callbackField", type);
             obj.put("targetField", callback.getTarget().getPObjctReferenc().getType());
         }else{
             obj.put("Message", "initial");
@@ -542,7 +555,7 @@ public class DataProjection {
 
             List<DPEvent> dpEvents = nestedTraces.get(mObject);
 
-            if (containsCallins(dpEvents)) {
+            if (containsCallins(dpEvents) && isObjectInReciever(dpEvents, mObject)) {
                 for (DPEvent event : dpEvents) {
                     List<JSONObject> c = eventToJson(event, mObject, appPackageGlob);
                     events.addAll(c);
@@ -562,6 +575,35 @@ public class DataProjection {
         }
 
     }
+
+    private boolean isObjectInReciever(List<DPEvent> dpEvents, MObject mObject) {
+        boolean observedAsRec = false;
+        CallbackOuterClass.PValue pValue = mObject.getpValue();
+        if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)) {
+            CallbackOuterClass.PObjectReference target = pValue.getPObjctReferenc();
+
+            for (DPEvent dpEvent : dpEvents) {
+                List<DPCallbackEvent> events = dpEvent.events;
+                for (DPCallbackEvent event : events) {
+                    if(event instanceof DPCallin){
+                        DPCallin event1 = (DPCallin) event;
+                        CallbackOuterClass.PValue calle = event1.getMethodEvent().getCalle();
+                        CallbackOuterClass.PObjectReference pObjctReferenc = calle.getPObjctReferenc();
+                        observedAsRec = observedAsRec || (target.equals(pObjctReferenc));
+                    }
+                }
+
+//                if (eventInCallback.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)) {
+//                    CallbackOuterClass.MethodEvent methodEvent = eventInCallback.getMethodEvent();
+//                    CallbackOuterClass.PValue calle = methodEvent.getCalle();
+//                    observedAsRec = observedAsRec || (calle.equals(target));
+//                }
+            }
+        }
+
+        return observedAsRec;
+    }
+
     public static boolean containsCallins(List<DPEvent> events){
         boolean res = false;
         for (DPEvent event : events) {
