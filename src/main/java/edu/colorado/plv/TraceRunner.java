@@ -56,6 +56,7 @@ public class TraceRunner {
         }
 
 
+	System.out.println("Generating Trace");
         String logOutput = args[1];
         int port = Integer.parseInt(args[0]);
         List<String> filters = new ArrayList<>();
@@ -68,6 +69,8 @@ public class TraceRunner {
         try {
             traceMainLoop.mainLoop();
         }catch (SocketException exception){
+            System.out.println("socket exception");
+            exception.printStackTrace();
             System.exit(-1);
         }
     }
