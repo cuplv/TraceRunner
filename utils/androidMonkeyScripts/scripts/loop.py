@@ -3,7 +3,12 @@ import sys
 import subprocess
 import time
 import shutil
-f = open('/home/ubuntu/toTrace.txt','r')
+
+if len(sys.argv != 2):
+    print "usage: [cmd] [path to file to run]"
+    raise Exception("usage exception")
+toTrace = sys.argv[1]
+f = open(toTrace,'r')
 lines = f.readlines()
 
 print lines
