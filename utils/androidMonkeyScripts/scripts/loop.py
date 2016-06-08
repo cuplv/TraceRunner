@@ -18,7 +18,7 @@ for line in lines:
     split = line.split(" ")
     if(len(split) != 2):
         raise Exception("bad file format")
-    repo,hash = split
+    repo,rhash = split
     # #delete old vm
     # subprocess.call(['android', 'delete', 'avd', '-n', 'androidvm'])
 
@@ -71,9 +71,9 @@ for line in lines:
     subprocess.call(['adb', 'shell', 'input', 'keyevent', '82'])
     subprocess.call(['adb', 'shell', 'input', 'keyevent', '3'])
     # print "emulator started: " + str(emulatorPID)
-    if False:
+    if True:
         print "running on application: " + repo
-        subprocess.call(['python', '/home/ubuntu/scripts/generateTrace.py', repo])
+        subprocess.call(['python', '/home/ubuntu/scripts/generateTrace.py', repo, rhash])
 
 
 
