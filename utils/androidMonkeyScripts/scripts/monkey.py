@@ -12,7 +12,7 @@ def monkey(pkg):
 	monkeyLog = open('/Users/shawn/Desktop/monkeylog.txt', 'w')
 	time.sleep(180)
 	# adb shell monkey -p com.flatsoft.base -v 500
-	for i in xrange(3):  # TODO: change this back to 50
+	for i in xrange(50):  # TODO: change this back to 50
 		subprocess.call(['adb', 'shell', 'monkey', '-p', pkg, '--pct-touch', '70', '-v', '5'], stdout=monkeyLog)
 		time.sleep(15)
 
