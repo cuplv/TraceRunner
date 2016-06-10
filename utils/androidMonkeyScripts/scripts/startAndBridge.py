@@ -6,7 +6,7 @@ import subprocess
 
 #from com.sun.tools.attach import VirtualMachine
 
-
+print "Start And Bridge"
 if len(sys.argv) != 5:
 	raise Exception("usage: [apk path] [package] [appname] [commit hash]")
 apk_path = sys.argv[1]

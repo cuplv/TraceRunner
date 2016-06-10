@@ -3,6 +3,7 @@ import sys
 import subprocess
 import shutil
 import parseManifest
+import signal
 
 # Note emulator should already be started and on home screen
 
@@ -68,11 +69,19 @@ def generate_trace(truncPath, irhash):
 	print cmd
 	# subprocess.Popen(cmd, shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
 	# traceLog = open('/home/ubuntu/tracelog.txt', 'w')
-	monkey = subprocess.Popen(['python', scriptpath + '/monkey.py', pkg])
+	# monkey = subprocess.Popen(['python', scriptpath + '/monkey.py', pkg])
+	import monkey
+
+	pid = os.fork()
+	if pid == 0:
+		monkey.monkey(pkg)
+		exit()
+
 	sbres = subprocess.call(cmd)
 	# print sbres
 	try:
-		monkey.kill()
+
+		os.kill(pid, signal.SIGTERM)
 		print "----------------monkey is dead---------------------------"
 	except OSError:
 		pass  # don't care if already killed
