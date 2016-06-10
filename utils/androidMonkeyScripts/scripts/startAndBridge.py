@@ -81,7 +81,8 @@ uniqueID = ''.join(str(time.time()).split("."))
 failureLog = open('/Users/shawn/Desktop/failureLog.txt','a')
 
 protofile = "/Users/shawn/Desktop/traces/" + package + appname + uniqueID + "_" + sys.argv[4] + ".proto"
-res = subprocess.call(['/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/bin/java','-jar',jarpath, "7778", protofile, filts, "android.*"])
+res = subprocess.call(['/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/bin/java','-jar'
+						  ,jarpath, "7778", protofile, filts, "android.*"])
 if res == -1:
 	failureLog.write(package + appname + uniqueID)
 	failureLog.close()
