@@ -54,7 +54,7 @@ def generate_trace(truncPath, irhash):
 		print os.getcwd()
 		rhash = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
 
-
+	rhash = rhash.strip()
 	###Build application###
 	# os.chdir(workingDir)
 	res = subprocess.call(['chmod', "+x", 'gradlew'])
