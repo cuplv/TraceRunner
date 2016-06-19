@@ -11,6 +11,7 @@ import com.sun.jdi.request.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.lang.System;
 
 /**
  * Created by s on 10/13/15.
@@ -141,10 +142,10 @@ public class TraceMainLoop {
             Location breakpointLocation = dispatchMessage.location();
 
             evtReqMgr = vm.eventRequestManager();
-            BreakpointRequest bReqDispatch
-                    = evtReqMgr.createBreakpointRequest(breakpointLocation);
-            bReqDispatch.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
-            bReqDispatch.enable();
+//            BreakpointRequest bReqDispatch
+//                    = evtReqMgr.createBreakpointRequest(breakpointLocation);
+//            bReqDispatch.setSuspendPolicy(BreakpointRequest.SUSPEND_ALL);
+//            bReqDispatch.enable();
 
 
             //Set breakpoints for error log
@@ -219,9 +220,11 @@ public class TraceMainLoop {
             //Exception handling
             Map<ThreadReference, ExceptionCache> lastExceptionOnThread = new HashMap<>();
 
-
+            long startTime;
             try {
                 while (true) {
+                    startTime = System.currentTimeMillis();
+                    Thread.sleep(25);
                     EventSet evtSet = evtQueue.remove();
                     EventIterator evtIter = evtSet.eventIterator();
                     while (evtIter.hasNext()) {
@@ -240,7 +243,7 @@ public class TraceMainLoop {
                                     disableAll(((BreakpointEvent) evt).thread());
                                 }
                                 EventRequest request = evt.request();
-                                if(request == bReqDispatch) {
+                                if(false /*request == bReqDispatch*/) {
                                     eventProcessor.processMessage((BreakpointEvent) evt);
                                     callStack.remove(thrf); //TODO: if additional breakpoints add check for msg here
                                 }else if(logeBp.contains(request)){
@@ -333,6 +336,7 @@ public class TraceMainLoop {
                             evtSet.resume();
                         }
                     }
+                    System.out.println("event took (ms): " + (System.currentTimeMillis() - startTime));
                 }
                 //TODO: https://dzone.com/articles/generating-minable-event
             } catch (VMDisconnectedException e) {

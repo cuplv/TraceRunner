@@ -54,6 +54,15 @@ public class TraceRunner {
             return;
 
         }
+        if (args[0].equals("verifTrace")){
+            FileInputStream fileInputStream = new FileInputStream(args[1]);
+            File file = new File(args[2]);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            ProtoProcessor.writeJsonTraceForVerif(fileInputStream, outputStream, args[1]);
+            outputStream.close();
+
+            return;
+        }
 
 
         String logOutput = args[1];

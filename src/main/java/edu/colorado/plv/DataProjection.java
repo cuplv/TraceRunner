@@ -514,19 +514,7 @@ public class DataProjection {
                 DPCallin callinEvent = (DPCallin) event;
                 jev.put("eventtype", "callin");
                 CallbackOuterClass.MethodEvent methodEvent = callinEvent.getMethodEvent();
-                jev.put("name", methodEvent.getFullname());
-                jev.put("type", methodEvent.getDeclaringType());
-                jev.put("signature", methodEvent.getSignature());
-                List<CallbackOuterClass.PValue> args = methodEvent.getParametersList();
-                List<Boolean> boolArgs = new LinkedList<>();
-                for (CallbackOuterClass.PValue arg : args) {
-                    CallbackOuterClass.PValue.ValueTypeCase valueTypeCase = arg.getValueTypeCase();
-                    if(valueTypeCase.equals(CallbackOuterClass.PValue.ValueTypeCase.PBOOLVALUE)){
-                        boolean pBoolValue = arg.getPBoolValue();
-                        boolArgs.add(pBoolValue);
-                    }
-                }
-                jev.put("booleanArgs", boolArgs);
+                jev = methodEventToJson(methodEvent);
 
             }else{
                 DPException exceptionEvent = (DPException) event;
@@ -541,6 +529,25 @@ public class DataProjection {
 
         return events;
     }
+
+    public static JSONObject methodEventToJson(CallbackOuterClass.MethodEvent methodEvent) {
+        JSONObject jev = new JSONObject();
+        jev.put("name", methodEvent.getFullname());
+        jev.put("type", methodEvent.getDeclaringType());
+        jev.put("signature", methodEvent.getSignature());
+        List<CallbackOuterClass.PValue> args = methodEvent.getParametersList();
+        List<Boolean> boolArgs = new LinkedList<>();
+        for (CallbackOuterClass.PValue arg : args) {
+            CallbackOuterClass.PValue.ValueTypeCase valueTypeCase = arg.getValueTypeCase();
+            if(valueTypeCase.equals(CallbackOuterClass.PValue.ValueTypeCase.PBOOLVALUE)){
+                boolean pBoolValue = arg.getPBoolValue();
+                boolArgs.add(pBoolValue);
+            }
+        }
+        jev.put("booleanArgs", boolArgs);
+        return jev;
+    }
+
     public void writeJsonObject(File file) throws IOException {
 
         Set<MObject> mObjects = nestedTraces.keySet();
