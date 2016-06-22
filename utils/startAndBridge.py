@@ -60,7 +60,8 @@ print pid
 
 #open bridge
 print "***Open Bridge***"
-res = subprocess.call(['adb', 'forward', 'tcp:7778', 'jdwp:' + str(pid)])
+tracelog = open('/Users/shawn/Desktop/tracelog.txt','a')
+res = subprocess.call(['adb', 'forward', 'tcp:4779', 'jdwp:' + str(pid)], stdout=tracelog)
 if 0 != res:
 	raise Exception("bridge failed")
 
@@ -77,7 +78,7 @@ if not os.path.isfile(jarpath):
 filt = package.split(".")
 filts = ".".join(filt[0:2]) + ".*"
 print "Package filter: " + filts
-res = subprocess.call(['java','-jar',jarpath, "7778", "/Users/s/Desktop/android_star_filter_data/" + package + appname + ".proto", filts, "android.*"])
+res = subprocess.call(['/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/bin/java','-jar',jarpath, "4779", "/Users/shawn/Desktop/android_star_filter_data/" + package + appname + "".join(str(time.time()).split(".")) + ".proto", filts, "android.*"])
 
 
 #print dir(VirtualMachine)

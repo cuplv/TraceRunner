@@ -6,9 +6,9 @@ import subprocess
 
 #from com.sun.tools.attach import VirtualMachine
 
-
-if len(sys.argv) != 4:
-	raise Exception("usage: [apk path] [package] [appname]")
+print "Start And Bridge"
+if len(sys.argv) != 5:
+	raise Exception("usage: [apk path] [package] [appname] [commit hash]")
 apk_path = sys.argv[1]
 package = sys.argv[2]
 appname = sys.argv[3]
@@ -78,11 +78,14 @@ filts = ".".join(filt[0:2]) + ".*"
 print "Package filter: " + filts
 uniqueID = ''.join(str(time.time()).split("."))
 
-failureLog = open('/home/ubuntu/failureLog.txt','a')
+failureLog = open('/Users/shawn/Desktop/failureLog.txt','a')
 
-res = subprocess.call(['java','-jar',jarpath, "7778", "/home/ubuntu/traces/" + package + appname + uniqueID + ".proto", filts, "android.*"])
+protofile = "/Users/shawn/Desktop/traces/" + package + appname + uniqueID + "_" + sys.argv[4] + ".proto"
+res = subprocess.call(['/Library/Java/JavaVirtualMachines/jdk1.7.0_71.jdk/Contents/Home/bin/java','-jar'
+						  ,jarpath, "7778", protofile, filts, "android.*"])
 if res == -1:
 	failureLog.write(package + appname + uniqueID)
+	failureLog.close()
 	exit(-1)
 
 
