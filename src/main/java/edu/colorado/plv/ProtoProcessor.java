@@ -5,6 +5,8 @@ import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.ExceptionEvent;
 import com.sun.jdi.event.MethodEntryEvent;
 import com.sun.jdi.event.MethodExitEvent;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -36,7 +38,79 @@ public class ProtoProcessor implements EventProcessor {
     //List<CallbackOuterClass.EventInCallback.Builder> eventsInCurrentCallback;
 
 
+    public static void writeJsonTraceForVerif(InputStream fileInputStream, OutputStream outputStream, String info) throws IOException{
 
+        JSONArray events = new JSONArray();
+        JSONObject event = new JSONObject();
+        event.put("initial", "true");
+        while(true){
+
+            CallbackOuterClass.EventInCallback pEvent =
+                    CallbackOuterClass.EventInCallback.parseDelimitedFrom(fileInputStream);
+            if(pEvent == null){
+                break;
+            }
+
+            if(pEvent.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)) {
+                //This is an "Event", callback was used but bad terminology
+                events.add(event);
+                event = new JSONObject();
+
+                JSONObject eventStr;
+                //TODO: create string for event
+                eventStr = new JSONObject();
+                CallbackOuterClass.Callback icallback = pEvent.getCallback();
+                eventStr.put("what", icallback.getWhat());
+                eventStr.put("callbackField", icallback.getCallback().getPObjctReferenc().getType());
+                eventStr.put("targetField", icallback.getTarget().getPObjctReferenc().getType());
+                event.put("eventIdentifier", eventStr);
+                event.put("initial", "false");
+
+                //Add list of all objects which have been encountered
+                JSONArray callbackObjects = new JSONArray();
+                event.put("callbackObjects", callbackObjects);
+
+                //Add list of callins
+                JSONArray callinList = new JSONArray();
+                event.put("callinList", callinList);
+
+
+
+            }else if(pEvent.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)) {
+                CallbackOuterClass.MethodEvent methodEvent = pEvent.getMethodEvent();
+                if(methodEvent.getIsCallback()){
+                    //Callback, adding all concrete objects to a list
+                    CallbackOuterClass.PValue reciever = methodEvent.getCalle();
+
+                    String s = ToString.to_str(reciever);
+                    JSONArray callbackObjects = (JSONArray)event.get("callbackObjects");
+                    addIfNotIn(s, callbackObjects);
+
+                    //Iterate over all parameters and add to list
+                    int parametersCount = methodEvent.getParametersCount();
+                    for(int i = 0; i<parametersCount; ++i){
+                        CallbackOuterClass.PValue parameter = methodEvent.getParameters(i);
+                        String sp = ToString.to_str(parameter);
+                        addIfNotIn(sp,callbackObjects);
+                    }
+                }else{
+                    //Callin
+                    JSONObject jsonObject = DataProjection.methodEventToJson(methodEvent);
+                    JSONArray callinList = (JSONArray)event.get("callinList");
+                    callinList.add(jsonObject);
+                }
+
+            }
+
+
+        }
+        events.add(event);
+        JSONObject obj = new JSONObject();
+        obj.put("info", info);
+        obj.put("events", events);
+        PrintStream printStream = new PrintStream(outputStream);
+        printStream.print(obj.toJSONString());
+    }
 
 
     public static List<String> getfields(){
