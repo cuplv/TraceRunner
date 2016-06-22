@@ -20,7 +20,8 @@ public class TraceRunner {
             System.out.println("usage: [port] [log output file] [class filter] or [log input file]\n" +
                     "usage: read [file]\n" +
                     "usage: dataProj [proto file] [directory] [appPackage glob]\n" +
-                    "usage: dataProjJson [proto file] [appPackage glob] [outputDir]");
+                    "usage: dataProjJson [proto file] [appPackage glob] [outputDir]" +
+                    "usage: verifTrace");
 
         }
         if (args[0].equals("dataProjJson")){

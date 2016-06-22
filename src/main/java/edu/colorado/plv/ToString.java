@@ -27,8 +27,18 @@ public class ToString {
     public static String to_str(CallbackOuterClass.PValue pValue){
         if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)) {
             return to_str(pValue.getPObjctReferenc());
-        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)){
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)) {
             return "null";
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PINTEGERVALUE)){
+            return "integer_v";
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PBOOLVALUE)){
+            return "boolean_v";
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PFLOATVALUE)){
+            return "float_v";
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POTHERVALUE)){
+            return "other_v";
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PSTRINGREFERENCE)){
+            return "string_v";
         }else {
             throw new UnsupportedOperationException();
         }

@@ -1,6 +1,7 @@
 package edu.colorado.plv;
 
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.*;
@@ -537,14 +538,20 @@ public class DataProjection {
         jev.put("signature", methodEvent.getSignature());
         List<CallbackOuterClass.PValue> args = methodEvent.getParametersList();
         List<Boolean> boolArgs = new LinkedList<>();
+        JSONArray cargs = new JSONArray();
         for (CallbackOuterClass.PValue arg : args) {
             CallbackOuterClass.PValue.ValueTypeCase valueTypeCase = arg.getValueTypeCase();
             if(valueTypeCase.equals(CallbackOuterClass.PValue.ValueTypeCase.PBOOLVALUE)){
                 boolean pBoolValue = arg.getPBoolValue();
                 boolArgs.add(pBoolValue);
             }
+            cargs.add(ToString.to_str(arg));
         }
         jev.put("booleanArgs", boolArgs);
+        jev.put("concreteArgs", cargs);
+
+
+
         return jev;
     }
 
