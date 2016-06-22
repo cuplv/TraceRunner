@@ -20,7 +20,8 @@ public class TraceRunner {
             System.out.println("usage: [port] [log output file] [class filter] or [log input file]\n" +
                     "usage: read [file]\n" +
                     "usage: dataProj [proto file] [directory] [appPackage glob]\n" +
-                    "usage: dataProjJson [proto file] [appPackage glob] [outputDir]");
+                    "usage: dataProjJson [proto file] [appPackage glob] [outputDir]" +
+                    "usage: verifTrace");
 
         }
         if (args[0].equals("dataProjJson")){
@@ -53,6 +54,15 @@ public class TraceRunner {
             ProtoProcessor.readInputStream(fileInputStream);
             return;
 
+        }
+        if (args[0].equals("verifTrace")){
+            FileInputStream fileInputStream = new FileInputStream(args[1]);
+            File file = new File(args[2]);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            ProtoProcessor.writeJsonTraceForVerif(fileInputStream, outputStream, args[1]);
+            outputStream.close();
+
+            return;
         }
 
 
