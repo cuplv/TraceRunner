@@ -38,11 +38,25 @@ public class ProtoProcessor implements EventProcessor {
     //List<CallbackOuterClass.EventInCallback.Builder> eventsInCurrentCallback;
 
 
+    private static void addIfNotIn(String s, JSONArray jsonObject) {
+        boolean inArray = false;
+        for(Object co : jsonObject){
+
+            if(co.equals(s)){
+                inArray = true;
+            }
+        }
+        if(!inArray){
+            jsonObject.add(s);
+        }
+    }
     public static void writeJsonTraceForVerif(InputStream fileInputStream, OutputStream outputStream, String info) throws IOException{
 
         JSONArray events = new JSONArray();
         JSONObject event = new JSONObject();
         event.put("initial", "true");
+        JSONObject currentCallback = new JSONObject();
+        currentCallback.put("callinList", new JSONArray());
         while(true){
 
             CallbackOuterClass.EventInCallback pEvent =
@@ -71,8 +85,8 @@ public class ProtoProcessor implements EventProcessor {
                 event.put("callbackObjects", callbackObjects);
 
                 //Add list of callins
-                JSONArray callinList = new JSONArray();
-                event.put("callinList", callinList);
+                JSONArray callinbackList = new JSONArray();
+                event.put("callbackList", callinbackList);
 
 
 
@@ -93,11 +107,21 @@ public class ProtoProcessor implements EventProcessor {
                         String sp = ToString.to_str(parameter);
                         addIfNotIn(sp,callbackObjects);
                     }
+                    JSONArray icallbackList = (JSONArray)event.get("callbackList");
+                    icallbackList.add(currentCallback);
+                    currentCallback = new JSONObject();
+                    JSONObject callbackInfo = DataProjection.methodEventToJson(methodEvent);
+
+
+                    currentCallback.put("callback", callbackInfo);
+                    currentCallback.put("callinList", new JSONArray());
                 }else{
                     //Callin
-                    JSONObject jsonObject = DataProjection.methodEventToJson(methodEvent);
-                    JSONArray callinList = (JSONArray)event.get("callinList");
-                    callinList.add(jsonObject);
+                    if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)) {
+                        JSONObject jsonObject = DataProjection.methodEventToJson(methodEvent);
+                        JSONArray callinList = (JSONArray) currentCallback.get("callinList");
+                        callinList.add(jsonObject);
+                    }
                 }
 
             }
