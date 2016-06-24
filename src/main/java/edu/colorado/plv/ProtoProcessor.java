@@ -110,7 +110,7 @@ public class ProtoProcessor implements EventProcessor {
                     JSONArray icallbackList = (JSONArray)event.get("callbackList");
                     icallbackList.add(currentCallback);
                     currentCallback = new JSONObject();
-                    JSONObject callbackInfo = DataProjection.methodEventToJson(methodEvent);
+                    JSONObject callbackInfo = DataProjection.methodEventToJson_short(methodEvent);
 
 
                     currentCallback.put("callback", callbackInfo);
@@ -118,7 +118,7 @@ public class ProtoProcessor implements EventProcessor {
                 }else{
                     //Callin
                     if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)) {
-                        JSONObject jsonObject = DataProjection.methodEventToJson(methodEvent);
+                        JSONObject jsonObject = DataProjection.methodEventToJson_short(methodEvent);
                         JSONArray callinList = (JSONArray) currentCallback.get("callinList");
                         callinList.add(jsonObject);
                     }

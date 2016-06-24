@@ -32,7 +32,7 @@ public class ToString {
         }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PINTEGERVALUE)){
             return "integer_v";
         }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PBOOLVALUE)){
-            return "boolean_v";
+            return Boolean.toString(pValue.getPBoolValue());
         }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PFLOATVALUE)){
             return "float_v";
         }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POTHERVALUE)){

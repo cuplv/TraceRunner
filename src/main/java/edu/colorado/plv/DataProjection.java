@@ -554,6 +554,39 @@ public class DataProjection {
 
         return jev;
     }
+    public static JSONObject methodEventToJson_short(CallbackOuterClass.MethodEvent methodEvent) {
+        JSONObject jev = new JSONObject();
+//        jev.put("name", methodEvent.getFullname());
+//        String type = methodEvent.getDeclaringType();
+        CallbackOuterClass.PValue calle = methodEvent.getCalle();
+        List<CallbackOuterClass.PValue> args = methodEvent.getParametersList();
+        String firstFrameworkSuper = null;
+        if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)) {
+            firstFrameworkSuper = calle.getPObjctReferenc().getFirstFrameworkSuper();
+            //jev.put("signature", firstFrameworkSuper);
+        }else if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)){
+            firstFrameworkSuper = "";
+            //throw new IllegalStateException("null is not callable");
+        }else{
+            throw new IllegalStateException("a primitive type is not callable, look for a bug");
+        }
+
+        JSONArray cargs = new JSONArray();
+        cargs.add(ToString.to_str(calle)); //Add calle as first argument
+
+        for (CallbackOuterClass.PValue arg : args) {
+            cargs.add(ToString.to_str(arg));
+        }
+//        jev.put("booleanArgs", boolArgs);
+        jev.put("concreteArgs", cargs);
+
+
+        String signature = methodEvent.getSignature();
+        String name = methodEvent.getFullname();
+        String sig = firstFrameworkSuper+"."+name+signature;
+        jev.put("signature", sig);
+        return jev;
+    }
 
     public void writeJsonObject(File file) throws IOException {
 
