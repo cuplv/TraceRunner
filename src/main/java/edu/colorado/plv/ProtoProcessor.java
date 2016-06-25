@@ -54,6 +54,9 @@ public class ProtoProcessor implements EventProcessor {
 
         JSONArray events = new JSONArray();
         JSONObject event = new JSONObject();
+        JSONArray callbackList = new JSONArray();
+        long activityThread = -1;
+
         event.put("initial", "true");
         JSONObject currentCallback = new JSONObject();
         currentCallback.put("callinList", new JSONArray());
@@ -67,8 +70,11 @@ public class ProtoProcessor implements EventProcessor {
 
             if(pEvent.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.CALLBACK)) {
                 //This is an "Event", callback was used but bad terminology
+
+                event.put("callbackList", callbackList);
                 events.add(event);
                 event = new JSONObject();
+                callbackList = new JSONArray();
 
                 JSONObject eventStr;
                 //TODO: create string for event
@@ -79,49 +85,81 @@ public class ProtoProcessor implements EventProcessor {
                 eventStr.put("targetField", icallback.getTarget().getPObjctReferenc().getType());
                 event.put("eventIdentifier", eventStr);
                 event.put("initial", "false");
+                System.out.println("****************EVENT*********************");
+                System.out.println(event);
+                System.out.println("*************************************");
 
                 //Add list of all objects which have been encountered
                 JSONArray callbackObjects = new JSONArray();
                 event.put("callbackObjects", callbackObjects);
 
                 //Add list of callins
-                JSONArray callinbackList = new JSONArray();
-                event.put("callbackList", callinbackList);
-
+//                JSONArray callinbackList = new JSONArray();
+//                event.put("callbackList", callinbackList);
 
 
             }else if(pEvent.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)) {
                 CallbackOuterClass.MethodEvent methodEvent = pEvent.getMethodEvent();
                 if(methodEvent.getIsCallback()){
-                    //Callback, adding all concrete objects to a list
-                    CallbackOuterClass.PValue reciever = methodEvent.getCalle();
+                    if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)) {
+                        //Callback, adding all concrete objects to a list
+                        CallbackOuterClass.PValue reciever = methodEvent.getCalle();
 
-                    String s = ToString.to_str(reciever);
-                    JSONArray callbackObjects = (JSONArray)event.get("callbackObjects");
-                    addIfNotIn(s, callbackObjects);
+                        String s = ToString.to_str(reciever);
+                        JSONArray callbackObjects = (JSONArray) event.get("callbackObjects");
+                        addIfNotIn(s, callbackObjects);
 
-                    //Iterate over all parameters and add to list
-                    int parametersCount = methodEvent.getParametersCount();
-                    for(int i = 0; i<parametersCount; ++i){
-                        CallbackOuterClass.PValue parameter = methodEvent.getParameters(i);
-                        String sp = ToString.to_str(parameter);
-                        addIfNotIn(sp,callbackObjects);
+                        //Iterate over all parameters and add to list
+                        int parametersCount = methodEvent.getParametersCount();
+                        for (int i = 0; i < parametersCount; ++i) {
+                            CallbackOuterClass.PValue parameter = methodEvent.getParameters(i);
+                            String sp = ToString.to_str(parameter);
+                            addIfNotIn(sp, callbackObjects);
+                        }
+//                    JSONArray icallbackList = (JSONArray)event.get("callbackList");
+
+
+                        currentCallback = new JSONObject();
+                        JSONObject callbackInfo = DataProjection.methodEventToJson_short(methodEvent);
+                        currentCallback.put("callback", callbackInfo);
+                        currentCallback.put("callinList", new JSONArray());
+
+                        if(methodEvent.getThreadID() == activityThread){
+                            callbackList.add(currentCallback);
+                        }
+
+                        if(activityThread == -1){
+                            if(methodEvent.getFullname().contains("onCreate")){
+                                activityThread = methodEvent.getThreadID();
+                                callbackList.add(currentCallback);
+                            }
+                        }
+
+
+                        System.out.println("****************Callback*********************");
+                        System.out.println(currentCallback);
+                        System.out.println("*************************************");
                     }
-                    JSONArray icallbackList = (JSONArray)event.get("callbackList");
-                    icallbackList.add(currentCallback);
-                    currentCallback = new JSONObject();
-                    JSONObject callbackInfo = DataProjection.methodEventToJson_short(methodEvent);
 
-
-                    currentCallback.put("callback", callbackInfo);
-                    currentCallback.put("callinList", new JSONArray());
                 }else{
                     //Callin
+
                     if(methodEvent.getEventType().equals(CallbackOuterClass.EventType.METHODENTRY)) {
                         JSONObject jsonObject = DataProjection.methodEventToJson_short(methodEvent);
                         JSONArray callinList = (JSONArray) currentCallback.get("callinList");
-                        callinList.add(jsonObject);
+                        if(methodEvent.getThreadID() == activityThread){
+                            callinList.add(jsonObject);
+                        }
+
+                        if(activityThread == -1){
+                            if(methodEvent.getFullname().contains("onCreate")){
+                                activityThread = methodEvent.getThreadID();
+                                callinList.add(jsonObject);
+                            }
+                        }
                     }
+
+
                 }
 
             }
