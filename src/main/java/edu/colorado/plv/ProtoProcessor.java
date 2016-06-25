@@ -83,7 +83,8 @@ public class ProtoProcessor implements EventProcessor {
                 eventStr.put("what", icallback.getWhat());
                 eventStr.put("callbackField", icallback.getCallback().getPObjctReferenc().getType());
                 eventStr.put("targetField", icallback.getTarget().getPObjctReferenc().getType());
-                event.put("eventIdentifier", eventStr);
+
+                event.put("signature", eventStr.toJSONString());
                 event.put("initial", "false");
                 System.out.println("****************EVENT*********************");
                 System.out.println(event);
@@ -119,18 +120,23 @@ public class ProtoProcessor implements EventProcessor {
 //                    JSONArray icallbackList = (JSONArray)event.get("callbackList");
 
 
-                        currentCallback = new JSONObject();
-                        JSONObject callbackInfo = DataProjection.methodEventToJson_short(methodEvent);
-                        currentCallback.put("callback", callbackInfo);
-                        currentCallback.put("callinList", new JSONArray());
+
 
                         if(methodEvent.getThreadID() == activityThread){
+                            currentCallback = new JSONObject();
+                            JSONObject callbackInfo = DataProjection.methodEventToJson_short(methodEvent);
+                            currentCallback.put("callback", callbackInfo);
+                            currentCallback.put("callinList", new JSONArray());
                             callbackList.add(currentCallback);
                         }
 
                         if(activityThread == -1){
                             if(methodEvent.getFullname().contains("onCreate")){
                                 activityThread = methodEvent.getThreadID();
+                                currentCallback = new JSONObject();
+                                JSONObject callbackInfo = DataProjection.methodEventToJson_short(methodEvent);
+                                currentCallback.put("callback", callbackInfo);
+                                currentCallback.put("callinList", new JSONArray());
                                 callbackList.add(currentCallback);
                             }
                         }
