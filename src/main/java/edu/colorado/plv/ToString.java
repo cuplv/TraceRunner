@@ -43,4 +43,21 @@ public class ToString {
             throw new UnsupportedOperationException();
         }
     }
+    public static boolean isNonExtendingPval(CallbackOuterClass.PValue pValue){
+        if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)) {
+            CallbackOuterClass.PObjectReference pObjctReferenc = pValue.getPObjctReferenc();
+            if(pObjctReferenc.getFirstFrameworkSuper().equals("")){
+                return pObjctReferenc.getInterfacesCount()==0;
+            }
+            return false;
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PSTRINGREFERENCE)){
+            return false;
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POTHERVALUE)) {
+            return false;
+        }else if(pValue.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)){
+            return false;
+        }else {
+            throw new UnsupportedOperationException();
+        }
+    }
 }

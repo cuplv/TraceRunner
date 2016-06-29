@@ -54,6 +54,8 @@ public class ProtoProcessor implements EventProcessor {
 
         JSONArray events = new JSONArray();
         JSONObject event = new JSONObject();
+
+        event.put("callbackObjects", new JSONArray());
         JSONArray callbackList = new JSONArray();
         long activityThread = -1;
 
@@ -94,13 +96,10 @@ public class ProtoProcessor implements EventProcessor {
                 evtArgs.add(callbackPObj.getType() + "@" + targetPObj.getId());
                 event.put("concreteArgs", evtArgs);
                 event.put("initial", "false");
-                System.out.println("****************EVENT*********************");
-                System.out.println(event);
-                System.out.println("*************************************");
 
                 //Add list of all objects which have been encountered
-                JSONArray callbackObjects = new JSONArray();
-                event.put("callbackObjects", callbackObjects);
+                JSONArray callbackObjectss = new JSONArray();
+                event.put("callbackObjects", callbackObjectss);
 
 
             }else if(pEvent.getEventTypeCase().equals(CallbackOuterClass.EventInCallback.EventTypeCase.METHODEVENT)) {
@@ -111,16 +110,17 @@ public class ProtoProcessor implements EventProcessor {
                         CallbackOuterClass.PValue reciever = methodEvent.getCalle();
 
                         String s = ToString.to_str(reciever);
-                        JSONArray callbackObjects = (JSONArray) event.get("callbackObjects");
-                        addIfNotIn(s, callbackObjects);
+                        //******************************
+                        //JSONArray callbackObjects = (JSONArray) event.get("callbackObjects");
+//                        addIfNotIn(s, callbackObjects);
 
                         //Iterate over all parameters and add to list
-                        int parametersCount = methodEvent.getParametersCount();
-                        for (int i = 0; i < parametersCount; ++i) {
-                            CallbackOuterClass.PValue parameter = methodEvent.getParameters(i);
-                            String sp = ToString.to_str(parameter);
-                            addIfNotIn(sp, callbackObjects);
-                        }
+//                        int parametersCount = methodEvent.getParametersCount();
+//                        for (int i = 0; i < parametersCount; ++i) {
+//                            CallbackOuterClass.PValue parameter = methodEvent.getParameters(i);
+//                            String sp = ToString.to_str(parameter);
+//                            addIfNotIn(sp, callbackObjects);
+//                        }
 //                    JSONArray icallbackList = (JSONArray)event.get("callbackList");
 
 
@@ -142,11 +142,6 @@ public class ProtoProcessor implements EventProcessor {
                                 callbackList.add(currentCallback);
                             }
                         }
-
-
-                        System.out.println("****************Callback*********************");
-                        System.out.println(currentCallback);
-                        System.out.println("*************************************");
                     }
 
                 }else{
@@ -156,15 +151,19 @@ public class ProtoProcessor implements EventProcessor {
                         JSONObject jsonObject = DataProjection.methodEventToJson_short(methodEvent);
                         JSONArray callinList = (JSONArray) currentCallback.get("callinList");
                         String fullname = methodEvent.getFullname();
-                        if(!fullname.contains("<clinit>")) {
-                            if (methodEvent.getThreadID() == activityThread) {
-                                callinList.add(jsonObject);
-                            }
+                        CallbackOuterClass.PValue calle = methodEvent.getCalle();
+                        if(!ToString.isNonExtendingPval(calle)) {
+                            if (!fullname.contains("<clinit>")) {
 
-                            if (activityThread == -1) {
-                                if (methodEvent.getFullname().contains("onCreate")) {
-                                    activityThread = methodEvent.getThreadID();
+                                if (methodEvent.getThreadID() == activityThread) {
                                     callinList.add(jsonObject);
+                                }
+
+                                if (activityThread == -1) {
+                                    if (methodEvent.getFullname().contains("onCreate")) {
+                                        activityThread = methodEvent.getThreadID();
+                                        callinList.add(jsonObject);
+                                    }
                                 }
                             }
                         }
@@ -177,6 +176,7 @@ public class ProtoProcessor implements EventProcessor {
 
 
         }
+        event.put("callbackObjects", callbackList);
         events.add(event);
         JSONObject obj = new JSONObject();
         obj.put("info", info);

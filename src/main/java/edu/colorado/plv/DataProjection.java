@@ -563,6 +563,11 @@ public class DataProjection {
         String firstFrameworkSuper = null;
         if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)) {
             firstFrameworkSuper = calle.getPObjctReferenc().getFirstFrameworkSuper();
+            if(firstFrameworkSuper.equals("")){
+                int interfacesCount = calle.getPObjctReferenc().getInterfacesCount();
+                if(interfacesCount > 0)
+                    firstFrameworkSuper = calle.getPObjctReferenc().getInterfaces(0);
+            }
             //jev.put("signature", firstFrameworkSuper);
         }else if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)){
             firstFrameworkSuper = "";
@@ -583,7 +588,12 @@ public class DataProjection {
 
         String signature = methodEvent.getSignature();
         String name = methodEvent.getFullname();
+        if(methodEvent.getIsStatic()){
+            firstFrameworkSuper = methodEvent.getDeclaringType();
+            System.out.print("");
+        }
         String sig = firstFrameworkSuper+"."+name+signature;
+
         jev.put("signature", sig);
         return jev;
     }
@@ -594,11 +604,18 @@ public class DataProjection {
         List<CallbackOuterClass.PValue> args = methodEvent.getParametersList();
         String firstFrameworkSuper = null;
         if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.POBJCTREFERENC)) {
-            firstFrameworkSuper = calle.getPObjctReferenc().getFirstFrameworkSuper();
+            CallbackOuterClass.PObjectReference pObjctReferenc = calle.getPObjctReferenc();
+
+            firstFrameworkSuper = pObjctReferenc.getFirstFrameworkSuper();
             //jev.put("signature", firstFrameworkSuper);
-        }else if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)){
+            if(firstFrameworkSuper.equals("")){
+                if(pObjctReferenc.getInterfacesCount() > 0)
+                    firstFrameworkSuper = pObjctReferenc.getInterfaces(0);
+            }
+        }else if(calle.getValueTypeCase().equals(CallbackOuterClass.PValue.ValueTypeCase.PNULL)) {
             firstFrameworkSuper = "";
             //throw new IllegalStateException("null is not callable");
+
         }else{
             throw new IllegalStateException("a primitive type is not callable, look for a bug");
         }
