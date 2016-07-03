@@ -1,9 +1,5 @@
 package app.dinus.com.example;
 
-
-// WARNING: the class uses commons-lang
-// Need to import this in gradle: compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-
 import android.annotation.SuppressLint;
 import android.view.ContextMenu;
 import android.view.DragEvent;
@@ -15,7 +11,10 @@ import android.view.WindowInsets;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -43,7 +42,7 @@ public class TraceRunnerCallbackRegistration {
         try {
             // Access the mListenerInfo object of view
             // Need to break visibility restrictions (boolean flag set to true)
-            Object listenerInfo = FieldUtils.readField(view, "mListenerInfo", true);
+            Object listenerInfo = readField(view, "mListenerInfo", true);
             if (null == listenerInfo) {
                 System.err.println("mListenerInfo is null!");
                 return view;
@@ -114,22 +113,80 @@ public class TraceRunnerCallbackRegistration {
         return view;
     }
 
-    private static boolean fieldExist(Object obj, String fieldName) throws IllegalAccessException {
-        Field field = FieldUtils.getField(obj.getClass(), fieldName, true);
-        return null == field;
+    private static Object readField(Object obj, String fieldName, boolean forceAccess) throws IllegalAccessException {
+        Class objClass = obj.getClass();
+
+        try {
+            Field field = getFieldRec(objClass, fieldName);
+            if (field == null) return null;
+
+            if (forceAccess && !field.isAccessible()) {
+                field.setAccessible(true);
+            } else {
+                setAccessibleWorkaround(field);
+            }
+
+            Object b = field.get(obj);
+            return b;
+
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Field getFieldRec(Class clazz, String fieldName)
+            throws NoSuchFieldException {
+        try {
+            return clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Class superClass = clazz.getSuperclass();
+            if (superClass == null) {
+                throw e;
+            } else {
+                return getFieldRec(superClass, fieldName);
+            }
+        }
+    }
+
+
+    static void setAccessibleWorkaround(AccessibleObject o) {
+        if (o == null || o.isAccessible()) {
+            return;
+        }
+        Member m = (Member) o;
+        if (Modifier.isPublic(m.getModifiers())
+                && isPackageAccess(m.getDeclaringClass().getModifiers())) {
+            try {
+                o.setAccessible(true);
+            } catch (SecurityException e) {
+                // ignore in favor of subsequent IllegalAccessException
+            }
+        }
+    }
+
+    private static final int ACCESS_TEST = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE;
+    static boolean isPackageAccess(int modifiers) {
+        return (modifiers & ACCESS_TEST) == 0;
     }
 
     private static boolean isFieldNull(Object obj, String fieldName) throws IllegalAccessException {
         assert null != obj;
 
-        Object fieldObj = FieldUtils.readField(obj, fieldName, true);
+        Object fieldObj = readField(obj, fieldName, true);
         return null == fieldObj;
     }
 
     private static boolean isCollectionFieldEmpty(Object obj, String fieldName) throws IllegalAccessException {
         assert null != obj;
 
-        Object field = FieldUtils.readField(obj, fieldName, true);
+        Object field = readField(obj, fieldName, true);
         if (field != null) {
             Collection<Object> arrayObj = (Collection<Object>) field;
             return arrayObj.size() == 0;
