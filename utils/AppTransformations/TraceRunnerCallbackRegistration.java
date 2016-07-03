@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
-
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
