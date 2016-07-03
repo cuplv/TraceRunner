@@ -74,7 +74,7 @@ public class TraceRunnerCallbackRegistration {
             }
            if (! isFieldNull(listenerInfo, "mOnScrollChangeListener")) {
                listener = getListener(listener);
-               view.oChangeListener(listener);
+               view.onScrollChangeListener(listener);
            }
             if (isFieldNull(listenerInfo, "mOnClickListener")) {
                 listener = getListener(listener);
