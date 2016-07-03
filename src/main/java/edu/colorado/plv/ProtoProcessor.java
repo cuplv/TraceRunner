@@ -371,6 +371,8 @@ public class ProtoProcessor implements EventProcessor {
             e.printStackTrace();
         }
         String methodLocation = location.method().toString();
+        if(caller==null)
+            caller= CallbackOuterClass.PValue.newBuilder().setPNull(true).build();
         CallbackOuterClass.EventInCallback.Builder nevt = CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
                 CallbackOuterClass.MethodEvent.newBuilder()
                         .setFullname(evt.method().name())
@@ -433,6 +435,8 @@ public class ProtoProcessor implements EventProcessor {
             e.printStackTrace();
         }
         String methodLocation = location.method().toString();
+        if(caller==null)
+            caller= CallbackOuterClass.PValue.newBuilder().setPNull(true).build();
         CallbackOuterClass.EventInCallback.Builder nevt = CallbackOuterClass.EventInCallback.newBuilder().setMethodEvent(
                 CallbackOuterClass.MethodEvent.newBuilder()
                         .setFullname(evt.method().name())

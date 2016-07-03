@@ -21,7 +21,7 @@ public class TraceRunner {
                     "usage: read [file]\n" +
                     "usage: dataProj [proto file] [directory] [appPackage glob]\n" +
                     "usage: dataProjJson [proto file] [appPackage glob] [outputDir]" +
-                    "usage: verifTrace");
+                    "usage: verifTrace [input] [output]");
 
         }
         if (args[0].equals("dataProjJson")){

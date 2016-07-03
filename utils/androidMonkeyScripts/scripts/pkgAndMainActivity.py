@@ -1,53 +1,53 @@
 #!/usr/bin/python
 import os
 import sys
-import xml.etree.ElementTree as ET
+from subprocess import Popen, PIPE
+import re
 
 if len(sys.argv) != 2:
-	raise Exception("usage [source path]")
+    raise Exception("usage [source path]")
+
+androidHome = os.environ.get('ANDROID_HOME')
+if androidHome == "":
+    raise Exception("please set ANDROID_HOME")
+
+aapt = androidHome + "/build-tools/22.0.1/aapt"
+
+def getNameFromLine(line):
+    spline = line.split(" ")
+    for l in spline:
+        if re.match("^name=", l):
+            return l[6:-1]
+
 
 srcdir = sys.argv[1]
 manifests = []
 for root, dirs, files in os.walk(srcdir):
-	for f in files:
-		if f.endswith(".apk"):
-			print "apk: " + root + "/" + f
-		if f == "AndroidManifest.xml":
-			manifests.append(root + '/' + f)
+    for f in files:
+        if f.endswith(".apk"):
+            print "apk: " + root + "/" + f
+            process = Popen([aapt, "dump", "badging", root + "/" + f], stdout=PIPE)
+            (output, err) = process.communicate()
+            exit_code = process.wait()
+            soutput = output.split("\n")
+            for line in soutput:
+                package = ""
+                activity = ""
+                if "package" in line:
+                    #print line
+                    package = getNameFromLine(line)
+                if "launchable" in line:
+                    #print line
+                    activity = getNameFromLine(line)
+                if package != "":
+                    print package
+                if activity != "":
+                    print activity
 
-for manifest in manifests:
-	try:
-		
-		xmlroot = ET.parse(manifest).getroot()
-		
-		package = xmlroot.attrib['package']
-		applications = xmlroot.findall('application')
-		if len(applications) != 1:
-			raise AttributeError("too many application tags")
-		application = applications[0]
-		
-		activities = application.findall('activity')
-		mainActivity = ""
-		for activity in activities:
-			intentfilters = activity.findall('intent-filter')
-			if len(intentfilters) > 1:
-				raise AttributeError("too many intent filters in activity")
-			if len(intentfilters) == 1:
-				intentfilter = intentfilters[0]
-				actions = intentfilter.findall('action')
-				if len(actions) != 1:
-					raise AttributeError("wrong number of actions")
-				action = actions[0]
-				if(action.attrib['{http://schemas.android.com/apk/res/android}name'] == 'android.intent.action.MAIN'):
-					mainActivity = activity
-		mainActivityName = mainActivity.attrib['{http://schemas.android.com/apk/res/android}name']
-		print "==================="
-		print manifest
-		print "--"
-		print "package: " + package
-		print "main activity name: " + mainActivityName
-	except AttributeError as e:
-		if False:
-			print "--------------------"
-			print manifest
-			print "bad manifest: " + str(e)
+            print "----------------------------------"
+
+
+
+
+
+
