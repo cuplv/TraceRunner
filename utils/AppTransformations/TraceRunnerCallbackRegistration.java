@@ -1,5 +1,9 @@
 package app.dinus.com.example;
 
+
+// WARNING: the class uses commons-lang
+// Need to import this in gradle: compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
 import android.annotation.SuppressLint;
 import android.view.ContextMenu;
 import android.view.DragEvent;
