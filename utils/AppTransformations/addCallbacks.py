@@ -17,7 +17,7 @@ def convertLine(line):
     if doNoDotSubs:
         line = re.sub(r"(?!\.)(findViewById\([.a-zA-Z0-9]+\))", r"TraceRunnerCallbackRegistration.registerForView(\1)",
                   line)
-    line = re.sub(r"([a-zA-Z][a-zA-Z0-9_.]*)\.(findViewById\([.a-zA-Z0-9]+\))",
+    line = re.sub(r"([a-zA-Z][a-zA-Z0-9_.]*)\.(findViewById\([.a-zA-Z0-9_]+\))",
                   r"TraceRunnerCallbackRegistration.registerForView(\1.\2)", line)
 
     return line
