@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 
-import android.view.WindowInsets;
+// import android.view.WindowInsets;
 
 
 import java.lang.reflect.AccessibleObject;
@@ -72,10 +72,10 @@ public class TraceRunnerCallbackRegistration {
                 view.setOnFocusChangeListener(listener);
                 } catch (RuntimeException e) {}
             }
-           if (! isFieldNull(listenerInfo, "mOnScrollChangeListener")) {
-               listener = getListener(listener);
-               view.oChangeListener(listener);
-           }
+//            if (! isFieldNull(listenerInfo, "mOnScrollChangeListener")) {
+//                listener = getListener(listener);
+//                view.oChangeListener(listener);
+//            }
             if (isFieldNull(listenerInfo, "mOnClickListener")) {
                 listener = getListener(listener);
                 try {
@@ -130,10 +130,10 @@ public class TraceRunnerCallbackRegistration {
                 view.setOnSystemUiVisibilityChangeListener(listener);
                 } catch (RuntimeException e) {}
             }
-            if (isFieldNull(listenerInfo, "mOnApplyWindowInsetsListener")) {
-                listener = getListener(listener);
-                view.setOnApplyWindowInsetsListener(listener);
-            }
+            // if (isFieldNull(listenerInfo, "mOnApplyWindowInsetsListener")) {
+            //     listener = getListener(listener);
+            //     view.setOnApplyWindowInsetsListener(listener);
+            // }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -260,10 +260,10 @@ public class TraceRunnerCallbackRegistration {
 
         }
 
-        @Override
-        public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
-            return null;
-        }
+        // @Override
+        // public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+        //     return null;
+        // }
 
         @Override
         public void onClick(View v) {
