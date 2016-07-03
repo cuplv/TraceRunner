@@ -23,7 +23,7 @@ def convertLine(line):
     return line
 
 
-def convert_java(fname):
+def convert_java(fname, package):
     f = open(fname,'r')
     lines = f.readlines()
 
@@ -49,8 +49,12 @@ def convert_java(fname):
     f.seek(0)
     f.truncate()
     #f.write("import " + package + ".TraceRunnerCallbackRegistration;")
+    index = 0
     for line in modlines:
+        if index == 2:
+            f.write("import " + package + ".TraceRunnerCallbackRegistration;")
         f.write(line)
+        index+=1
     f.close()
 
     # #run sed command on file
@@ -81,9 +85,12 @@ def main():
 
     opts, args = p.parse_args()
 
+    if not opts.package:
+        usage("package required")
+
     if opts.file:
         file = opts.file
-        convert_java(file)
+        convert_java(file, opts.package)
 
     if opts.directory:
         dir = opts.directory
