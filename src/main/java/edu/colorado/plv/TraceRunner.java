@@ -78,6 +78,7 @@ public class TraceRunner {
         try {
             traceMainLoop.mainLoop();
         }catch (SocketException exception){
+            exception.printStackTrace();
             System.exit(-1);
         }
     }
