@@ -9,3 +9,5 @@ lazy val commonSettings = Seq(
 
 
 libraryDependencies += "org.smali" % "dexlib2" % "2.1.3"
+
+libraryDependencies += "org.ow2.asm" % "asm-debug-all" % "5.1"
