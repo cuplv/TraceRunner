@@ -27,3 +27,28 @@ Android APK files are signed by the developer to prevent people trying to alter 
 
 Create a Key
 ------------
+```
+mkdir ~/.keystore
+cd ~/.keystore
+keytool -genkey -v -keystore recompiled.keystore -alias recompiled -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Sign recompiled apk
+-------------------
+```
+bash utils/resign.sh [path to generated apk] app-debug.apk
+```
+
+Starting the new (or any) APK on a phone
+========================================
+
+get info for all apk files in a directory:
+```
+python utils/pkgAndMainActivity.py [path to generated apk]
+```
+
+run a given apk:
+```
+python utils/start.py [apk path] [package] [appname]
+```
+[appname] is the name of the activity you want to start, this is listed by pkgAndMainActivity.py
