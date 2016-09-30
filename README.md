@@ -1,17 +1,54 @@
-To import into Intellij
+To perform app transformation:
+
+Import into Intellij
 =======================
 
-Download json-simple-1.1.1.jar into libs directory:
-https://search.maven.org/#artifactdetails%7Ccom.googlecode.json-simple%7Cjson-simple%7C1.1.1%7Cbundle
-(TODO: figure out why gradle is broken again and add this dependency properly)
+Select import project and choose sbt file
+select download sources
 
-./gradlew --daemon assemble
-./gradlew --daemon idea
-DO NOT "IMPORT PROJECT" this will break things
-In Intellij import Tracerunner.ipr
+Check out android platforms
+===========================
+git clone git@github.com:Sable/android-platforms.git
 
-To make it build before running it in the ide:
-go to gradle tab on left side and expand
-Tracerunner > Tasks > build
-right click on assemble and click "execute before make"
+Run with arguments
+=======================
+```
+-allow-phantom-refs -android-jars [place android-platforms was checked out]/android-platforms -process-dir [path to apk]/app-debug.apk -output-dir [directory to put apk in]
+```
 
+-allow-phantom-refs #this makes fake versions of things we cannot find, this should not affect the instrumentation since we are performing our transformation to every file, but keep an eye on it
+
+-android-jars #non stubbed version of android framework.  The Sable/android-platforms repo is really old though so this may be problematic later, TODO: figure out how to compile recent versions.
+
+
+Signing APK
+===========
+Android APK files are signed by the developer to prevent people trying to alter them (usually for mallicious purposes).  By running a code transformation we have now altered the APK meaning the old signature will no longer work.  This is how to apply a new signature.
+
+Create a Key
+------------
+```
+mkdir ~/.keystore
+cd ~/.keystore
+keytool -genkey -v -keystore recompiled.keystore -alias recompiled -keyalg RSA -keysize 2048 -validity 10000
+```
+
+Sign recompiled apk
+-------------------
+```
+bash utils/resign.sh [path to generated apk] app-debug.apk
+```
+
+Starting the new (or any) APK on a phone
+========================================
+
+get info for all apk files in a directory:
+```
+python utils/pkgAndMainActivity.py [path to generated apk]
+```
+
+run a given apk:
+```
+python utils/start.py [apk path] [package] [appname]
+```
+[appname] is the name of the activity you want to start, this is listed by pkgAndMainActivity.py
