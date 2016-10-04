@@ -4,3 +4,6 @@ build/**
 *.iml
 *.iws
 *.ipr
+.DS_Store
+testApps/output/
+project/
