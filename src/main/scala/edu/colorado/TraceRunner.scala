@@ -54,8 +54,6 @@ object TraceRunner {
     Scene.v().loadClassAndSupport("java.lang.Object")
     Scene.v().loadClassAndSupport("java.lang.System")
     instrumentationClasses.map(a => Scene.v().loadClassAndSupport(a))
-
-
   }
 
   def main(args: Array[String]): Unit = {
@@ -98,7 +96,7 @@ object TraceRunner {
           //prefer Android APK files// -src-prec apk
           Options.v().set_src_prec(Options.src_prec_apk)
           //output as APK, too//-f J
-          Options.v().set_output_format(Options.output_format_dex)
+          Options.v().set_output_format(Options.output_format_force_dex)
           // resolve the PrintStream and System soot-classes
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
           Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
@@ -107,7 +105,7 @@ object TraceRunner {
             new Transform("jtp.myInstrumenter", new CallinInstrumenter(config)));
 
           val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
-          //soot.Main.main(config1);
+          soot.Main.main(config1);
         }else{
           throw new IllegalArgumentException("Application packages must be non empty")
         }

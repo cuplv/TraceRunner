@@ -23,6 +23,7 @@ object TraceRunnerOptions {
       Some(config.apkPath),
       Some("-output-dir"),
       Some(config.outputDir)
+
     ).flatten
   }
 }
