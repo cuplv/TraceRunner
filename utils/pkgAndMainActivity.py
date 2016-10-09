@@ -11,7 +11,8 @@ androidHome = os.environ.get('ANDROID_HOME')
 if androidHome == "":
     raise Exception("please set ANDROID_HOME")
 
-aapt = androidHome + "/build-tools/22.0.1/aapt"
+# print "android home: %s" % androidHome
+aapt = androidHome + "/build-tools/24.0.3/aapt"
 
 def getNameFromLine(line):
     spline = line.split(" ")
