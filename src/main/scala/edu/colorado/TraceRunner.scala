@@ -5,9 +5,10 @@ import java.io.{File, OutputStream}
 import java.nio.file.{Files, Path}
 import javax.tools.{JavaCompiler, StandardJavaFileManager, ToolProvider}
 
-import edu.colorado.{CallinInstrumenter, TraceRunnerOptions}
+import edu.colorado.{CallinInstrumenter, InstrumentationGenerators, TraceRunnerOptions}
 import soot.{PackManager, Scene, SootClass, Transform}
-import soot.options.Options;
+import soot.options.Options
+
 import scala.collection.JavaConverters._
 
 case class Config(apkPath: String = null,
@@ -50,11 +51,7 @@ object TraceRunner {
     }).map(a => a.getAbsolutePath)
   }
 
-  def addInstrumentationClasses(instrumentationClasses: Array[String]) = {
-    Scene.v().loadClassAndSupport("java.lang.Object")
-    Scene.v().loadClassAndSupport("java.lang.System")
-    instrumentationClasses.map(a => Scene.v().loadClassAndSupport(a))
-  }
+
 
   def main(args: Array[String]): Unit = {
     val parser = new scopt.OptionParser[Config]("TraceRunner") {
@@ -75,34 +72,39 @@ object TraceRunner {
 
           /**hack to make osx openjdk work**/
           if(System.getProperty("os.name").equals("Mac OS X")){
-            Scene.v().setSootClassPath(sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
+            Scene.v().setSootClassPath(config.apkPath + ":" +
+              sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
 
           }
 
-          /**add instrumentation to classpath**/
-          val path: String = Scene.v().getSootClassPath
-          val left: String =
-            instrumentationClasses(config).foldLeft(path)((acc: String,v: String) =>
-              acc + ":" + config.instDir + "/" + v)
-          Scene.v().setSootClassPath(left)
+//          //TODO: can instrumentation be written in java easily?
+//          /**add instrumentation to classpath**/
+//          val path: String = Scene.v().getSootClassPath
+//          val left: String =
+//            instrumentationClasses(config).foldLeft(path)((acc: String,v: String) =>
+//              acc + ":" + config.instDir + "/" + v)
+//          Scene.v().setSootClassPath(left)
 
 
 
           //** add instrumentation classes **
-          addInstrumentationClasses(instrumentationClasses(config))
+          //InstrumentationGenerators.addInstrumentationClasses()
+
+
 
 
           //** Instrument callbacks **
           //prefer Android APK files// -src-prec apk
           Options.v().set_src_prec(Options.src_prec_apk)
           //output as APK, too//-f J
-          Options.v().set_output_format(Options.output_format_force_dex)
+          Options.v().set_output_format(Options.output_format_dex)
           // resolve the PrintStream and System soot-classes
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
           Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
 
+          PackManager.v().getPack("jtp").add(new Transform("jtp.plvInstrumentationClasses", new InstrumentationGenerators()))
           PackManager.v().getPack("jtp").add(
-            new Transform("jtp.myInstrumenter", new CallinInstrumenter(config)));
+            new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config)))
 
           val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
           soot.Main.main(config1);
