@@ -15,7 +15,8 @@ case class Config(apkPath: String = null,
                   androidJars: String = null,
                   outputDir: String = null,
                   applicationPackages: Array[String] = null,
-                  instDir: String = null
+                  instDir: String = null,
+                  jimpleOutput: Boolean = false
                  )
 
 object TraceRunner {
@@ -61,9 +62,10 @@ object TraceRunner {
         .text("Path to APK").required()
       opt[String]('o', "output-dir").action( (x,c) => c.copy(outputDir=x))
         .text("Output Directory").required()
-      opt[String]('p', "Application Packages").action((x,c) =>
+      opt[String]('p', "application-packages").action((x,c) =>
         c.copy(applicationPackages = x.split(":").filter(a => a != ""))).required()
-      opt[String]('i', "Instrumentation Directory").action((x,c) => c.copy(instDir = x)).required()
+      opt[String]('i', "instrumentation-directory").action((x,c) => c.copy(instDir = x)).required()
+      opt[Unit]('m', "output_jimple").action((x,c) => c.copy(jimpleOutput = true))
 
     }
     parser.parse(args,Config()) match {
@@ -95,7 +97,11 @@ object TraceRunner {
 
           //** Instrument callbacks **
           //prefer Android APK files// -src-prec apk
-          Options.v().set_src_prec(Options.src_prec_apk)
+          if(!config.jimpleOutput) {
+            Options.v().set_src_prec(Options.src_prec_apk)
+          }else{
+            Options.v().set_src_prec(Options.src_prec_jimple)
+          }
           //output as APK, too//-f J
           Options.v().set_output_format(Options.output_format_dex)
           // resolve the PrintStream and System soot-classes
