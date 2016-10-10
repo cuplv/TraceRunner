@@ -17,6 +17,8 @@ object TraceRunnerOptions {
       if(USE_PHANTOM_CLASSES){
         Some("-allow-phantom-refs")
       }else{None},
+      if(config.jimpleOutput){Some("-output-format")} else None,
+      if(config.jimpleOutput){Some("jimple")} else None,
       Some("-android-jars"),
       Some(config.androidJars),
       Some("-process-dir"),

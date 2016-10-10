@@ -97,13 +97,12 @@ object TraceRunner {
 
           //** Instrument callbacks **
           //prefer Android APK files// -src-prec apk
+          Options.v().set_src_prec(Options.src_prec_apk)
           if(!config.jimpleOutput) {
-            Options.v().set_src_prec(Options.src_prec_apk)
-          }else{
-            Options.v().set_src_prec(Options.src_prec_jimple)
+            Options.v().set_output_format(Options.output_format_dex)
           }
           //output as APK, too//-f J
-          Options.v().set_output_format(Options.output_format_dex)
+
           // resolve the PrintStream and System soot-classes
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
           Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
