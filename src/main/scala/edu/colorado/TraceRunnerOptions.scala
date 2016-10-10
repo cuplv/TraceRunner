@@ -14,19 +14,9 @@ object TraceRunnerOptions {
 
   def getSootConfig(config: Config): Array[String] = {
     Array(
-      if(USE_PHANTOM_CLASSES){
-        Some("-allow-phantom-refs")
-      }else{None},
       if(config.jimpleOutput){Some("-output-format")} else None,
       if(config.jimpleOutput){Some("jimple")} else None,
-      Some("-android-jars"),
-      Some(config.androidJars),
-      Some("-process-dir"),
-      Some(config.apkPath),
-      Some("-output-dir"),
-      Some(config.outputDir),
-      Some("-w") //-w option does whole program which enables SceneTransformers for InstrumentationGenerators
-
+      Some("-w")
     ).flatten
   }
 }

@@ -80,12 +80,7 @@ object TraceRunner {
           }
 
 //          //TODO: can instrumentation be written in java easily?
-//          /**add instrumentation to classpath**/
-//          val path: String = Scene.v().getSootClassPath
-//          val left: String =
-//            instrumentationClasses(config).foldLeft(path)((acc: String,v: String) =>
-//              acc + ":" + config.instDir + "/" + v)
-//          Scene.v().setSootClassPath(left)
+
 
 
 
@@ -95,13 +90,21 @@ object TraceRunner {
 
 
 
-          //** Instrument callbacks **
+          //** Set Options **
           //prefer Android APK files// -src-prec apk
           Options.v().set_src_prec(Options.src_prec_apk)
           if(!config.jimpleOutput) {
             Options.v().set_output_format(Options.output_format_dex)
           }
-          //output as APK, too//-f J
+          Options.v().set_android_jars(config.androidJars)
+          if(TraceRunnerOptions.USE_PHANTOM_CLASSES) {
+            Options.v().set_allow_phantom_refs(true)
+          }
+
+          Options.v().set_process_dir(List(config.apkPath).asJava)
+          Options.v().set_output_dir(config.outputDir)
+          Options.v().set_whole_program(true)
+
 
           // resolve the PrintStream and System soot-classes
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
@@ -112,6 +115,16 @@ object TraceRunner {
             new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config)))
 
           val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
+
+//          //TODO: remove following if bad
+//          /**add instrumentation to classpath**/
+//          val path: String = Scene.v().getSootClassPath
+//          val left: String =
+//            instrumentationClasses(config).foldLeft(path)((acc: String,v: String) =>
+//              acc + ":" + config.instDir + "/" + v)
+//          Scene.v().setSootClassPath(left)
+//          //TODO: end
+
           soot.Main.main(config1);
         }else{
           throw new IllegalArgumentException("Application packages must be non empty")
