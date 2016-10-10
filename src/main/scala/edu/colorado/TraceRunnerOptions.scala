@@ -22,7 +22,8 @@ object TraceRunnerOptions {
       Some("-process-dir"),
       Some(config.apkPath),
       Some("-output-dir"),
-      Some(config.outputDir)
+      Some(config.outputDir),
+      Some("-w") //-w option does whole program which enables SceneTransformers for InstrumentationGenerators
 
     ).flatten
   }

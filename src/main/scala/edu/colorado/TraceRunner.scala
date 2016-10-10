@@ -102,7 +102,7 @@ object TraceRunner {
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
           Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
 
-          PackManager.v().getPack("cg").add(new Transform("cg.plvInstrumentationClasses", new InstrumentationGenerators()))
+//          PackManager.v().getPack("cg").add(new Transform("cg.plvInstrumentationClasses", new InstrumentationGenerators()))
           PackManager.v().getPack("jtp").add(
             new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config)))
 
