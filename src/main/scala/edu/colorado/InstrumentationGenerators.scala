@@ -46,10 +46,7 @@ class InstrumentationGenerators extends SceneTransformer{
     units.add(Jimple.v().newInvokeStmt(Jimple.v().newVirtualInvokeExpr(tmpRef, toCall.makeRef(), StringConstant.v("Hello world!"))));
 
 
-    //Write out to file: TODO: this may break apk output... again
-//    val fileName: String = SourceLocator.v().getFileNameFor(instClass, Options.output_format_class);
-//    val streamOut: OutputStream = new JasminOutputStream(new FileOutputStream(fileName));
-//    val writerOut: PrintWriter  = new PrintWriter(new OutputStreamWriter(streamOut));
+
   }
 
   override def internalTransform(phaseName: String, options: util.Map[String, String]): scala.Unit = {

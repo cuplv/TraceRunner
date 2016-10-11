@@ -23,14 +23,15 @@ object TraceRunner {
 
   def instrumentationClasses(config: Config): Array[String] = {
 
-    val r = ".*\\.class".r
+    val isclass = ".*\\.class".r
     /** remove old instrumentation classes **/
 
     val instDirectory: File = new File(config.instDir)
-    instDirectory.listFiles().map(a => {
+    val listFiles: Array[File] = instDirectory.listFiles()
+    listFiles.map(a => {
       val name: String = a.getName
       name match{
-        case r() => {
+        case isclass() => {
           Files.delete(a.toPath)
         }
         case _ => {}
@@ -43,13 +44,15 @@ object TraceRunner {
     val fileObjects = standardFileManager.getJavaFileObjectsFromFiles(instDirectory.listFiles().toIterable.asJava)
     compiler.getTask(null, standardFileManager, null,null, null, fileObjects).call()
 
+    val listFiles1: Array[File] = instDirectory.listFiles()
     /** list all instrumentation classes **/
-    instDirectory.listFiles().filter(a =>{
-      a match {
-        case r() => true
+    val isclass2 = ".*\\.class".r
+    val map: Array[String] = listFiles1.filter( (a:File) =>
+      a.getName match {
+        case isclass2() => true
         case _ => false
-      }
-    }).map(a => a.getAbsolutePath)
+      }).map(a => a.getAbsolutePath)
+    map
   }
 
 
@@ -78,18 +81,6 @@ object TraceRunner {
               sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
 
           }
-
-//          //TODO: can instrumentation be written in java easily?
-
-
-
-
-          //** add instrumentation classes **
-          //InstrumentationGenerators.addInstrumentationClasses()
-
-
-
-
           //** Set Options **
           //prefer Android APK files// -src-prec apk
           Options.v().set_src_prec(Options.src_prec_apk)
@@ -118,11 +109,19 @@ object TraceRunner {
 
 //          //TODO: remove following if bad
 //          /**add instrumentation to classpath**/
-//          val path: String = Scene.v().getSootClassPath
-//          val left: String =
-//            instrumentationClasses(config).foldLeft(path)((acc: String,v: String) =>
-//              acc + ":" + config.instDir + "/" + v)
-//          Scene.v().setSootClassPath(left)
+          val path: String = Scene.v().getSootClassPath
+
+          val classes: Array[String] = instrumentationClasses(config)
+          //val instrumentationFileList: Array[File] = (new File(config.instDir)).listFiles()
+          val left: String =
+            classes.foldLeft(path)((acc: String,v: String) =>
+              acc + ":" + v)
+          if(path.equals(left)){
+            println("please run \"javac src/main/java/edu/colorado/plv/tracerunner_runtime_instrumentation/*.java\"" +
+              " from the tracerunner directory")
+            throw new IllegalArgumentException("")
+          }
+          Scene.v().setSootClassPath(left)
 //          //TODO: end
 
           soot.Main.main(config1);
