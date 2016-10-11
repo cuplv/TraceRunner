@@ -121,12 +121,16 @@ object TraceRunner {
               " from the tracerunner directory")
             throw new IllegalArgumentException("")
           }
-          Scene.v().setSootClassPath(left)
-
+          Scene.v().setSootClassPath(path + ":/home/s/Documents/source/TraceRunnerInstrumentation/build/libs/TraceRunnerInstrumentation-1.0.jar")
+          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation");
           /**set instrumentation to be included in apk**/
           //c	=	Scene.v().getSootClass()
           val instrumentataionclasses: Array[SootClass] = classes.map((a:String) =>
-              a.split('/').last.split('.').head).map(s => Scene.v().getSootClass(s))
+              a.split('/').last.split('.').head).map(s => {
+            val clazz = Scene.v().getSootClass(s)
+            clazz
+          })
+
           instrumentataionclasses.foreach(a => {
             val methods: util.List[SootMethod] = a.getMethods
             a.setApplicationClass()

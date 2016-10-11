@@ -4,7 +4,8 @@ import java.util
 
 import edu.colorad.cs.TraceRunner.Config
 import soot.jimple.{AbstractStmtSwitch, InvokeStmt}
-import soot.{Body, BodyTransformer, PatchingChain, Scene, SootMethod}
+import soot.util.Chain
+import soot.{Body, BodyTransformer, PatchingChain, Scene, SootClass, SootMethod}
 
 import scala.collection.JavaConversions._
 import scala.util.matching.Regex
@@ -13,26 +14,18 @@ import scala.util.matching.Regex
  * Created by s on 9/21/16.
  */
 class CallinInstrumenter(config: Config) extends BodyTransformer{
-  //var runFirst = false //TODO: somehow run once code can be run multiple times, fix this
+  var runSetup = true //TODO: somehow run once code can be run multiple times, fix this
 
   val applicationPackages = config.applicationPackages.map((a:String) =>{
     Utils.packageGlobToSignatureMatchingRegex(a).r
   })
 
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]): Unit = {
-//    if(!runFirst) {
-//      val inst = new InstrumentationGenerators()
-//      inst.addInstrumentationClasses()
-//      runFirst = true
-//    }
-    //TODO: remove the following
-    //TODO: I can find the inst class in the following but it does not end up in the resulting jar?
-//    Scene.v().getClasses.map(a =>
-//      {
-//        val name: String = a.getName
-//        val _ = 2
-//      })
-    //TODO: end remove
+
+    if(runSetup){
+      val clazz: SootClass = Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation")
+      clazz.setApplicationClass()
+    }
 
 
     val declaration: String = b.getMethod.getDeclaration
