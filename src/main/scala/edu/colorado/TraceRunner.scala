@@ -97,18 +97,15 @@ object TraceRunner {
           Options.v().set_whole_program(true)
 
 
-          // resolve the PrintStream and System soot-classes
+
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
           Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
 
-//          PackManager.v().getPack("cg").add(new Transform("cg.plvInstrumentationClasses", new InstrumentationGenerators()))
+          /** callin transformer**/
           PackManager.v().getPack("jtp").add(
             new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config)))
 
-          val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
-
-//          //TODO: remove following if bad
-//          /**add instrumentation to classpath**/
+          /**add instrumentation to classpath**/
           val path: String = Scene.v().getSootClassPath
 
           val classes: Array[String] = instrumentationClasses(config)
@@ -122,8 +119,18 @@ object TraceRunner {
             throw new IllegalArgumentException("")
           }
           Scene.v().setSootClassPath(left)
-//          //TODO: end
 
+          /**set instrumentation to be included in apk**/
+          //c	=	Scene.v().getSootClass()
+          val instrumentataionclasses: Array[SootClass] = classes.map((a:String) =>
+              a.split('/').last.split('.').head).map(s => Scene.v().getSootClass(s))
+          instrumentataionclasses.foreach(a =>
+            a.setApplicationClass()
+          )
+
+
+          /**run soot transformation**/
+          val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
           soot.Main.main(config1);
         }else{
           throw new IllegalArgumentException("Application packages must be non empty")

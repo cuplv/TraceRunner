@@ -13,18 +13,18 @@ import scala.util.matching.Regex
  * Created by s on 9/21/16.
  */
 class CallinInstrumenter(config: Config) extends BodyTransformer{
-  var runFirst = false //TODO: somehow run once code can be run multiple times, fix this
+  //var runFirst = false //TODO: somehow run once code can be run multiple times, fix this
 
   val applicationPackages = config.applicationPackages.map((a:String) =>{
     Utils.packageGlobToSignatureMatchingRegex(a).r
   })
 
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]): Unit = {
-    if(!runFirst) {
-      val inst = new InstrumentationGenerators()
-      inst.addInstrumentationClasses()
-      runFirst = true
-    }
+//    if(!runFirst) {
+//      val inst = new InstrumentationGenerators()
+//      inst.addInstrumentationClasses()
+//      runFirst = true
+//    }
     //TODO: remove the following
     //TODO: I can find the inst class in the following but it does not end up in the resulting jar?
 //    Scene.v().getClasses.map(a =>
