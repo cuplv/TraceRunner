@@ -3,10 +3,11 @@ package edu.colorad.cs.TraceRunner
 
 import java.io.{File, OutputStream}
 import java.nio.file.{Files, Path}
+import java.util
 import javax.tools.{JavaCompiler, StandardJavaFileManager, ToolProvider}
 
 import edu.colorado.{CallinInstrumenter, InstrumentationGenerators, TraceRunnerOptions}
-import soot.{PackManager, Scene, SootClass, Transform}
+import soot.{PackManager, Scene, SootClass, SootMethod, Transform}
 import soot.options.Options
 
 import scala.collection.JavaConverters._
@@ -23,26 +24,28 @@ object TraceRunner {
 
   def instrumentationClasses(config: Config): Array[String] = {
 
-    val isclass = ".*\\.class".r
-    /** remove old instrumentation classes **/
-
     val instDirectory: File = new File(config.instDir)
-    val listFiles: Array[File] = instDirectory.listFiles()
-    listFiles.map(a => {
-      val name: String = a.getName
-      name match{
-        case isclass() => {
-          Files.delete(a.toPath)
-        }
-        case _ => {}
-      }
-    })
+    if(false) { //TODO: re enable when figured out what problem is
+      val isclass = ".*\\.class".r
+      /** remove old instrumentation classes **/
 
-    /** compile instrumentation classes **/
-    val compiler: JavaCompiler = ToolProvider.getSystemJavaCompiler
-    val standardFileManager: StandardJavaFileManager = compiler.getStandardFileManager(null,null,null)
-    val fileObjects = standardFileManager.getJavaFileObjectsFromFiles(instDirectory.listFiles().toIterable.asJava)
-    compiler.getTask(null, standardFileManager, null,null, null, fileObjects).call()
+      val listFiles: Array[File] = instDirectory.listFiles()
+      listFiles.map(a => {
+        val name: String = a.getName
+        name match {
+          case isclass() => {
+            Files.delete(a.toPath)
+          }
+          case _ => {}
+        }
+      })
+
+      /** compile instrumentation classes **/
+      val compiler: JavaCompiler = ToolProvider.getSystemJavaCompiler
+      val standardFileManager: StandardJavaFileManager = compiler.getStandardFileManager(null, null, null)
+      val fileObjects = standardFileManager.getJavaFileObjectsFromFiles(instDirectory.listFiles().toIterable.asJava)
+      compiler.getTask(null, standardFileManager, null, null, null, fileObjects).call()
+    }
 
     val listFiles1: Array[File] = instDirectory.listFiles()
     /** list all instrumentation classes **/
@@ -124,8 +127,10 @@ object TraceRunner {
           //c	=	Scene.v().getSootClass()
           val instrumentataionclasses: Array[SootClass] = classes.map((a:String) =>
               a.split('/').last.split('.').head).map(s => Scene.v().getSootClass(s))
-          instrumentataionclasses.foreach(a =>
+          instrumentataionclasses.foreach(a => {
+            val methods: util.List[SootMethod] = a.getMethods
             a.setApplicationClass()
+          }
           )
 
 
