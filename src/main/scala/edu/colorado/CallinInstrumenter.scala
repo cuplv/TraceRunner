@@ -1,6 +1,8 @@
 package edu.colorado
 
 import java.util
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
+import java.util.concurrent.locks.ReentrantLock
 
 import edu.colorad.cs.TraceRunner.Config
 import soot.jimple.{AbstractStmtSwitch, InvokeStmt}
@@ -13,19 +15,36 @@ import scala.util.matching.Regex
 /**
  * Created by s on 9/21/16.
  */
+object Synchronizer{
+  var runSetup = new AtomicBoolean(true)
+  var lock = new ReentrantLock()
+}
+
 class CallinInstrumenter(config: Config) extends BodyTransformer{
-  var runSetup = true //TODO: somehow run once code can be run multiple times, fix this
+ //TODO: somehow run once code can be run multiple times, fix this
 
   val applicationPackages = config.applicationPackages.map((a:String) =>{
     Utils.packageGlobToSignatureMatchingRegex(a).r
   })
 
+
+
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]): Unit = {
 
-    if(runSetup){
-      val clazz: SootClass = Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation")
-      clazz.setApplicationClass()
+
+    if(Synchronizer.runSetup.get()){ //nuclear option to run only once, TODO: fix this
+      Synchronizer.lock.lock()
+      if(Synchronizer.runSetup.get()) {
+        val clazz: SootClass = Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation")
+        if (!clazz.isApplicationClass()) {
+          //println("run from thread: " + Thread.currentThread().getId)
+          clazz.setApplicationClass()
+        }
+        Synchronizer.runSetup.set(false)
+      }
+      Synchronizer.lock.unlock()
     }
+
 
 
     val declaration: String = b.getMethod.getDeclaration
@@ -50,7 +69,7 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
       for (i: soot.Unit <- units.snapshotIterator()) {
         i.apply(new AbstractStmtSwitch {
           override def caseInvokeStmt(stmt: InvokeStmt) = {
-            //          println(stmt) //TODO
+                      println(stmt) //TODO
           }
         })
       }

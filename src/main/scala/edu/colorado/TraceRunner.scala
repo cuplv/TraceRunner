@@ -6,57 +6,72 @@ import java.nio.file.{Files, Path}
 import java.util
 import javax.tools.{JavaCompiler, StandardJavaFileManager, ToolProvider}
 
-import edu.colorado.{CallinInstrumenter, InstrumentationGenerators, TraceRunnerOptions}
+import edu.colorado.{CallinInstrumenter, InstrumentationGenerators, TraceRunnerOptions, Utils}
 import soot.{PackManager, Scene, SootClass, SootMethod, Transform}
 import soot.options.Options
 
 import scala.collection.JavaConverters._
+import scala.util.matching.Regex
 
 case class Config(apkPath: String = null,
                   androidJars: String = null,
                   outputDir: String = null,
-                  applicationPackages: Array[String] = null,
+                  applicationPackages: Array[String] = Array(),
                   instDir: String = null,
                   jimpleOutput: Boolean = false
-                 )
+                 ){
+  val applicationPackagesr = applicationPackages.map((a:String) =>{
+    Utils.packageGlobToSignatureMatchingRegex(a).r
+  })
+  def isApplicationPackage(signature: String): Boolean = {
+    applicationPackagesr.exists((r: Regex) => {
+      signature match {
+        case r() => true
+        case _ => false
+      }
+    })
+  }
+}
 
 object TraceRunner {
 
-  def instrumentationClasses(config: Config): Array[String] = {
-
-    val instDirectory: File = new File(config.instDir)
-    if(false) { //TODO: re enable when figured out what problem is
-      val isclass = ".*\\.class".r
-      /** remove old instrumentation classes **/
-
-      val listFiles: Array[File] = instDirectory.listFiles()
-      listFiles.map(a => {
-        val name: String = a.getName
-        name match {
-          case isclass() => {
-            Files.delete(a.toPath)
-          }
-          case _ => {}
-        }
-      })
-
-      /** compile instrumentation classes **/
-      val compiler: JavaCompiler = ToolProvider.getSystemJavaCompiler
-      val standardFileManager: StandardJavaFileManager = compiler.getStandardFileManager(null, null, null)
-      val fileObjects = standardFileManager.getJavaFileObjectsFromFiles(instDirectory.listFiles().toIterable.asJava)
-      compiler.getTask(null, standardFileManager, null, null, null, fileObjects).call()
-    }
-
-    val listFiles1: Array[File] = instDirectory.listFiles()
-    /** list all instrumentation classes **/
-    val isclass2 = ".*\\.java".r
-    val map: Array[String] = listFiles1.filter( (a:File) =>
-      a.getName match {
-        case isclass2() => true
-        case _ => false
-      }).map(a => a.getAbsolutePath)
-    map
-  }
+//  def instrumentationClasses(config: Config): Array[String] = {
+//
+//    val instDirectory: File = new File(config.instDir)
+//
+//
+//    if(false) { //TODO: re enable when figured out what problem is
+//      val isclass = ".*\\.class".r
+//      /** remove old instrumentation classes **/
+//
+//      val listFiles: Array[File] = instDirectory.listFiles()
+//      listFiles.map(a => {
+//        val name: String = a.getName
+//        name match {
+//          case isclass() => {
+//            Files.delete(a.toPath)
+//          }
+//          case _ => {}
+//        }
+//      })
+//
+//      /** compile instrumentation classes **/
+//      val compiler: JavaCompiler = ToolProvider.getSystemJavaCompiler
+//      val standardFileManager: StandardJavaFileManager = compiler.getStandardFileManager(null, null, null)
+//      val fileObjects = standardFileManager.getJavaFileObjectsFromFiles(instDirectory.listFiles().toIterable.asJava)
+//      compiler.getTask(null, standardFileManager, null, null, null, fileObjects).call()
+//    }
+//
+//    val listFiles1: Array[File] = instDirectory.listFiles()
+//    /** list all instrumentation classes **/
+//    val isclass2 = ".*\\.java".r
+//    val map: Array[String] = listFiles1.filter( (a:File) =>
+//      a.getName match {
+//        case isclass2() => true
+//        case _ => false
+//      }).map(a => a.getAbsolutePath)
+//    map
+//  }
 
 
 
@@ -111,31 +126,9 @@ object TraceRunner {
           /**add instrumentation to classpath**/
           val path: String = Scene.v().getSootClassPath
 
-          val classes: Array[String] = instrumentationClasses(config)
-          //val instrumentationFileList: Array[File] = (new File(config.instDir)).listFiles()
-          val left: String =
-            classes.foldLeft(path)((acc: String,v: String) =>
-              acc + ":" + v)
-          if(path.equals(left)){
-            println("please run \"javac src/main/java/edu/colorado/plv/tracerunner_runtime_instrumentation/*.java\"" +
-              " from the tracerunner directory")
-            throw new IllegalArgumentException("")
-          }
-          Scene.v().setSootClassPath(path + ":/home/s/Documents/source/TraceRunnerInstrumentation/build/libs/TraceRunnerInstrumentation-1.0.jar")
+          Scene.v().setSootClassPath(path + ":" + config.instDir)
           Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation");
-          /**set instrumentation to be included in apk**/
-          //c	=	Scene.v().getSootClass()
-          val instrumentataionclasses: Array[SootClass] = classes.map((a:String) =>
-              a.split('/').last.split('.').head).map(s => {
-            val clazz = Scene.v().getSootClass(s)
-            clazz
-          })
 
-          instrumentataionclasses.foreach(a => {
-            val methods: util.List[SootMethod] = a.getMethods
-            a.setApplicationClass()
-          }
-          )
 
 
           /**run soot transformation**/
