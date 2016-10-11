@@ -49,7 +49,7 @@ object TraceRunner {
 
     val listFiles1: Array[File] = instDirectory.listFiles()
     /** list all instrumentation classes **/
-    val isclass2 = ".*\\.class".r
+    val isclass2 = ".*\\.java".r
     val map: Array[String] = listFiles1.filter( (a:File) =>
       a.getName match {
         case isclass2() => true
