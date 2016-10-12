@@ -128,6 +128,7 @@ object TraceRunner {
 
           Scene.v().setSootClassPath(path + ":" + config.instDir)
           Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation");
+          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat")
 
 
 

@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.locks.ReentrantLock
 
 import edu.colorad.cs.TraceRunner.Config
+import soot.jimple.internal.InvokeExprBox
 import soot.jimple.{AbstractStmtSwitch, InvokeStmt}
 import soot.util.Chain
 import soot.{Body, BodyTransformer, PatchingChain, Scene, SootClass, SootMethod}
@@ -35,11 +36,9 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
     if(Synchronizer.runSetup.get()){ //nuclear option to run only once, TODO: fix this
       Synchronizer.lock.lock()
       if(Synchronizer.runSetup.get()) {
-        val clazz: SootClass = Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation")
-        if (!clazz.isApplicationClass()) {
-          //println("run from thread: " + Thread.currentThread().getId)
-          clazz.setApplicationClass()
-        }
+        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation")
+          .setApplicationClass()
+        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat").setApplicationClass()
         Synchronizer.runSetup.set(false)
       }
       Synchronizer.lock.unlock()
@@ -69,7 +68,11 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
       for (i: soot.Unit <- units.snapshotIterator()) {
         i.apply(new AbstractStmtSwitch {
           override def caseInvokeStmt(stmt: InvokeStmt) = {
-                      println(stmt) //TODO
+//                      val pkg: String = stmt.getInvokeExprBox.getValue match{
+//                        case i: InvokeExprBox => ???
+//                        case _ => ???
+//                      }
+                      //println(stmt) //TODO
           }
         })
       }
