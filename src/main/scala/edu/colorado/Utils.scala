@@ -1,5 +1,7 @@
 package edu.colorado
 
+import java.util.concurrent.atomic.AtomicInteger
+
 import edu.colorad.cs.TraceRunner.Config
 
 import scala.util.matching.Regex
@@ -20,7 +22,11 @@ object Utils {
     )
   }
   def packageGlobToSignatureMatchingRegex(glob: String): String = {
-    "<" + globToRegex(glob)
+    globToRegex(glob)
+  }
+  val nameIndex = new AtomicInteger(0);
+  def nextName(label: String): String = {
+    "traceRunnerTempVar_" + label + "_" + nameIndex.getAndIncrement()
   }
 
 
