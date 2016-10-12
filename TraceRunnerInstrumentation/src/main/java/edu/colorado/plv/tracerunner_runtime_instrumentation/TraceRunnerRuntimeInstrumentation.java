@@ -20,21 +20,19 @@ public class TraceRunnerRuntimeInstrumentation {
     static AtomicInteger count = new AtomicInteger(0);
 
 
-    public static void setupNetwork(){ //TODO: can't even open on main thread or NetworkOnMainThreadException
-        try {
-            socket = new Socket(hostName, portNumber);
 
+    static ExecutorService executorService = Executors.newFixedThreadPool(1);
+    public static void logCallin(String signature){
+        executorService.execute(new LogDat(signature));
+    }
+    public static void setupNetwork(){
+        try {
+            socket =
+                    new Socket(hostName, portNumber);
+            printWriter = new PrintWriter(socket.getOutputStream(), true);
         }catch(IOException e){
             throw new RuntimeException("TraceRunnerInstrumentation failed to open socket");
         }
-    }
-    static ExecutorService executorService = Executors.newFixedThreadPool(2);
-    public static void logCallin(String signature){
-        if(socket == null || printWriter == null){
-            setupNetwork();
-        }
-        executorService.execute(new LogDat(printWriter, signature));
-        //TODO: implementation
     }
 }
 
