@@ -6,9 +6,9 @@ import java.util.concurrent.locks.ReentrantLock
 
 import edu.colorad.cs.TraceRunner.Config
 import soot.jimple.internal.{InvokeExprBox, JVirtualInvokeExpr}
-import soot.jimple.{AbstractStmtSwitch, InvokeStmt, Jimple, StringConstant}
+import soot.jimple._
 import soot.util.Chain
-import soot.{Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootClass, SootMethod, Value, VoidType}
+import soot.{ArrayType, Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootClass, SootMethod, Value, VoidType}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -55,7 +55,7 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
     //val signature: String = b.getMethod.getSignature
     val signature: String = b.getMethod.getDeclaringClass.getName
 
-    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String)")
+    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[])")
 
     val matches: Boolean = applicationPackages.exists((r: Regex )=>{
       signature match{
@@ -71,6 +71,22 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
             val name1: String = stmt.getInvokeExpr.getMethod.getDeclaringClass.getName
             val methodName: String = stmt.getInvokeExpr.getMethod().getName()
             if (!config.isApplicationPackage(name1)){
+
+              val argCount: Int = stmt.getInvokeExpr.getArgCount
+              val arguments: Local = Jimple.v().newLocal(Utils.nextName("arguments"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+
+
+              //initialize array
+              units.insertBefore(Jimple.v().newAssignStmt(
+                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount))), i)
+
+              //Assign array elements to correct vales
+              (0 until argCount).foreach((a: Int) => {
+                val arg: Value = stmt.getInvokeExpr.getArg(a)
+                units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), arg), i)
+              })
+
+
               val signature: Local = Jimple.v().newLocal(Utils.nextName("signaturename"), RefType.v("java.lang.String"))
               val methodname: Local = Jimple.v().newLocal(Utils.nextName("methodname"), RefType.v("java.lang.String"))
               //Create signature information
@@ -78,7 +94,7 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
               units.insertBefore(sigassign,i)
               units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName)),i)
               //log that callin has happened
-              val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname).asJava)
+              val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname, arguments).asJava)
               units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
             }
 

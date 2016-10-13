@@ -22,8 +22,15 @@ public class TraceRunnerRuntimeInstrumentation {
 
 
     static ExecutorService executorService = Executors.newFixedThreadPool(1);
-    public static void logCallin(String signature, String methodName){
+    public static void logCallin(String signature, String methodName, Object[] arguments, Object caller){
+        //called on Activity Thread
+        int id = count.getAndIncrement();
+        long threadID = Thread.currentThread().getId();
+
         executorService.execute(new LogDat(signature, methodName));
+    }
+    public static void logCallback(String signature, String methodName, Object[] arguments){
+
     }
     public static void setupNetwork(){
         try {
