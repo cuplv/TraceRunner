@@ -20,6 +20,21 @@ Run with arguments
 
 -android-jars #non stubbed version of android framework.  The Sable/android-platforms repo is really old though so this may be problematic later, TODO: figure out how to compile recent versions.
 
+example usage:
+
+-j
+/home/s/Documents/source/android-platforms
+-d
+/home/s/Documents/source/TraceRunner/testApps/TestApp/app/build/outputs/apk/app-debug.apk
+-o
+/home/s/Documents/source/TraceRunner/testApps/output
+-p
+plv.colorado.*
+-i
+/home/s/Documents/source/TraceRunner/TraceRunnerInstrumentation/build/libs/TraceRunnerInstrumentation-1.0.jar
+
+-m output jimple instead of apk
+
 
 Signing APK
 ===========
