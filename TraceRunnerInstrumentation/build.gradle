@@ -18,6 +18,7 @@ repositories {
 }
 
 dependencies {
+    testCompile 'junit:junit:4.12'
     compile 'com.google.protobuf:protobuf-java:3.0.0'
 }
 
@@ -35,4 +36,18 @@ jar {
         attributes 'Implementation-Title': 'Gradle Quickstart',
                    'Implementation-Version': version
     }
+}
+
+test {
+    afterTest { desc, result -> 
+        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}
+
+// Tell idea where to find protobuf generated files
+apply plugin: 'idea'
+idea {
+ module {
+   sourceDirs += file("${protobuf.generatedFilesBaseDir}/main/java");
+ }
 }
