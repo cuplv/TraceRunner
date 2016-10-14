@@ -1,7 +1,7 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
 import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer;
-import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.CallinMsg;
+import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.CallinEntryMsg;
 import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.TraceMsg;
 import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.ValueMsg;
 
@@ -32,7 +32,7 @@ public class TraceRunnerRuntimeInstrumentation {
         int id = count.getAndIncrement();
         long threadID = Thread.currentThread().getId();
 
-        CallinMsg.Builder callinMsgBuilder = CallinMsg.newBuilder();
+        CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
         callinMsgBuilder.setSignature(signature);
         callinMsgBuilder.setMethodName(methodName);
 
@@ -43,10 +43,10 @@ public class TraceRunnerRuntimeInstrumentation {
         if (null != caller) callinMsgBuilder.setCaller(getValueMsg(caller));
 
         TraceMsg msg = TraceMsg.newBuilder()
-                .setType(TraceMsg.MsgType.CALLIN)
+                .setType(TraceMsg.MsgType.CALLIN_ENTRY)
                 .setMessageId(id)
                 .setThreadId(threadID)
-                .setCallin(callinMsgBuilder.build()).build();
+                .setCallinEntry(callinMsgBuilder.build()).build();
 
         TraceMsgContainer container = TraceMsgContainer.newBuilder()
                 .setMsg(msg).build();

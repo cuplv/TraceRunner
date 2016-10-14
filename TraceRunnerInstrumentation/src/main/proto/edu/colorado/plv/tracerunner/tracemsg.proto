@@ -9,7 +9,12 @@ message TraceMsgContainer {
      CallbackMsg.
   */
   message TraceMsg {
-    enum MsgType {APP = 1; CALLIN = 2; CALLBACK = 3;}
+    enum MsgType {APP = 1; CALLIN_ENTRY = 2;
+      CALLIN_EXIT = 3;
+      CALLIN_EXEPION = 4;
+      CALLBACK_ENTRY = 5;
+      CALLBACK_EXIT = 6;
+      CALLBACK_EXCEPTION = 7;}
 
     /* Identifies the type of the message */
     required MsgType type = 1;
@@ -19,8 +24,15 @@ message TraceMsgContainer {
     required uint64 thread_id = 3;
 
     optional AppMsg app = 4;
-    optional CallinMsg callin = 5;
-    optional CallbackMsg callback = 6;
+
+    oneof oneof_message {
+      CallinEntryMsg callinEntry = 5;
+      CallinExitMsg callinExit = 6;
+      CallinExceptionMsg callinException= 7;
+      CallbackEntryMsg callbackEntry = 8;
+      CallbackExitMsg callbackExit = 9;
+      CallbackExceptionMsg callbackException= 10;
+    }
   }
 
   /* Defines the information about the instrumented app. */
@@ -29,34 +41,40 @@ message TraceMsgContainer {
   }
 
   /* Msg that contains the information of a callin invocation */
-  message CallinMsg {
+  message CallinEntryMsg {
     /* signature of the callin */
     required string signature = 1;
     /* name of the invoked callin */
-    required string methodName = 2;
+    required string method_name = 2;
     /* list of parameters of the callin */
     repeated ValueMsg param_list = 3;
-    /* value returned by the callin */
-    optional ValueMsg return_value = 4;
     /* object that calls this callin - document better */
-    optional ValueMsg caller = 5;
+    optional ValueMsg caller = 4;
   }
 
-  /* Represent the invocation of a callback
-
-  Must be refined.
-
-  */
-  message CallbackMsg {
+  message CallinExitMsg {
+    /* id of the callin */
+    required uint64 callin_id = 1;
     /* signature of the callin */
-    required string signature = 1;
-    /* list of parameters of the calback */
-    repeated ValueMsg param_list = 2;
-    /* value returned by the callback */
+    required string signature = 2;
+    /* return value */
     optional ValueMsg return_value = 3;
-    /* object that calls this callin - document better */
-    optional ValueMsg caller = 5;
   }
+
+  /* TODO: placeholder */
+  message CallinExceptionMsg {
+  }
+
+  /* TODO: placeholder */
+  message CallbackEntryMsg {
+  }
+  /* TODO: placeholder */
+  message CallbackExitMsg {
+  }
+  /* TODO: placeholder */
+  message CallbackExceptionMsg {
+  }
+
 
   /* Object used as caller/parameter/return value */
   message ValueMsg {
