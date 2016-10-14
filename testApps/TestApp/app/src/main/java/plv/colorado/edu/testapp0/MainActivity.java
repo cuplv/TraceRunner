@@ -1,7 +1,10 @@
 package plv.colorado.edu.testapp0;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+
+import java.io.IOException;
 
 public class MainActivity extends Activity {
 

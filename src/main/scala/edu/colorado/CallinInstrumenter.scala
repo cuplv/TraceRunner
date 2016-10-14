@@ -51,6 +51,10 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
 
     val declaration: String = b.getMethod.getDeclaration
     val method: SootMethod = b.getMethod()
+
+
+
+
     val name: String = b.getMethod.getName
     //val signature: String = b.getMethod.getSignature
     val signature: String = b.getMethod.getDeclaringClass.getName
@@ -69,7 +73,8 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
         i.apply(new AbstractStmtSwitch {
           override def caseInvokeStmt(stmt: InvokeStmt) = {
             val name1: String = stmt.getInvokeExpr.getMethod.getDeclaringClass.getName
-            val methodName: String = stmt.getInvokeExpr.getMethod().getName()
+            val currentMethod: SootMethod = stmt.getInvokeExpr.getMethod()
+            val methodName: String = currentMethod.getName()
             if (!config.isApplicationPackage(name1)){
 
               val argCount: Int = stmt.getInvokeExpr.getArgCount
@@ -77,14 +82,18 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
 
 
               //initialize array
+              //+2 on count for return value and receiver in that order
               units.insertBefore(Jimple.v().newAssignStmt(
-                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount))), i)
+                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 2))), i)
 
               //Assign array elements to correct vales
-              (0 until argCount).foreach((a: Int) => {
-                val arg: Value = stmt.getInvokeExpr.getArg(a)
+              (2 until argCount+2).foreach((a: Int) => {
+                val arg: Value = stmt.getInvokeExpr.getArg(a-2)
                 units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), arg), i)
               })
+              //TODO: Capture reciever
+
+              val value: Value = stmt.getInvokeExprBox.getValue
 
 
               val signature: Local = Jimple.v().newLocal(Utils.nextName("signaturename"), RefType.v("java.lang.String"))
@@ -92,10 +101,13 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
               //Create signature information
               val sigassign = Jimple.v().newAssignStmt(signature, StringConstant.v(name1))
               units.insertBefore(sigassign,i)
+
+              //TODO: Capture return value
+
               units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName)),i)
               //log that callin has happened
               val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname, arguments).asJava)
-              units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
+              units.insertAfter(Jimple.v().newInvokeStmt(expr), i)
             }
 
           }
