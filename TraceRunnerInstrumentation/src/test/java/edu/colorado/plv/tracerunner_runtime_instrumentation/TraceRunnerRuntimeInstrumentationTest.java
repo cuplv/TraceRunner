@@ -7,8 +7,10 @@ import org.junit.*;
  * Created by Sergio Mover on 10/14/16.
  */
 public class TraceRunnerRuntimeInstrumentationTest {
+    private static final long MAX_TO = 5;
+
     @org.junit.Test
-    public void logCallin() throws Exception {
+    public void logCallin() throws RuntimeException {
         String signature = "method signature";
         String methodName = "method name";
         Object caller = "caller string";
@@ -27,7 +29,10 @@ public class TraceRunnerRuntimeInstrumentationTest {
         args[4] = stringVar;
         args[5] = "string constant value";
 
+        // TODO the test should start a server side socket to get the data and check the results
         TraceRunnerRuntimeInstrumentation.logCallin(signature, methodName, args, caller);
+        TraceRunnerRuntimeInstrumentation.logCallin(signature, methodName, args, caller);
+        TraceRunnerRuntimeInstrumentation.shutdownAndAwaitTermination();
     }
 
 }

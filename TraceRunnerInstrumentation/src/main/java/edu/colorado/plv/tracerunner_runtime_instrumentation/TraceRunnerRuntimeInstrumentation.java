@@ -2,17 +2,16 @@ package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
 import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer;
 import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.CallinMsg;
-import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.ValueMsg;
 import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.TraceMsg;
+import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.ValueMsg;
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.net.Socket;
-import java.io.PrintWriter;
-import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.lang.RuntimeException;
 
 /**
  * Created by s on 10/3/16.
@@ -24,9 +23,8 @@ public class TraceRunnerRuntimeInstrumentation {
     static BufferedOutputStream outStream = null;
     static AtomicInteger count = new AtomicInteger(0);
 
-
-
     static ExecutorService executorService = Executors.newFixedThreadPool(1);
+    static final long EXECUTOR_TO = 5;
 
     public static void logCallin(String signature, String methodName,
                                  Object[] arguments, Object caller) {
@@ -54,26 +52,43 @@ public class TraceRunnerRuntimeInstrumentation {
                 .setMsg(msg).build();
 
         executorService.execute(new LogDat(container));
-        //(new LogDat(container)).sendData();
+    }
+
+    /**
+     * Shutdown the running thread on the pool.
+     *
+     * Taken from the javadoc of ExecutorService
+     *
+     */
+    static void  shutdownAndAwaitTermination() {
+        // Disable new tasks from being submitted
+        TraceRunnerRuntimeInstrumentation.executorService.shutdown();
+
+        try {
+            // Wait a while for existing tasks to terminate
+            if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
+                    TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS)) {
+                // cancel currently executing tasks
+                TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
+                // Wait a while for tasks to respond to being cancelled
+                if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
+                        TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS))
+                    System.err.println("Pool did not terminate");
+            }
+        } catch (InterruptedException ie) {
+            TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
+            // Don't think we have to raise a runtime exception here
+            System.err.println("Pool did not terminate");
+        }
     }
 
     public static void logCallback(String signature, String methodName, Object[] arguments){
 
     }
 
-    public static void setupNetwork(){
-        try {
-            System.out.println("creating socket");
-            socket = new Socket(hostName, portNumber);
-            System.out.println("created socket");
-            outStream = new BufferedOutputStream(socket.getOutputStream());
-        }catch(IOException e){
-            System.out.println("Ciao");
-            throw new RuntimeException("TraceRunnerInstrumentation failed to open socket");
-        } catch (Exception e) {
-            System.out.println("Ciao");
-            throw new RuntimeException("TraceRunnerInstrumentation failed to open socket");
-        }
+    public static void setupNetwork() throws IOException {
+        socket = new Socket(hostName, portNumber);
+        outStream = new BufferedOutputStream(socket.getOutputStream());
     }
 
     /**
