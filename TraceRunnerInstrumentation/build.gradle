@@ -39,9 +39,15 @@ jar {
 }
 
 test {
-    afterTest { desc, result -> 
-        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
-    }
+     useJUnit()
+
+     testLogging {
+          showStandardStreams = true
+     }
+
+     afterTest { desc, result -> 
+       println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+     }
 }
 
 // Tell idea where to find protobuf generated files

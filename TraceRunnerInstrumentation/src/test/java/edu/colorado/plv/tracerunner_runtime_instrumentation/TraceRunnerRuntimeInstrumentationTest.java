@@ -1,6 +1,7 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
 import static org.junit.Assert.*;
+import org.junit.*;
 
 /**
  * Created by Sergio Mover on 10/14/16.

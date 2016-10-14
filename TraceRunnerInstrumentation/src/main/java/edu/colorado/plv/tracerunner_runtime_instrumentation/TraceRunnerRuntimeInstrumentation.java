@@ -54,6 +54,7 @@ public class TraceRunnerRuntimeInstrumentation {
                 .setMsg(msg).build();
 
         executorService.execute(new LogDat(container));
+        //(new LogDat(container)).sendData();
     }
 
     public static void logCallback(String signature, String methodName, Object[] arguments){
@@ -62,9 +63,14 @@ public class TraceRunnerRuntimeInstrumentation {
 
     public static void setupNetwork(){
         try {
+            System.out.println("creating socket");
             socket = new Socket(hostName, portNumber);
+            System.out.println("created socket");
             outStream = new BufferedOutputStream(socket.getOutputStream());
         }catch(IOException e){
+            System.out.println("Ciao");
+            throw new RuntimeException("TraceRunnerInstrumentation failed to open socket");
+        } catch (Exception e) {
             System.out.println("Ciao");
             throw new RuntimeException("TraceRunnerInstrumentation failed to open socket");
         }

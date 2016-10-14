@@ -14,19 +14,27 @@ public class LogDat implements Runnable {
         this.data = data;
     }
 
-    @Override
-    public void run() {
+    public void sendData() {
         if (TraceRunnerRuntimeInstrumentation.socket == null ||
                 TraceRunnerRuntimeInstrumentation.socket.isClosed() ||
                 ! TraceRunnerRuntimeInstrumentation.socket.isConnected()) {
             TraceRunnerRuntimeInstrumentation.setupNetwork();
+            System.out.println("Back from setup");
         }
 
         try {
+            System.out.println("created socket");
             data.writeTo(TraceRunnerRuntimeInstrumentation.socket.getOutputStream());
+            TraceRunnerRuntimeInstrumentation.socket.getOutputStream().flush();
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException("TraceRunnerInstrumentation failed to send data!");
         }
+    }
+
+    @Override
+    public void run() {
+        sendData();
     }
 
 }
