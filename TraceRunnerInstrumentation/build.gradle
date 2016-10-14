@@ -1,7 +1,35 @@
 apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
 version = "1.0"
 sourceCompatibility='1.7'
 targetCompatibility='1.7'
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+  }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.protobuf:protobuf-java:3.0.0'
+}
+
+protobuf {
+  // Configure the protoc executable - let gradle download it for us
+  // WARNING: in this case we do *not* use the local protobuf
+  protoc {
+    // Download from repositories
+    artifact = 'com.google.protobuf:protoc:3.0.0'
+  }
+}
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',

@@ -1,0 +1,65 @@
+syntax = "proto2";
+
+package edu.colorado.plv.tracerunner;
+
+message TraceMsgContainer {
+
+  /* Defines a single message sent by the instrumented App
+     The message can be of several types: AppMsg, CallinMsg,
+     CallbackMsg.
+  */
+  message TraceMsg {
+    enum MsgType {APP = 1; CALLIN = 2; CALLBACK = 3;}
+
+    /* Identifies the type of the message */
+    required MsgType type = 1;
+    /* Defines the position of the message in the trace */
+    required uint64 message_id = 2;
+    /* id of the thread on which the message was recorded */
+    required uint64 thread_id = 3;
+
+    optional AppMsg app = 4;
+    optional CallinMsg callin = 5;
+    optional CallbackMsg callback = 6;
+  }
+
+  /* Defines the information about the instrumented app. */
+  message AppMsg {
+    optional string app_name = 1;
+  }
+
+  /* Msg that contains the information of a callin invocation */
+  message CallinMsg {
+    /* name of the invoked callin */
+    required string methodName = 1;
+    /* list of parameters of the callin */
+    repeated ValueMsg param_list = 2;
+    /* value returned by the callin */
+    optional ValueMsg return_value = 3;
+    /* object that calls this callin - document better */
+    optional ValueMsg caller = 4;
+  }
+
+  message CallbackMsg {
+    /* list of parameters of the callin */
+    repeated ValueMsg param_list = 1;
+    /* value returned by the callin */
+    optional ValueMsg return_value = 2;
+    /* object that calls this callin - document better */
+    optional ValueMsg caller = 3;
+  }
+
+  /* Object used as caller/parameter/return value */
+  message ValueMsg {
+    /* type of the value */
+    optional string type = 1;
+    /* most precise framework type */
+    optional string fmwk_type = 2;
+    /* id of the object */
+    optional string object_id = 3;
+    /* value of the object */
+    optional string value = 4;
+  }
+
+  required TraceMsg msg = 1;
+}
