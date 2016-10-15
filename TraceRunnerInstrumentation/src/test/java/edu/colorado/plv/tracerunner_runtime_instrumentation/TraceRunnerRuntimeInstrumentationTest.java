@@ -30,8 +30,8 @@ public class TraceRunnerRuntimeInstrumentationTest {
         args[5] = "string constant value";
 
         // TODO the test should start a server side socket to get the data and check the results
-        TraceRunnerRuntimeInstrumentation.logCallin(signature, methodName, args, caller);
-        TraceRunnerRuntimeInstrumentation.logCallin(signature, methodName, args, caller);
+        TraceRunnerRuntimeInstrumentation.logCallin(signature, methodName, args); //, caller);
+        TraceRunnerRuntimeInstrumentation.logCallin(signature, methodName, args); //, caller);
         TraceRunnerRuntimeInstrumentation.shutdownAndAwaitTermination();
     }
 

@@ -27,7 +27,7 @@ public class TraceRunnerRuntimeInstrumentation {
     static final long EXECUTOR_TO = 5;
 
     public static void logCallin(String signature, String methodName,
-                                 Object[] arguments, Object caller) {
+                                 Object[] arguments) {
         //called on Activity Thread
         int id = count.getAndIncrement();
         long threadID = Thread.currentThread().getId();
@@ -40,7 +40,7 @@ public class TraceRunnerRuntimeInstrumentation {
             callinMsgBuilder.addParamList(getValueMsg(arg));
         }
 
-        if (null != caller) callinMsgBuilder.setCaller(getValueMsg(caller));
+        //if (null != caller) callinMsgBuilder.setCaller(getValueMsg(caller));
 
         TraceMsg msg = TraceMsg.newBuilder()
                 .setType(TraceMsg.MsgType.CALLIN_ENTRY)
