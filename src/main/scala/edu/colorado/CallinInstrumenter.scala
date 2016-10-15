@@ -5,7 +5,9 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.locks.ReentrantLock
 
 import edu.colorad.cs.TraceRunner.Config
-import soot.jimple.internal.{InvokeExprBox, JVirtualInvokeExpr}
+import soot.dava.internal.javaRep.DNewInvokeExpr
+import soot.grimp.internal.{GDynamicInvokeExpr, GNewInvokeExpr, GStaticInvokeExpr}
+import soot.jimple.internal._
 import soot.jimple._
 import soot.util.Chain
 import soot.{ArrayType, Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootClass, SootMethod, Value, VoidType}
@@ -59,7 +61,7 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
     //val signature: String = b.getMethod.getSignature
     val signature: String = b.getMethod.getDeclaringClass.getName
 
-    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[])")
+    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object)")
 
     val matches: Boolean = applicationPackages.exists((r: Regex )=>{
       signature match{
@@ -82,16 +84,35 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
 
 
               //initialize array
-              //+2 on count for return value and receiver in that order
+              //+1 for receiver
               units.insertBefore(Jimple.v().newAssignStmt(
-                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 2))), i)
+                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 1))), i)
 
               //Assign array elements to correct vales
-              (2 until argCount+2).foreach((a: Int) => {
-                val arg: Value = stmt.getInvokeExpr.getArg(a-2)
+              (1 until argCount+1).foreach((a: Int) => {
+                val arg: Value = stmt.getInvokeExpr.getArg(a-1)
+                //val arg = NullConstant.v()
                 units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), arg), i)
               })
               //TODO: Capture reciever
+              val receiver = stmt.getInvokeExpr match {
+                case i: InstanceInvokeExpr => i.getBase
+                case i: StaticInvokeExpr => NullConstant.v() //TODO: null value here
+                case i: DynamicInvokeExpr => ??? //Android doesn't use the following hopefully?
+                case i: JDynamicInvokeExpr => ???
+                case i: GNewInvokeExpr => ???
+                case i: DNewInvokeExpr => ???
+                case i: AbstractSpecialInvokeExpr => ???
+                case i: AbstractVirtualInvokeExpr => ???
+                case i: AbstractInterfaceInvokeExpr => ???
+                case i: GDynamicInvokeExpr => ???
+                case i: JStaticInvokeExpr => ???
+                case i: GStaticInvokeExpr => ???
+                case _ => ???
+              }
+
+              units.insertBefore(Jimple.v().newAssignStmt(
+                Jimple.v().newArrayRef(arguments, IntConstant.v(0)), receiver),i)
 
               val value: Value = stmt.getInvokeExprBox.getValue
 
@@ -105,8 +126,18 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
               //TODO: Capture return value
 
               units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName)),i)
+              val refType: RefType = method.getDeclaringClass().getType()
+
+              val newThisRef = if(!method.isStatic()) {
+                b.getThisLocal
+              }else{NullConstant.v()}
+              //TODO: what if static method, probably breaking things
+              //val newThisRef = b.getThisLocal
+              val callerref: Local = Jimple.v().newLocal(Utils.nextName("callerref"), RefType.v("java.lang.Object"))
+              units.insertBefore(Jimple.v().newAssignStmt(callerref, newThisRef),i)
+              //units.insertBefore(Jimple.v().newAssignStmt(callerref, NullConstant.v()),i)
               //log that callin has happened
-              val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname, arguments).asJava)
+              val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname, arguments, callerref).asJava)
               units.insertAfter(Jimple.v().newInvokeStmt(expr), i)
             }
 
