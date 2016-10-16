@@ -27,7 +27,14 @@ public class TraceRunnerRuntimeInstrumentation {
         int id = count.getAndIncrement();
         long threadID = Thread.currentThread().getId();
 
-        executorService.execute(new LogDat(signature, methodName));
+        String data = signature + " " + methodName + " thread: " + threadID + " logID: " + id + caller.getClass().getName();
+        for(Object argument : arguments){
+            if(argument != null)
+                data += ":" + argument.getClass().getName();
+            else
+                data += ":null";
+        }
+        executorService.execute(new LogDat(data));
     }
     public static void logCallback(String signature, String methodName, Object[] arguments){
 

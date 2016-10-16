@@ -7,12 +7,11 @@ import java.net.Socket;
 
 public class LogDat implements Runnable{
     private final String data;
-    private final String methodName;
-//    private final String[] arguments;
 
-    LogDat(String data, String methodName){
+
+    LogDat(String data){
         this.data = data;
-        this.methodName = methodName;
+
 //        this.arguments = arguments;
     }
 
@@ -21,7 +20,7 @@ public class LogDat implements Runnable{
         if(TraceRunnerRuntimeInstrumentation.printWriter == null){
             TraceRunnerRuntimeInstrumentation.setupNetwork();
         }
-        TraceRunnerRuntimeInstrumentation.printWriter.println(data + " " + methodName);
+        TraceRunnerRuntimeInstrumentation.printWriter.println(data);
 //        for(int i=0; i<arguments.length; ++i)
 //            TraceRunnerRuntimeInstrumentation.printWriter.println(arguments[i]);
     }
