@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TraceRunnerInstrumentation.iml" filepath="$PROJECT_DIR$/.idea/modules/TraceRunnerInstrumentation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TraceRunnerInstrumentation_main.iml" filepath="$PROJECT_DIR$/.idea/modules/TraceRunnerInstrumentation_main.iml" group="TraceRunnerInstrumentation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TraceRunnerInstrumentation_test.iml" filepath="$PROJECT_DIR$/.idea/modules/TraceRunnerInstrumentation_test.iml" group="TraceRunnerInstrumentation" />
+    </modules>
+  </component>
+</project>
