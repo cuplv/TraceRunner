@@ -78,53 +78,7 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
             val currentMethod: SootMethod = stmt.getInvokeExpr.getMethod()
             val methodName: String = currentMethod.getName()
             if (!config.isApplicationPackage(name1)){
-
-//              val argCount: Int = stmt.getInvokeExpr.getArgCount
-//              val arguments: Local = Jimple.v().newLocal(Utils.nextName("arguments"), ArrayType.v(RefType.v("java.lang.Object"), 1))
-
-
-              //initialize array
-              //+1 for receiver
-//              units.insertBefore(Jimple.v().newAssignStmt(
-//                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 1))), i)
-//
-//              //Assign array elements to correct vales
-//              (1 until argCount+1).foreach((a: Int) => {
-//                val arg: Value = stmt.getInvokeExpr.getArg(a-1)
-//                //val arg = NullConstant.v()
-//                units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), arg), i)
-//              })
-//              //TODO: Capture reciever
-//              val receiver = stmt.getInvokeExpr match {
-//                case i: InstanceInvokeExpr => i.getBase
-//                case i: StaticInvokeExpr => NullConstant.v() //TODO: null value here
-//                case i: DynamicInvokeExpr => ??? //Android doesn't use the following hopefully?
-//                case i: JDynamicInvokeExpr => ???
-//                case i: GNewInvokeExpr => ???
-//                case i: DNewInvokeExpr => ???
-//                case i: AbstractSpecialInvokeExpr => ???
-//                case i: AbstractVirtualInvokeExpr => ???
-//                case i: AbstractInterfaceInvokeExpr => ???
-//                case i: GDynamicInvokeExpr => ???
-//                case i: JStaticInvokeExpr => ???
-//                case i: GStaticInvokeExpr => ???
-//                case _ => ???
-//              }
-//
-//              units.insertBefore(Jimple.v().newAssignStmt(
-//                Jimple.v().newArrayRef(arguments, IntConstant.v(0)), receiver),i)
-//
-//              val newThisRef = if(!method.isStatic()) {
-//                b.getThisLocal
-//              }else{NullConstant.v()}
-//              //TODO: what if static method, probably breaking things
-//              //val newThisRef = b.getThisLocal
-//              val callerref: Local = Jimple.v().newLocal(Utils.nextName("callerref"), RefType.v("java.lang.Object"))
-//              units.insertBefore(Jimple.v().newAssignStmt(callerref, newThisRef),i)
-//              //units.insertBefore(Jimple.v().newAssignStmt(callerref, NullConstant.v()),i)
-//              //log that callin has happened
-
-
+              
 
               //Arguments
               val argCount: Int = stmt.getInvokeExpr.getArgCount
