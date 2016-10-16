@@ -127,8 +127,8 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
               units.insertBefore(sigassign,i)
 
               //TODO: Capture return value
-
-              units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName)),i)
+              val methodSignature = method.getSignature
+              units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName + methodSignature)),i)
               val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname, arguments, callerref).asJava)
               units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
             }
