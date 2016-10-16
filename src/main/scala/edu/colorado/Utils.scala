@@ -34,25 +34,34 @@ object Utils {
   def autoBox(v: Value): Value = {
     v.getType() match {
       case i: IntType => {
-        val methods =
-          Scene.v().getSootClass("java.lang.Integer").getMethods()
-
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Integer")
           .getMethod("java.lang.Integer valueOf(int)")
           Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
       }
-      case i: BooleanType => {
-        ???
-      }
       case i: FloatType => {
-        ???
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Float")
+          .getMethod("java.lang.Float valueOf(float)")
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+
       }
       case i: LongType => {
-        ???
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Long")
+          .getMethod("java.lang.Long valueOf(long)")
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+      }
+      case i: DoubleType => {
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Double")
+          .getMethod("java.lang.Double valueOf(double)")
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
       }
       case i: RefType => v
-      case _ => ???
+      case _ => {
+        ???
+      } //Note no boolean type as these are ints
     }
 
   }
