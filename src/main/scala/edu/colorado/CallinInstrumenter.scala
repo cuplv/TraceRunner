@@ -24,7 +24,7 @@ object Synchronizer{
   var lock = new ReentrantLock()
 }
 
-class CallinInstrumenter(config: Config) extends BodyTransformer{
+class CallinInstrumenter(config: Config, instrumentationClasses: scala.collection.mutable.Buffer[String]) extends BodyTransformer{
  //TODO: somehow run once code can be run multiple times, fix this
 
   val applicationPackages = config.applicationPackages.map((a:String) =>{
@@ -41,9 +41,11 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
     if(Synchronizer.runSetup.get()){ //nuclear option to run only once, TODO: fix this
       Synchronizer.lock.lock()
       if(Synchronizer.runSetup.get()) {
-        Scene.v().getSootClass(callinInstrumentClass)
-          .setApplicationClass()
-        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat").setApplicationClass()
+          instrumentationClasses.map(a => Scene.v().getSootClass(a).setApplicationClass())
+//        Scene.v().getSootClass(callinInstrumentClass)
+//          .setApplicationClass()
+//        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation$1").setApplicationClass()
+//        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat").setApplicationClass()
         Synchronizer.runSetup.set(false)
       }
       Synchronizer.lock.unlock()
@@ -89,16 +91,6 @@ class CallinInstrumenter(config: Config) extends BodyTransformer{
               val receiver = stmt.getInvokeExpr match {
                 case i: InstanceInvokeExpr => i.getBase
                 case i: StaticInvokeExpr => NullConstant.v() //TODO: null value here
-                case i: DynamicInvokeExpr => ??? //Android doesn't use the following hopefully?
-                case i: JDynamicInvokeExpr => ???
-                case i: GNewInvokeExpr => ???
-                case i: DNewInvokeExpr => ???
-                case i: AbstractSpecialInvokeExpr => ???
-                case i: AbstractVirtualInvokeExpr => ???
-                case i: AbstractInterfaceInvokeExpr => ???
-                case i: GDynamicInvokeExpr => ???
-                case i: JStaticInvokeExpr => ???
-                case i: GStaticInvokeExpr => ???
                 case _ => ???
               }
               units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(0)), receiver), i)

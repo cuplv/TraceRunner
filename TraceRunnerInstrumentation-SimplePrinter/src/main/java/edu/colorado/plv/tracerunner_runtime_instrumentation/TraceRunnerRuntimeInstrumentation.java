@@ -34,7 +34,14 @@ public class TraceRunnerRuntimeInstrumentation {
             else
                 data += ":null";
         }
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                count.getAndIncrement();
+            }
+        };
         executorService.execute(new LogDat(data));
+        executorService.execute(r);
     }
     public static void logCallback(String signature, String methodName, Object[] arguments){
 

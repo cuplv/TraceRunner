@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package edu.colorado.plv.tracerunner;
+package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
 message TraceMsgContainer {
 

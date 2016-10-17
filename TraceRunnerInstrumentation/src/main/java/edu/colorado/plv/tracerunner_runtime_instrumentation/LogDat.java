@@ -1,6 +1,6 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
-import edu.colorado.plv.tracerunner.Tracemsg;
+import edu.colorado.plv.tracerunner_runtime_instrumentation.Tracemsg;
 
 import java.io.IOException;
 

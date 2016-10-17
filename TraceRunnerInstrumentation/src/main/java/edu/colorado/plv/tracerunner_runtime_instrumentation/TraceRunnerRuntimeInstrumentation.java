@@ -1,9 +1,9 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
-import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer;
-import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.CallinEntryMsg;
-import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.TraceMsg;
-import edu.colorado.plv.tracerunner.Tracemsg.TraceMsgContainer.ValueMsg;
+import edu.colorado.plv.tracerunner_runtime_instrumentation.Tracemsg.TraceMsgContainer;
+import edu.colorado.plv.tracerunner_runtime_instrumentation.Tracemsg.TraceMsgContainer.CallinEntryMsg;
+import edu.colorado.plv.tracerunner_runtime_instrumentation.Tracemsg.TraceMsgContainer.TraceMsg;
+import edu.colorado.plv.tracerunner_runtime_instrumentation.Tracemsg.TraceMsgContainer.ValueMsg;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;

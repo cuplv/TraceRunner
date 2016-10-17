@@ -6,7 +6,7 @@ import java.nio.file.{Files, Path}
 import java.util
 import javax.tools.{JavaCompiler, StandardJavaFileManager, ToolProvider}
 
-import edu.colorado.{CallinInstrumenter, InstrumentationGenerators, TraceRunnerOptions, Utils}
+import edu.colorado._
 import soot.{PackManager, PhaseOptions, Scene, SootClass, SootMethod, Transform}
 import soot.options.Options
 
@@ -119,21 +119,25 @@ object TraceRunner {
           Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
           Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
 
-          /** callin transformer**/
-          PackManager.v().getPack("jtp").add(
-            new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config)))
+
 
           /**add instrumentation to classpath**/
           val path: String = Scene.v().getSootClassPath
 
           Scene.v().setSootClassPath(path + ":" + config.instDir)
-          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation");
-          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat")
+//          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation");
+
+          val classes: scala.collection.mutable.Buffer[String] = JUtils.getClasses(config.instDir).asScala
+          classes.foreach(a => Scene.v().addBasicClass(a))
+//          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation$1");
+//          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat")
 
           //Disable callgraph construction
           PhaseOptions.v().setPhaseOption("cg", "enabled:false");
 
-
+          /** callin transformer**/
+          PackManager.v().getPack("jtp").add(
+            new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
 
           /**run soot transformation**/
           val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)

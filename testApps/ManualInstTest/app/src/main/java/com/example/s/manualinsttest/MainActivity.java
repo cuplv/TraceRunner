@@ -9,7 +9,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TraceRunnerRuntimeInstrumentation.logCallin("hi!");
+        TraceRunnerRuntimeInstrumentation.logCallin("hi!","there",new Object[]{"hi"},"lksdjf");
         setContentView(R.layout.activity_main);
     }
 }
