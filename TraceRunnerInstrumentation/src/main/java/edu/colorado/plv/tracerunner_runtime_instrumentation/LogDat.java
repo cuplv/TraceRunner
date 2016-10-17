@@ -1,28 +1,34 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
-import java.io.BufferedWriter;
+import edu.colorado.plv.tracerunner.Tracemsg;
+
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
 
-public class LogDat implements Runnable{
-    private final String data;
+public class LogDat implements Runnable {
+    private final Tracemsg.TraceMsgContainer data;
 
-
-    LogDat(String data){
+    LogDat(Tracemsg.TraceMsgContainer data) {
         this.data = data;
+    }
 
-//        this.arguments = arguments;
+    public void sendData() throws IOException {
+        if (TraceRunnerRuntimeInstrumentation.socket == null ||
+                TraceRunnerRuntimeInstrumentation.socket.isClosed() ||
+                !TraceRunnerRuntimeInstrumentation.socket.isConnected()) {
+            TraceRunnerRuntimeInstrumentation.setupNetwork();
+        }
+        data.writeTo(TraceRunnerRuntimeInstrumentation.socket.getOutputStream());
+        TraceRunnerRuntimeInstrumentation.socket.getOutputStream().flush();
     }
 
     @Override
     public void run() {
-        if(TraceRunnerRuntimeInstrumentation.printWriter == null){
-            TraceRunnerRuntimeInstrumentation.setupNetwork();
+        try {
+            sendData();
+        } catch (IOException e) {
+            throw new RuntimeException("TracerunnerRuntimeInstrumentation: " +
+                    "IOException sending data");
         }
-        TraceRunnerRuntimeInstrumentation.printWriter.println(data);
-//        for(int i=0; i<arguments.length; ++i)
-//            TraceRunnerRuntimeInstrumentation.printWriter.println(arguments[i]);
     }
 
 }
