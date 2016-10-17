@@ -27,8 +27,9 @@ public class TraceRunnerRuntimeInstrumentation {
     static final long EXECUTOR_TO = 5;
 
     public static void logCallin(String signature, String methodName,
-                                 Object[] arguments) {
+                                 Object[] arguments, Object caller) {
         //called on Activity Thread
+        //TODO: add callers
         int id = count.getAndIncrement();
         long threadID = Thread.currentThread().getId();
 
