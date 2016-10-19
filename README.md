@@ -48,11 +48,20 @@ cd ~/.keystore
 keytool -genkey -v -keystore recompiled.keystore -alias recompiled -keyalg RSA -keysize 2048 -validity 10000
 ```
 
+Put instrumentation classes in new apk
+--------------------------------------
+TODO: this is a new step which avoids problems in soot with protobufs, this will eventually be automated
+steps:
+* unzip apk (its just a zip file)
+* put classes.dex file from  TraceRunnerRuntimeInstrumentation in the unziped file
+* create new zip archive with a .dex extension
+
 Sign recompiled apk
 -------------------
 ```
 bash utils/resign.sh [path to generated apk] app-debug.apk
 ```
+
 
 Starting the new (or any) APK on a phone
 ========================================
@@ -76,4 +85,25 @@ Design choices of TraceRunner
 Library inclusion for instrumentation
 -------------------------------------
 This was primarily based off the presentation in Reference/ccs2013.pdf
+However we found an issue with running instrumentation files involving 
+protocol buffers through soot for compilation to dex.  For this reason 
+the "setApplicationClass" step is ignored in favor of adding the dex
+file to the apk later as android simply merges all dex files in the
+project root directory.
 
+Auto boxing of primitives
+-------------------------
+In java thefollowing is valid code:
+
+```
+Integer i = 2;
+```
+
+This is not the case in jimple, instead write somethin like the following:
+
+```
+Integer i = Integer.valueOf(2);
+```
+
+Failure to do so will result in runtime validation failure on the phone
+the error message is not descriptive of the real problem.
