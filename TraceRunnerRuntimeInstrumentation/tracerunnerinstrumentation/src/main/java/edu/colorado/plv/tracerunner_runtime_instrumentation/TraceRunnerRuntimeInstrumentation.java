@@ -17,9 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by s on 10/3/16.
  */
 public class TraceRunnerRuntimeInstrumentation {
-//    static String hostName = "localhost";
+    //    static String hostName = "localhost";
     static int portNumber = 5050;
-    static String hostName = "10.0.1.52";
+    static String hostName = "localhost";
     static Socket socket = null;
     static BufferedOutputStream outStream = null;
     static AtomicInteger count = new AtomicInteger(0);

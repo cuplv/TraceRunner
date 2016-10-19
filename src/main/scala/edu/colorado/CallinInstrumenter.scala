@@ -41,7 +41,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     if(Synchronizer.runSetup.get()){ //nuclear option to run only once, TODO: fix this
       Synchronizer.lock.lock()
       if(Synchronizer.runSetup.get()) {
-          instrumentationClasses.map(a => Scene.v().getSootClass(a).setApplicationClass())
+//          instrumentationClasses.map(a => Scene.v().getSootClass(a).setApplicationClass()) //TODO: commented out while trying to manually add dex
 //        Scene.v().getSootClass(callinInstrumentClass)
 //          .setApplicationClass()
 //        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation$1").setApplicationClass()

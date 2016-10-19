@@ -67,3 +67,13 @@ run a given apk:
 python utils/start.py [apk path] [package] [appname]
 ```
 [appname] is the name of the activity you want to start, this is listed by pkgAndMainActivity.py
+
+
+
+Design choices of TraceRunner
+=============================
+
+Library inclusion for instrumentation
+-------------------------------------
+This was primarily based off the presentation in Reference/ccs2013.pdf
+
