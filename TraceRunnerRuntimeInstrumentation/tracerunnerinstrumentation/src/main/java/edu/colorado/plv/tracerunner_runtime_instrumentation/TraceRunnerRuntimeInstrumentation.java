@@ -101,11 +101,20 @@ public class TraceRunnerRuntimeInstrumentation {
      */
     private static ValueMsg getValueMsg(Object obj) {
         ValueMsg.Builder valueBuilder = ValueMsg.newBuilder();
+        if(obj != null) {
+            valueBuilder.toString();
 
-        valueBuilder = valueBuilder.setType(obj.getClass().getCanonicalName());
-        valueBuilder = valueBuilder.setObjectId(Integer.toHexString(System.identityHashCode(obj)));
-        valueBuilder = setValue(valueBuilder, obj);
+            Class aClass = obj.getClass();
+            //name not canonical name used here because canonical name can be null if inner class
+            //https://stackoverflow.com/questions/15903672/whats-the-difference-between-name-and-canonicalname
+            String name = aClass.getName();
+            valueBuilder = valueBuilder.setType(name);
+            valueBuilder = valueBuilder.setObjectId(Integer.toHexString(System.identityHashCode(obj)));
+            valueBuilder = setValue(valueBuilder, obj);
 
+        }else{
+            valueBuilder = valueBuilder.setIsNull(true);
+        }
         return valueBuilder.build();
     }
 
