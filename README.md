@@ -99,7 +99,7 @@ In java thefollowing is valid code:
 Integer i = 2;
 ```
 
-This is not the case in jimple, instead write somethin like the following:
+This is not the case in jimple, instead write the following:
 
 ```
 Integer i = Integer.valueOf(2);
