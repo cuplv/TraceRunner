@@ -26,8 +26,12 @@ case class Config(apkPath: String = null,
   def isApplicationPackage(signature: String): Boolean = {
     applicationPackagesr.exists((r: Regex) => {
       signature match {
-        case r() => true
-        case _ => false
+        case r() => {
+          true
+        }
+        case _ => {
+          false
+        }
       }
     })
   }

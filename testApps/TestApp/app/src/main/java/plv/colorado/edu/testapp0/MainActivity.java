@@ -32,7 +32,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        //TODO: static class method invok
         //TODO: add more test cases here
 
     }

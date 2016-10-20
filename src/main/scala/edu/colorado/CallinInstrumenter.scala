@@ -10,7 +10,7 @@ import soot.grimp.internal.{GDynamicInvokeExpr, GNewInvokeExpr, GStaticInvokeExp
 import soot.jimple.internal._
 import soot.jimple._
 import soot.util.Chain
-import soot.{ArrayType, Body, BodyTransformer, IntType, Local, PatchingChain, RefType, Scene, SootClass, SootMethod, Value, VoidType}
+import soot.{ArrayType, Body, BodyTransformer, IntType, Local, PatchingChain, RefType, Scene, SootClass, SootMethod, Unit, Value, ValueBox, VoidType}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -35,7 +35,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
   val callinInstrumentClass: String = "edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation"
 
-  override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]): Unit = {
+  override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]){
 
 
     if(Synchronizer.runSetup.get()){ //nuclear option to run only once, TODO: fix this
@@ -63,7 +63,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     //val signature: String = b.getMethod.getSignature
     val signature: String = b.getMethod.getDeclaringClass.getName
 
-    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object)")
+
 
     val matches: Boolean = applicationPackages.exists((r: Regex )=>{
       signature match{
@@ -75,59 +75,82 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
       val units: PatchingChain[soot.Unit] = b.getUnits;
       for (i: soot.Unit <- units.snapshotIterator()) {
         i.apply(new AbstractStmtSwitch {
-          override def caseInvokeStmt(stmt: InvokeStmt) = {
-            val name1: String = stmt.getInvokeExpr.getMethod.getDeclaringClass.getName
-            val currentMethod: SootMethod = stmt.getInvokeExpr.getMethod()
-            val methodName: String = currentMethod.getName()
-            if (!config.isApplicationPackage(name1)){
-              
 
-              //Arguments
-              val argCount: Int = stmt.getInvokeExpr.getArgCount
-              val arguments: Local = Jimple.v().newLocal(Utils.nextName("arguments"), ArrayType.v(RefType.v("java.lang.Object"), 1))
-              units.insertBefore(Jimple.v().newAssignStmt(
-                arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 1))), i)
+          override def caseAssignStmt(stmt: AssignStmt) = {
+            stmt.getLeftOp
+            val right: Value = stmt.getRightOp
+            right match{
+              case e: InvokeExpr => {
 
-              val receiver = stmt.getInvokeExpr match {
-                case i: InstanceInvokeExpr => i.getBase
-                case i: StaticInvokeExpr => NullConstant.v() //TODO: null value here
-                case _ => ???
               }
-              units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(0)), receiver), i)
-
-              (1 until (argCount+1)).foreach( a => {
-                val arg: Value = stmt.getInvokeExpr().getArg(a - 1)
-                val tmpLocal = Jimple.v().newLocal(Utils.nextName("arguments"), RefType.v("java.lang.Object"))
-                val argAssign: AssignStmt = Jimple.v().newAssignStmt(
-                  tmpLocal , Utils.autoBox(arg))
-                val argAssign2: AssignStmt = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), tmpLocal)
-
-                units.insertBefore(argAssign, i)
-                units.insertBefore(argAssign2,i)
-              })
-
-              //Caller
-              val newThisRef = b.getThisLocal
-              val callerref: Local = Jimple.v().newLocal(Utils.nextName("callerref"), RefType.v("java.lang.Object"))
-              units.insertBefore(Jimple.v().newAssignStmt(callerref, newThisRef),i)
-
-              //Signature and method name
-              val signature: Local = Jimple.v().newLocal(Utils.nextName("signaturename"), RefType.v("java.lang.String"))
-              val methodname: Local = Jimple.v().newLocal(Utils.nextName("methodname"), RefType.v("java.lang.String"))
-              //Create signature information
-              val sigassign = Jimple.v().newAssignStmt(signature, StringConstant.v(name1))
-              units.insertBefore(sigassign,i)
-
-              //TODO: Capture return value
-              val methodSignature = method.getSignature
-              units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName + methodSignature)),i)
-              val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature,methodname, arguments, callerref).asJava)
-              units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
+              case _ => ()
             }
+          }
+          override def caseInvokeStmt(stmt: InvokeStmt) = {
+            val invokeExpr: InvokeExpr = stmt.getInvokeExpr
+
+            instrumentInvokeExpr(b, i, invokeExpr)
 
           }
         })
       }
-    }else {}
+    }
+
+  }
+
+  def instrumentInvokeExpr(b: Body, i: Unit, invokeExpr: InvokeExpr) = {
+    val method = b.getMethod
+    val units: PatchingChain[soot.Unit] = b.getUnits
+    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object)")
+    val name1: String = invokeExpr.getMethod.getDeclaringClass.getName
+    val currentMethod: SootMethod = invokeExpr.getMethod()
+    val methodName: String = currentMethod.getName()
+    val instrumentCallin: Boolean = !config.isApplicationPackage(name1)
+
+    if (instrumentCallin) {
+
+
+      //Arguments
+      val argCount: Int = invokeExpr.getArgCount
+      val arguments: Local = Jimple.v().newLocal(Utils.nextName("arguments"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+      units.insertBefore(Jimple.v().newAssignStmt(
+        arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 1))), i)
+
+      val receiver = invokeExpr match {
+        case i: InstanceInvokeExpr => i.getBase
+        case i: StaticInvokeExpr => NullConstant.v() //TODO: null value here
+        case _ => ???
+      }
+      units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(0)), receiver), i)
+
+      (1 until (argCount + 1)).foreach(a => {
+        val arg: Value = invokeExpr.getArg(a - 1)
+        val tmpLocal = Jimple.v().newLocal(Utils.nextName("arguments"), RefType.v("java.lang.Object"))
+        val argAssign: AssignStmt = Jimple.v().newAssignStmt(
+          tmpLocal, Utils.autoBox(arg))
+        val argAssign2: AssignStmt = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), tmpLocal)
+
+        units.insertBefore(argAssign, i)
+        units.insertBefore(argAssign2, i)
+      })
+
+      //Caller
+      val newThisRef = b.getThisLocal
+      val callerref: Local = Jimple.v().newLocal(Utils.nextName("callerref"), RefType.v("java.lang.Object"))
+      units.insertBefore(Jimple.v().newAssignStmt(callerref, newThisRef), i)
+
+      //Signature and method name
+      val signature: Local = Jimple.v().newLocal(Utils.nextName("signaturename"), RefType.v("java.lang.String"))
+      val methodname: Local = Jimple.v().newLocal(Utils.nextName("methodname"), RefType.v("java.lang.String"))
+      //Create signature information
+      val sigassign = Jimple.v().newAssignStmt(signature, StringConstant.v(name1))
+      units.insertBefore(sigassign, i)
+
+      val methodSignature = method.getSignature
+      units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName + methodSignature)), i)
+      val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature, methodname, arguments, callerref).asJava)
+      units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
+      //TODO: Capture return value
+    }
   }
 }
