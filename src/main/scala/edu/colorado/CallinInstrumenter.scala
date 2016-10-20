@@ -71,17 +71,21 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         case _ => false
       }
     })
-    if(matches) {
+    if(matches && name != "<clinit>") {
       val units: PatchingChain[soot.Unit] = b.getUnits;
       for (i: soot.Unit <- units.snapshotIterator()) {
         i.apply(new AbstractStmtSwitch {
 
           override def caseAssignStmt(stmt: AssignStmt) = {
-            stmt.getLeftOp
+            val left: Value = stmt.getLeftOp
             val right: Value = stmt.getRightOp
             right match{
               case e: InvokeExpr => {
+                instrumentInvokeExpr(b,i, e, None) //TODO: caputre output
 
+
+
+//                units.insertAfter()
               }
               case _ => ()
             }
@@ -89,7 +93,8 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
           override def caseInvokeStmt(stmt: InvokeStmt) = {
             val invokeExpr: InvokeExpr = stmt.getInvokeExpr
 
-            instrumentInvokeExpr(b, i, invokeExpr)
+            instrumentInvokeExpr(b, i, invokeExpr, None)
+            //TODO: Capture return value and put in 4th arg place
 
           }
         })
@@ -98,7 +103,13 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
   }
 
-  def instrumentInvokeExpr(b: Body, i: Unit, invokeExpr: InvokeExpr) = {
+  /**
+    * if invokeExpr is calling something in the framework then put instrumentation around it
+    * @param b
+    * @param i
+    * @param invokeExpr
+    */
+  def instrumentInvokeExpr(b: Body, i: Unit, invokeExpr: InvokeExpr, returnLocation: Option[Local]) = {
     val method = b.getMethod
     val units: PatchingChain[soot.Unit] = b.getUnits
     val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object)")
@@ -118,7 +129,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
       val receiver = invokeExpr match {
         case i: InstanceInvokeExpr => i.getBase
-        case i: StaticInvokeExpr => NullConstant.v() //TODO: null value here
+        case i: StaticInvokeExpr => NullConstant.v()
         case _ => ???
       }
       units.insertBefore(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(0)), receiver), i)
@@ -150,7 +161,26 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
       units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName + methodSignature)), i)
       val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature, methodname, arguments, callerref).asJava)
       units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
-      //TODO: Capture return value
+
+      //TODO: locations of exits
+      val callinExitMethodSig: String = "void logCallinExit(java.lang.String,java.lang.String,java.lang.Object,java.lang.String)"
+      returnLocation match{
+        case Some(returnLocation) => {
+          //Log return value and exit
+          val exitLogMethod: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod(callinExitMethodSig)
+          val exitExpr = Jimple.v().newStaticInvokeExpr(exitLogMethod.makeRef(), List[Local](signature, methodname, returnLocation, signature).asJava)
+          units.insertAfter(Jimple.v().newInvokeStmt(exitExpr), i)
+        }
+        case None =>{
+          //Log exit and set return value to null (this is for void methods only)
+          //Log return value and exit
+          val exitLogMethod: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod(callinExitMethodSig)
+          val nullreflocal = Jimple.v().newLocal(Utils.nextName("nullref"), RefType.v("java.lang.Object"))
+          val exitExpr = Jimple.v().newStaticInvokeExpr(exitLogMethod.makeRef(), List[Local](signature, methodname, nullreflocal, signature).asJava)
+          units.insertAfter(Jimple.v().newInvokeStmt(exitExpr), i)
+          units.insertAfter(Jimple.v().newAssignStmt(nullreflocal, NullConstant.v()),i)
+        }
+      }
     }
   }
 }

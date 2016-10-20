@@ -27,7 +27,10 @@ public class TraceRunnerRuntimeInstrumentation {
     static ExecutorService executorService = Executors.newFixedThreadPool(1);
     static final long EXECUTOR_TO = 5;
 
-    public static void logCallin(String signature, String methodName,
+    public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
+
+    }
+    public static void logCallin(String signature, String methodName, //TODO: add location
                                  Object[] arguments, Object caller) {
         //called on Activity Thread
         //TODO: add callers
