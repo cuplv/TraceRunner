@@ -17,7 +17,7 @@ public class LogDat implements Runnable {
                 !TraceRunnerRuntimeInstrumentation.socket.isConnected()) {
             TraceRunnerRuntimeInstrumentation.setupNetwork();
         }
-        data.writeTo(TraceRunnerRuntimeInstrumentation.socket.getOutputStream());
+        data.writeDelimitedTo(TraceRunnerRuntimeInstrumentation.socket.getOutputStream());
         TraceRunnerRuntimeInstrumentation.socket.getOutputStream().flush();
     }
 

@@ -77,6 +77,16 @@ python utils/start.py [apk path] [package] [appname]
 ```
 [appname] is the name of the activity you want to start, this is listed by pkgAndMainActivity.py
 
+Proto Converter Scripts
+=======================
+These scripts are used to read the traces and convert them into other data formats.
+
+* protoPrinter.py: prints a human readable version of the data
+
+dependencies:
+
+sudo pip install protobuf
+
 
 
 Design choices of TraceRunner
