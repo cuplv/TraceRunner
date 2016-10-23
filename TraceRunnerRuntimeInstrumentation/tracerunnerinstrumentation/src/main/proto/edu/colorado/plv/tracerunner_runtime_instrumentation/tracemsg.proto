@@ -53,10 +53,10 @@ message TraceMsgContainer {
     }
 
     message CallinExitMsg {
-        /* id of the callin */
-        required uint64 callin_id = 1;
         /* signature of the callin */
-        required string signature = 2;
+        required string signature = 1;
+        /* name of the invoked callin */
+        required string method_name = 2;
         /* return value */
         optional ValueMsg return_value = 3;
     }

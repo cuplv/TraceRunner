@@ -28,6 +28,24 @@ public class TraceRunnerRuntimeInstrumentation {
     static final long EXECUTOR_TO = 5;
 
     public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
+        int id = count.getAndIncrement();
+        long threadID = Thread.currentThread().getId();
+
+        TraceMsgContainer.CallinExitMsg.Builder callinExitMsgBuilder
+                = TraceMsgContainer.CallinExitMsg.newBuilder();
+        callinExitMsgBuilder.setSignature(signature);
+        callinExitMsgBuilder.setMethodName(methodName);
+        callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
+
+        TraceMsg msg = TraceMsg.newBuilder()
+                .setType(TraceMsg.MsgType.CALLIN_EXIT)
+                .setMessageId(id)
+                .setThreadId(threadID)
+                .setCallinExit(callinExitMsgBuilder)
+                .build();
+        TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                .setMsg(msg).build();
+        executorService.execute(new LogDat(container));
 
     }
     public static void logCallin(String signature, String methodName, //TODO: add location
