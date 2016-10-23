@@ -3,10 +3,12 @@ import os
 import subprocess
 
 def compileProto():
-    dirname = os.path.dirname(__file__)
-
+    # dirname = os.path.dirname(__file__)
+    dirname = os.path.dirname(os.path.abspath(__file__))
     split = dirname.split("/")
     projRoot = "/".join(split[0:-2])
+    print "----"
+    print projRoot
     srcDir = projRoot + "/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/src/main/proto/edu/colorado/plv/tracerunner_runtime_instrumentation/"
     protoFile = "tracemsg.proto"
 
