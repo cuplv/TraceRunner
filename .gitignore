@@ -10,3 +10,4 @@ build/**
 .DS_Store
 testApps/output/
 project/
+utils/ProtoConverter/tracemsg_pb2.py
