@@ -19,10 +19,7 @@ import scala.util.matching.Regex
 /**
  * Created by s on 9/21/16.
  */
-object Synchronizer{
-  var runSetup = new AtomicBoolean(true)
-  var lock = new ReentrantLock()
-}
+
 
 class CallinInstrumenter(config: Config, instrumentationClasses: scala.collection.mutable.Buffer[String]) extends BodyTransformer{
  //TODO: somehow run once code can be run multiple times, fix this
@@ -37,34 +34,12 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]){
 
-
-    if(Synchronizer.runSetup.get()){ //nuclear option to run only once, TODO: fix this
-      Synchronizer.lock.lock()
-      if(Synchronizer.runSetup.get()) {
-//          instrumentationClasses.map(a => Scene.v().getSootClass(a).setApplicationClass()) //TODO: commented out while trying to manually add dex
-//        Scene.v().getSootClass(callinInstrumentClass)
-//          .setApplicationClass()
-//        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation$1").setApplicationClass()
-//        Scene.v().getSootClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat").setApplicationClass()
-        Synchronizer.runSetup.set(false)
-      }
-      Synchronizer.lock.unlock()
-    }
-
-
-
     val declaration: String = b.getMethod.getDeclaration
     val method: SootMethod = b.getMethod()
-
-
-
-
 
     val name: String = b.getMethod.getName
     //val signature: String = b.getMethod.getSignature
     val signature: String = b.getMethod.getDeclaringClass.getName
-
-
 
     val matches: Boolean = applicationPackages.exists((r: Regex )=>{
       signature match{
