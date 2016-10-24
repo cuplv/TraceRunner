@@ -84,7 +84,6 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
               case e: InvokeExpr => {
 
                val captureReturn1: (Unit, Option[Local]) = captureReturn(b, units, i, e)
-                instrumentInvokeExpr(b,captureReturn1._1, e, captureReturn1._2) //TODO: caputre output
                 captureReturn1._2 match{
                   case Some(l) => units.insertAfter(Jimple.v().newAssignStmt(left, l),captureReturn1._1)
                   case None =>()
