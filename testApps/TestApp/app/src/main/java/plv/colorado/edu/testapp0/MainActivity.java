@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
         FakeLibraryClass.thisMethodTakesAFloat(2.3f);
         FakeLibraryClass.thisMethodTakesALong(2);
         FakeLibraryClass.thisMethodTakesADouble(32);
+        getApplication();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

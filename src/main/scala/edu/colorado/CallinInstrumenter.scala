@@ -81,6 +81,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
             val right: Value = stmt.getRightOp
             right match{
               case e: InvokeExpr => {
+
                 instrumentInvokeExpr(b,i, e, None) //TODO: caputre output
 
 
@@ -132,7 +133,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
                 units.insertBefore(Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue)),i)
                 instrumentInvokeExpr(b,i,invokeExpr, Some(boxedReturnValue))
               }
-              case r: RefType => {
+              case r: RefType => { //thing that extends Object
                 val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), RefType.v("java.lang.Object"))
                 units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr),i)
                 instrumentInvokeExpr(b,i,invokeExpr, Some(returnValue))
@@ -140,14 +141,10 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
               }
               case r => {
                 //Capture return value in local
-                //TODO: finish me
+                //TODO: check for other return types
                 ???
               }
             }
-
-
-
-            //TODO: Capture return value and put in 4th arg place
 
           }
         })
