@@ -5,13 +5,12 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.locks.ReentrantLock
 
 import edu.colorad.cs.TraceRunner.Config
-import soot.JastAddJ.LongType
 import soot.dava.internal.javaRep.DNewInvokeExpr
 import soot.grimp.internal.{GDynamicInvokeExpr, GNewInvokeExpr, GStaticInvokeExpr}
 import soot.jimple.internal._
 import soot.jimple._
 import soot.util.Chain
-import soot.{ArrayType, Body, BodyTransformer, CharType, FloatType, IntType, Local, PatchingChain, RefType, Scene, SootClass, SootMethod, Type, Unit, Value, ValueBox, VoidType}
+import soot.{ArrayType, Body, BodyTransformer, CharType, FloatType, IntType, Local, LongType, PatchingChain, RefType, Scene, SootClass, SootMethod, Type, Unit, Value, ValueBox, VoidType}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -104,10 +103,35 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
                 instrumentInvokeExpr(b,i,invokeExpr, Some(boxedReturnValue))
                 units.remove(i)
               }
-              case r: FloatType => ???
-              case r: LongType => ???
-              case r: CharType => ???
-              case r: ArrayType => ???
+              case r: FloatType => {
+                val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), FloatType.v())
+                units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr),i)
+                val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+                units.insertBefore(Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue)),i)
+                instrumentInvokeExpr(b,i,invokeExpr, Some(boxedReturnValue))
+              }
+              case r: LongType => {
+                val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), LongType.v())
+                units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr),i)
+                val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+                units.insertBefore(Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue)),i)
+                instrumentInvokeExpr(b,i,invokeExpr, Some(boxedReturnValue))
+
+              }
+              case r: CharType => {
+                val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), CharType.v())
+                units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr),i)
+                val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+                units.insertBefore(Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue)),i)
+                instrumentInvokeExpr(b,i,invokeExpr, Some(boxedReturnValue))
+              }
+              case r: ArrayType => {
+                val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), ArrayType.v(r.baseType, r.numDimensions))
+                units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr),i)
+                val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+                units.insertBefore(Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue)),i)
+                instrumentInvokeExpr(b,i,invokeExpr, Some(boxedReturnValue))
+              }
               case r: RefType => {
                 val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), RefType.v("java.lang.Object"))
                 units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr),i)
