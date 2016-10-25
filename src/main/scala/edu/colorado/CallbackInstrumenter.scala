@@ -41,6 +41,18 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       for (i: soot.Unit <- units.snapshotIterator()) {
 
         i.apply(new AbstractStmtSwitch {
+          override def caseReturnVoidStmt(stmt: ReturnVoidStmt): Unit = {
+            val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+            val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+            val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS)
+              .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
+            units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
+            units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),i)
+            val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+            units.insertBefore(Jimple.v().newAssignStmt(returnTmp, NullConstant.v()),i)
+            units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
+              List[Local](lsignature, methodname, returnTmp))),i)
+          }
           override def caseReturnStmt(stmt: ReturnStmt): Unit = {
             stmt.getOp match{
               case l: Local => {
