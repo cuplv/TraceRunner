@@ -12,29 +12,25 @@ git clone git@github.com:Sable/android-platforms.git
 
 Run with arguments
 =======================
-```
--allow-phantom-refs -android-jars [place android-platforms was checked out]/android-platforms -process-dir [path to apk]/app-debug.apk -output-dir [directory to put apk in]
-```
+sbt run -j [android platforms] -d [input apk] -o /home/s/Documents/source/TraceRunner/testApps/output -p plv.colorado.* -i /home/s/Documents/source/TraceRunner/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar
 
--allow-phantom-refs #this makes fake versions of things we cannot find, this should not affect the instrumentation since we are performing our transformation to every file, but keep an eye on it
 
--android-jars #non stubbed version of android framework.  The Sable/android-platforms repo is really old though so this may be problematic later, TODO: figure out how to compile recent versions.
+-j #non stubbed version of android framework.  The Sable/android-platforms repo is really old though so this may be problematic later, TODO: figure out how to compile recent versions.
 
 example usage:
 
--j
-/home/s/Documents/source/android-platforms
--d
-/home/s/Documents/source/TraceRunner/testApps/TestApp/app/build/outputs/apk/app-debug.apk
--o
-/home/s/Documents/source/TraceRunner/testApps/output
--p
-plv.colorado.*
--i
-/home/s/Documents/source/TraceRunner/TraceRunnerInstrumentation/build/libs/TraceRunnerInstrumentation-1.0.jar
+Put instrumentation classes in new apk
+--------------------------------------
+TODO: this is a new step which avoids problems in soot with protobufs, this will eventually be automated
 
--m output jimple instead of apk
+```
+python ../../utils/add_external_dex.py --dex /home/s/Documents/source/TraceRunner/TraceRunnerRuntimeInstrumentation/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex --apk app-debug.apk
+```
 
+steps:
+* unzip apk (its just a zip file)
+* put classes.dex file from  TraceRunnerRuntimeInstrumentation in the unziped file
+* create new zip archive with a .dex extension
 
 Signing APK
 ===========
@@ -48,13 +44,7 @@ cd ~/.keystore
 keytool -genkey -v -keystore recompiled.keystore -alias recompiled -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-Put instrumentation classes in new apk
---------------------------------------
-TODO: this is a new step which avoids problems in soot with protobufs, this will eventually be automated
-steps:
-* unzip apk (its just a zip file)
-* put classes.dex file from  TraceRunnerRuntimeInstrumentation in the unziped file
-* create new zip archive with a .dex extension
+
 
 Sign recompiled apk
 -------------------
@@ -77,6 +67,20 @@ python utils/start.py [apk path] [package] [appname]
 ```
 [appname] is the name of the activity you want to start, this is listed by pkgAndMainActivity.py
 
+note: please add internet permission to android app
+```
+    <uses-permission android:name="android.permission.INTERNET" />
+```
+
+Receiving the trace
+===================
+The instrumentation transmits the trace data to localhost:5050 (this can be changed in the androidruntimeinstrumentation)
+currently the easiest way to read this is "nc -l -p 5050 > /sdcard/trace" but we need an app so we don't require root and busy box on the phone.
+
+Getting the trace
+=================
+adb pull /sdcard/trace .
+
 Proto Converter Scripts
 =======================
 These scripts are used to read the traces and convert them into other data formats.
@@ -86,6 +90,11 @@ These scripts are used to read the traces and convert them into other data forma
 dependencies:
 
 sudo pip install protobuf
+
+usage
+```
+python utils/ProtoConverter/protoPrinter.py --trace trace
+```
 
 
 
