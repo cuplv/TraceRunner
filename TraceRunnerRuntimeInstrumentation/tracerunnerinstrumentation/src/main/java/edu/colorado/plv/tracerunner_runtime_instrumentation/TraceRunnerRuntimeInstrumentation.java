@@ -28,6 +28,24 @@ public class TraceRunnerRuntimeInstrumentation {
     static final long EXECUTOR_TO = 5;
 
     public static void logCallbackReturn(String signature, String methodName, Object returnVal){
+        int id = count.getAndIncrement();
+        long threadID = Thread.currentThread().getId();
+        TraceMsgContainer.CallbackExitMsg.Builder builder
+                = TraceMsgContainer.CallbackExitMsg.newBuilder();
+        builder.setSignature(signature);
+        builder.setMethodName(methodName);
+        if(returnVal != null){
+            builder.setReturnValue(getValueMsg(returnVal));
+        }
+        TraceMsg msg = TraceMsg.newBuilder()
+                .setType(TraceMsg.MsgType.CALLBACK_EXIT)
+                .setMessageId(id)
+                .setThreadId(threadID)
+                .setCallbackExit(builder)
+                .build();
+        TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                .setMsg(msg).build();
+        executorService.execute(new LogDat(container));
 
     }
 

@@ -39,10 +39,39 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       var lastArg: Option[soot.Unit] = None
       var thisRef: Option[soot.Unit] = None
       for (i: soot.Unit <- units.snapshotIterator()) {
+
         i.apply(new AbstractStmtSwitch {
           override def caseReturnStmt(stmt: ReturnStmt): Unit = {
-            val op: Value = stmt.getOp
-            println()
+            stmt.getOp match{
+              case l: Local => {
+                val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+                val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+                val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS)
+                  .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
+                units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
+                units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),i)
+                val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+                units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
+
+                units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
+                  List[Local](lsignature, methodname, returnTmp))),i)
+              }
+              case l: Constant => {
+                val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+                val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+                val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS)
+                  .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
+                units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
+                units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),i)
+                units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
+                  List[Value](lsignature, methodname, l))),i)
+              }
+              case l: Expr => {
+                ???
+              } //Probably no expr in return statement
+              case _ => ???
+            }
+
           }
           override def caseIdentityStmt(stmt: IdentityStmt) = {
             val rvalue: Value = stmt.getRightOpBox.getValue
