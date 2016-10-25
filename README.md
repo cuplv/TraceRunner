@@ -72,6 +72,15 @@ note: please add internet permission to android app
     <uses-permission android:name="android.permission.INTERNET" />
 ```
 
+Receiving the trace
+===================
+The instrumentation transmits the trace data to localhost:5050 (this can be changed in the androidruntimeinstrumentation)
+currently the easiest way to read this is "nc -l -p 5050 > /sdcard/trace" but we need an app so we don't require root and busy box on the phone.
+
+Getting the trace
+=================
+adb pull /sdcard/trace .
+
 Proto Converter Scripts
 =======================
 These scripts are used to read the traces and convert them into other data formats.
@@ -81,6 +90,11 @@ These scripts are used to read the traces and convert them into other data forma
 dependencies:
 
 sudo pip install protobuf
+
+usage
+```
+python utils/ProtoConverter/protoPrinter.py --trace trace
+```
 
 
 
