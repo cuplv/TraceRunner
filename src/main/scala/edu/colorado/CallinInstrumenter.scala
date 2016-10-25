@@ -214,7 +214,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
       units.insertBefore(sigassign, i)
 
       val methodSignature = method.getSignature
-      units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodName + methodSignature)), i)
+      units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(currentMethod.getSignature)), i)
       val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature, methodname, arguments, callerref).asJava)
       units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
 
