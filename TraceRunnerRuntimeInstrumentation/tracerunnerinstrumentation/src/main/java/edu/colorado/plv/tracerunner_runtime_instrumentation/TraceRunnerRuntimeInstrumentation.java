@@ -32,12 +32,20 @@ public class TraceRunnerRuntimeInstrumentation {
     }
 
     public static void logCallbackEntry(String signature, String methodName, Object[] arguments){
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+
+        StackTraceElement callbackCaller = stackTrace[4];
+
+        String callerClassName = callbackCaller.getClassName();
+        String callerMethodName = callbackCaller.getMethodName();
         int id = count.getAndIncrement();
         long threadID = Thread.currentThread().getId();
         TraceMsgContainer.CallbackEntryMsg.Builder callbackEntryMsgBuilder
                 = TraceMsgContainer.CallbackEntryMsg.newBuilder();
         callbackEntryMsgBuilder.setSignature(signature);
         callbackEntryMsgBuilder.setMethodName(methodName);
+        callbackEntryMsgBuilder.setCallbackCallerClass(callerClassName);
+        callbackEntryMsgBuilder.setCallbackCallerMethod(callerMethodName);
         for(Object o: arguments){
             callbackEntryMsgBuilder.addParamList(getValueMsg(o));
         }

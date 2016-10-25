@@ -14,5 +14,8 @@ public class MainActivity extends AppCompatActivity {
         getApplication(); //test return value from non used return
         TextView tv = (TextView)findViewById(R.id.h);
         tv.setText("goodbye world!");
+        SomeClass s = new SomeClass();
+        s.returnsString(3);
+        s.returnsString(10);
     }
 }

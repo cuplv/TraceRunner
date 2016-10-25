@@ -40,6 +40,10 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       var thisRef: Option[soot.Unit] = None
       for (i: soot.Unit <- units.snapshotIterator()) {
         i.apply(new AbstractStmtSwitch {
+          override def caseReturnStmt(stmt: ReturnStmt): Unit = {
+            val op: Value = stmt.getOp
+            println()
+          }
           override def caseIdentityStmt(stmt: IdentityStmt) = {
             val rvalue: Value = stmt.getRightOpBox.getValue
             rvalue match {
@@ -128,8 +132,8 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 
 
 
-      //TODO: log entry and args
-      println("")
+      //TODO: log exit in case of no return
+
     }
 
 
