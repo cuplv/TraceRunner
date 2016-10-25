@@ -12,28 +12,13 @@ git clone git@github.com:Sable/android-platforms.git
 
 Run with arguments
 =======================
-```
--allow-phantom-refs -android-jars [place android-platforms was checked out]/android-platforms -process-dir [path to apk]/app-debug.apk -output-dir [directory to put apk in]
-```
+sbt run -j [android platforms] -d [input apk] -o /home/s/Documents/source/TraceRunner/testApps/output -p plv.colorado.* -i /home/s/Documents/source/TraceRunner/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar
 
--allow-phantom-refs #this makes fake versions of things we cannot find, this should not affect the instrumentation since we are performing our transformation to every file, but keep an eye on it
 
--android-jars #non stubbed version of android framework.  The Sable/android-platforms repo is really old though so this may be problematic later, TODO: figure out how to compile recent versions.
+-j #non stubbed version of android framework.  The Sable/android-platforms repo is really old though so this may be problematic later, TODO: figure out how to compile recent versions.
 
 example usage:
 
--j
-/home/s/Documents/source/android-platforms
--d
-/home/s/Documents/source/TraceRunner/testApps/TestApp/app/build/outputs/apk/app-debug.apk
--o
-/home/s/Documents/source/TraceRunner/testApps/output
--p
-plv.colorado.*
--i
-/home/s/Documents/source/TraceRunner/TraceRunnerInstrumentation/build/libs/TraceRunnerInstrumentation-1.0.jar
-
--m output jimple instead of apk
 
 
 Signing APK
