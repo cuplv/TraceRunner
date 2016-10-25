@@ -27,6 +27,14 @@ public class TraceRunnerRuntimeInstrumentation {
     static ExecutorService executorService = Executors.newFixedThreadPool(1);
     static final long EXECUTOR_TO = 5;
 
+    public static void logCallbackReturn(String signature, String methodName, Object returnVal){
+
+    }
+
+    public static void logCallbackEntry(String signature, String methodName, Object[] arguments){
+
+    }
+
     public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
         int id = count.getAndIncrement();
         long threadID = Thread.currentThread().getId();

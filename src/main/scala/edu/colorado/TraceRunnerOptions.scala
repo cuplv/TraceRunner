@@ -11,6 +11,8 @@ import edu.colorad.cs.TraceRunner.Config
  */
 object TraceRunnerOptions {
   val  USE_PHANTOM_CLASSES = true
+  val CALLIN_INATRUMENTATION_CLASS: String =
+    "edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation"
 
   def getSootConfig(config: Config): Array[String] = {
     Array(
