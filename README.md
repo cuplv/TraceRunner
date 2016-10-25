@@ -19,7 +19,18 @@ sbt run -j [android platforms] -d [input apk] -o /home/s/Documents/source/TraceR
 
 example usage:
 
+Put instrumentation classes in new apk
+--------------------------------------
+TODO: this is a new step which avoids problems in soot with protobufs, this will eventually be automated
 
+```
+python ../../utils/add_external_dex.py --dex /home/s/Documents/source/TraceRunner/TraceRunnerRuntimeInstrumentation/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex --apk app-debug.apk
+```
+
+steps:
+* unzip apk (its just a zip file)
+* put classes.dex file from  TraceRunnerRuntimeInstrumentation in the unziped file
+* create new zip archive with a .dex extension
 
 Signing APK
 ===========
@@ -33,13 +44,7 @@ cd ~/.keystore
 keytool -genkey -v -keystore recompiled.keystore -alias recompiled -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-Put instrumentation classes in new apk
---------------------------------------
-TODO: this is a new step which avoids problems in soot with protobufs, this will eventually be automated
-steps:
-* unzip apk (its just a zip file)
-* put classes.dex file from  TraceRunnerRuntimeInstrumentation in the unziped file
-* create new zip archive with a .dex extension
+
 
 Sign recompiled apk
 -------------------
