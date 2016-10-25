@@ -67,6 +67,9 @@ message TraceMsgContainer {
 
     /* TODO: placeholder */
     message CallbackEntryMsg {
+        required string signature = 1;
+        required string method_name = 2;
+        repeated ValueMsg param_list = 3;
     }
     /* TODO: placeholder */
     message CallbackExitMsg {

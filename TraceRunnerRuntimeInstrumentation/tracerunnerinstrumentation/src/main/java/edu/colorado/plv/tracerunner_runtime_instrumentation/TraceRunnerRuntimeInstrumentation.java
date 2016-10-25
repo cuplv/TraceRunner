@@ -32,7 +32,25 @@ public class TraceRunnerRuntimeInstrumentation {
     }
 
     public static void logCallbackEntry(String signature, String methodName, Object[] arguments){
+        int id = count.getAndIncrement();
+        long threadID = Thread.currentThread().getId();
+        TraceMsgContainer.CallbackEntryMsg.Builder callbackEntryMsgBuilder
+                = TraceMsgContainer.CallbackEntryMsg.newBuilder();
+        callbackEntryMsgBuilder.setSignature(signature);
+        callbackEntryMsgBuilder.setMethodName(methodName);
+        for(Object o: arguments){
+            callbackEntryMsgBuilder.addParamList(getValueMsg(o));
+        }
 
+        TraceMsg msg = TraceMsg.newBuilder()
+                .setType(TraceMsg.MsgType.CALLBACK_ENTRY)
+                .setMessageId(id)
+                .setThreadId(threadID)
+                .setCallbackEntry(callbackEntryMsgBuilder)
+                .build();
+        TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                .setMsg(msg).build();
+        executorService.execute(new LogDat(container));
     }
 
     public static void logCallinExit(String signature, String methodName, Object returnValue, String location){

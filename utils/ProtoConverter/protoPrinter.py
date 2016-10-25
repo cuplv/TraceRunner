@@ -19,7 +19,6 @@ def decodeProtobuf(file):
         (size, position) = decoder._DecodeVarint(data, dataBegin)
         pbuf = tracemsg_pb2.TraceMsgContainer()
         pbuf.ParseFromString(data[position:position + size])
-        print pbuf
         dataBegin = size + position
         pbufList.append(pbuf)
     return pbufList
