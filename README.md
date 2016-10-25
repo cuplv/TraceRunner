@@ -67,6 +67,11 @@ python utils/start.py [apk path] [package] [appname]
 ```
 [appname] is the name of the activity you want to start, this is listed by pkgAndMainActivity.py
 
+note: please add internet permission to android app
+```
+    <uses-permission android:name="android.permission.INTERNET" />
+```
+
 Proto Converter Scripts
 =======================
 These scripts are used to read the traces and convert them into other data formats.
