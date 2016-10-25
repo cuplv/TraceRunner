@@ -97,7 +97,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
 //        units.insertBefore(newUnit, i)
         units.swapWith(i,newUnit)
-        instrumentInvokeExpr(b, i, invokeExpr, Some(boxedReturnValue))
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
 
         (newUnit,Option(returnValue))
       }
@@ -108,7 +108,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
 //        units.insertBefore(newUnit, i)
         units.swapWith(i,newUnit)
-        instrumentInvokeExpr(b, i, invokeExpr, Some(boxedReturnValue))
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
         (newUnit,Option(returnValue))
       }
       case r: LongType => {
@@ -118,7 +118,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
 //        units.insertBefore(newUnit, i)
         units.swapWith(i,newUnit)
-        instrumentInvokeExpr(b, i, invokeExpr, Some(boxedReturnValue))
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
         (newUnit,Option(returnValue))
       }
       case r: CharType => {
@@ -128,7 +128,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
 //        units.insertBefore(newUnit, i)
         units.swapWith(i,newUnit)
-        instrumentInvokeExpr(b, i, invokeExpr, Some(boxedReturnValue))
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
         (newUnit ,Option(returnValue))
       }
       case r: ArrayType => {
@@ -138,7 +138,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
 //        units.insertBefore(newUnit, i)
         units.swapWith(i,newUnit)
-        instrumentInvokeExpr(b, i, invokeExpr, Some(boxedReturnValue))
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
         (newUnit,Option(returnValue))
       }
       case r: RefType => {

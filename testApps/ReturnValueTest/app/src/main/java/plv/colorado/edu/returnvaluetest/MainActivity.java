@@ -18,5 +18,6 @@ public class MainActivity extends AppCompatActivity {
         s.returnsString(3);
         s.returnsString(10);
         s.addFive(4);
+        s.someVoid(8);
     }
 }
