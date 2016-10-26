@@ -42,13 +42,15 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       for (i: soot.Unit <- units.snapshotIterator()) {
 
         i.apply(new AbstractStmtSwitch {
+          private val methodSignature: String = method.getSubSignature
+
           override def caseReturnVoidStmt(stmt: ReturnVoidStmt): Unit = {
             val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
             val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
             val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS)
               .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
             units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
-            units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),i)
+            units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
             val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
             units.insertBefore(Jimple.v().newAssignStmt(returnTmp, NullConstant.v()),i)
             units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
@@ -62,7 +64,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
                 val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS)
                   .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
                 units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
-                units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),i)
+                units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
                 val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
                 units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
 
@@ -75,7 +77,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
                 val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS)
                   .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
                 units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
-                units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),i)
+                units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
                 units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
                   List[Value](lsignature, methodname, l))),i)
               }
@@ -120,7 +122,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           units.insertAfter(expr,l)
 
           units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),l)
-          units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),l)
+          units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getSubSignature)),l)
 
 
           //assing this ref to first element of inputArgs as receiver
@@ -163,7 +165,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 
 
 
-              units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)),thisRef)
+              units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getSubSignature)),thisRef)
               units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),thisRef)
 
             }
