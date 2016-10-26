@@ -1,3 +1,5 @@
+The process of implementing an Android application involves creating a set of callbacks which are invoked by the operating system to inform the app of various external events.  In turn these callbacks can invoke methods on the framework, which we refer to as callins, to send information to the framework about what the app wants to do or be notified of. These events have a strict protocol of when things are allowed to be called and when they are not leading to hard to understand exceptions when the developer violates this protocol. This tool is part of a broader project to address this issue by allowing us to observe this sequence of callins and callbacks as they are executed in the application.  Tracerunner functions by modifying the code of an Android application to transmit information every time a callback or a callin occurs which can be logged and analyzed later either manually or automatically.
+
 To perform app transformation:
 
 Import into Intellij
@@ -126,3 +128,7 @@ Integer i = Integer.valueOf(2);
 
 Failure to do so will result in runtime validation failure on the phone
 the error message is not descriptive of the real problem.
+
+Application versus framework code
+---------------------------------
+This is decided based on a pre defined set of filters in resources/android_packages.txt.  If the package matches one of these then it is considered framework. Otherwise application.
