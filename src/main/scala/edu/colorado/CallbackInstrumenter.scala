@@ -25,13 +25,14 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
     //val signature: String = b.getMethod.getSignature
     val signature: String = b.getMethod.getDeclaringClass.getName
 
-    val matches: Boolean = applicationPackages.exists((r: Regex )=>{
-      signature match{
-        case r() => true
-        case _ => false
-      }
-    })
-    if(matches && name != "<clinit>") {
+//    val method_in_app: Boolean = applicationPackages.exists((r: Regex )=>{
+//      signature match{
+//        case r() => true
+//        case _ => false
+//      }
+//    })
+    val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
+    if(method_in_app && name != "<clinit>") { //Is this a method we would like to instrument?
       val units: PatchingChain[soot.Unit] = b.getUnits;
       val paramCount: Int = method.getParameterCount
 
