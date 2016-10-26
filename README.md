@@ -76,9 +76,12 @@ note: please add internet permission to android app
 
 Receiving the trace
 ===================
+```
+adb reverse tcp:5050 tcp:5050 #bridge port to local machine through adb
+nc -l -p 5050 > trace #open socket and write data to file "trace"
+```
 The instrumentation transmits the trace data to localhost:5050 (this can be changed in the androidruntimeinstrumentation)
-currently the easiest way to read this is "nc -l -p 5050 > /sdcard/trace" but we need an app so we don't require root and busy box on the phone.
-
+currently the easiest way to read this is "nc -l -p 5050 > trace". With a rooted phone running busybox this can be run on the device itself however the port can also be forwarded as in the commands at the top of this section.
 Getting the trace
 =================
 adb pull /sdcard/trace .
