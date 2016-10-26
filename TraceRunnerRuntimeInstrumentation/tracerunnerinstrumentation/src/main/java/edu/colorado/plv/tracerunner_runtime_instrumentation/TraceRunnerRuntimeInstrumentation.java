@@ -51,11 +51,14 @@ public class TraceRunnerRuntimeInstrumentation {
 
     public static void logCallbackEntry(String signature, String methodName, Object[] arguments){
 
-
+        //Get caller info
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
         StackTraceElement callbackCaller = stackTrace[4];
 
+        //Get class hierarchy info
+
+
+        //Get callback info
         String callerClassName = callbackCaller.getClassName();
         String callerMethodName = callbackCaller.getMethodName();
         int id = count.getAndIncrement();
