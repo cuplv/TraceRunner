@@ -1,5 +1,6 @@
 android.*
 com.android.*
+com.google.*
 dalvik.*
 java.*
 javax.*

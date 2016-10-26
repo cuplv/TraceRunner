@@ -13,7 +13,9 @@ object TraceRunnerOptions {
   val  USE_PHANTOM_CLASSES = true
   val CALLIN_INATRUMENTATION_CLASS: String =
     "edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation"
-
+  val FRAMEWORK_FILTER_FILE: String = "./resources/android_packages.txt"
+  val source = scala.io.Source.fromFile(FRAMEWORK_FILTER_FILE)
+  val filter_lines = (try source.mkString finally source.close()).split("\n")
   def getSootConfig(config: Config): Array[String] = {
     Array(
       if(config.jimpleOutput){Some("-output-format")} else None,

@@ -39,44 +39,6 @@ case class Config(apkPath: String = null,
 
 object TraceRunner {
 
-//  def instrumentationClasses(config: Config): Array[String] = {
-//
-//    val instDirectory: File = new File(config.instDir)
-//
-//
-//    if(false) { //TODO: re enable when figured out what problem is
-//      val isclass = ".*\\.class".r
-//      /** remove old instrumentation classes **/
-//
-//      val listFiles: Array[File] = instDirectory.listFiles()
-//      listFiles.map(a => {
-//        val name: String = a.getName
-//        name match {
-//          case isclass() => {
-//            Files.delete(a.toPath)
-//          }
-//          case _ => {}
-//        }
-//      })
-//
-//      /** compile instrumentation classes **/
-//      val compiler: JavaCompiler = ToolProvider.getSystemJavaCompiler
-//      val standardFileManager: StandardJavaFileManager = compiler.getStandardFileManager(null, null, null)
-//      val fileObjects = standardFileManager.getJavaFileObjectsFromFiles(instDirectory.listFiles().toIterable.asJava)
-//      compiler.getTask(null, standardFileManager, null, null, null, fileObjects).call()
-//    }
-//
-//    val listFiles1: Array[File] = instDirectory.listFiles()
-//    /** list all instrumentation classes **/
-//    val isclass2 = ".*\\.java".r
-//    val map: Array[String] = listFiles1.filter( (a:File) =>
-//      a.getName match {
-//        case isclass2() => true
-//        case _ => false
-//      }).map(a => a.getAbsolutePath)
-//    map
-//  }
-
 
 
   def main(args: Array[String]): Unit = {
@@ -129,12 +91,10 @@ object TraceRunner {
           val path: String = Scene.v().getSootClassPath
 
           Scene.v().setSootClassPath(path + ":" + config.instDir)
-//          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation");
 
           val classes: scala.collection.mutable.Buffer[String] = JUtils.getClasses(config.instDir).asScala
           classes.foreach(a => Scene.v().addBasicClass(a))
-//          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation$1");
-//          Scene.v().addBasicClass("edu.colorado.plv.tracerunner_runtime_instrumentation.LogDat")
+
 
           //Disable callgraph construction
           PhaseOptions.v().setPhaseOption("cg", "enabled:false");
