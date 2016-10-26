@@ -10,7 +10,7 @@ import soot.grimp.internal.{GDynamicInvokeExpr, GNewInvokeExpr, GStaticInvokeExp
 import soot.jimple.internal._
 import soot.jimple._
 import soot.util.Chain
-import soot.{ArrayType, Body, BodyTransformer, CharType, FloatType, IntType, Local, LongType, PatchingChain, RefType, Scene, SootClass, SootMethod, Type, Unit, Value, ValueBox, VoidType}
+import soot.{ArrayType, Body, BodyTransformer, BooleanType, CharType, DoubleType, FloatType, IntType, Local, LongType, PatchingChain, RefType, Scene, SootClass, SootMethod, Type, Unit, Value, ValueBox, VoidType}
 
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
@@ -155,6 +155,26 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         instrumentInvokeExpr(b, newUnit, invokeExpr, Some(returnValue))
         (newUnit,Option(returnValue))
       }
+      case r: BooleanType => {
+        val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), BooleanType.v())
+        units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr), i)
+        val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+        val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
+        //        units.insertBefore(newUnit, i)
+        units.swapWith(i,newUnit)
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
+        (newUnit ,Option(returnValue))
+      }
+      case r: DoubleType => {
+        val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), DoubleType.v())
+        units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr), i)
+        val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+        val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
+        //        units.insertBefore(newUnit, i)
+        units.swapWith(i,newUnit)
+        instrumentInvokeExpr(b, newUnit, invokeExpr, Some(boxedReturnValue))
+        (newUnit ,Option(returnValue))
+      }
       case r => {
         //Capture return value in local
         //TODO: check for other return types
@@ -203,7 +223,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     })
 
     //Caller
-    val newThisRef = b.getThisLocal
+    val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
     val callerref: Local = Jimple.v().newLocal(Utils.nextName("callerref"), RefType.v("java.lang.Object"))
     units.insertBefore(Jimple.v().newAssignStmt(callerref, newThisRef), i)
 

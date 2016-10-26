@@ -7,7 +7,8 @@ import java.util
 import javax.tools.{JavaCompiler, StandardJavaFileManager, ToolProvider}
 
 import edu.colorado._
-import soot.{PackManager, PhaseOptions, Scene, SootClass, SootMethod, Transform}
+import soot.jimple.NullConstant
+import soot.{PackManager, PhaseOptions, Scene, SootClass, SootMethod, Transform, Type}
 import soot.options.Options
 
 import scala.collection.JavaConverters._
@@ -109,6 +110,8 @@ object TraceRunner {
 
         /**run soot transformation**/
         val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
+        val value: Type = NullConstant.v().getType
+
         soot.Main.main(config1);
 //        }else{
 //          throw new IllegalArgumentException("Application packages must be non empty")

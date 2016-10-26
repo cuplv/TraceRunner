@@ -126,7 +126,8 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 
 
           //assing this ref to first element of inputArgs as receiver
-          val newThisRef = b.getThisLocal
+          val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
+
           val thisAssign = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(0)), newThisRef)
           units.insertAfter(thisAssign,l)
 
@@ -146,7 +147,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
             case Some(thisRef) => {
 
               val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
-              val newThisRef = b.getThisLocal
+              val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
               val thisAssign = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(0)), newThisRef)
               val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
               val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
@@ -169,7 +170,9 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
               units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),thisRef)
 
             }
-            case None => ??? //Shouldn't happen
+            case None => {
+              ??? //Shouldn't happen
+            }
           }
         }
       }

@@ -39,6 +39,14 @@ public class FirstFrameworkResolver {
         }
         return false;
     }
+
+    /**
+     * Compute the most precise object in the class hierarchy which is in the framework
+     * If class doesn't extend anything this will return java.lang.Object
+     * Don't call this directly, use memoization function
+     * @param clazz
+     * @return
+     */
     Class getFirstFrameworkClass(Class clazz){
         Class iclass = clazz;
         Class superc;
@@ -49,6 +57,12 @@ public class FirstFrameworkResolver {
             superc = iclass.getSuperclass();
             iclass = superc;
         }while(superc != null);
+        return null;
+    }
+    Class getFrameworkOverride(Class clazz, String name){
+        clazz.getInterfaces();
+
+
         return null;
     }
     public static String createRegexFromGlob(String glob)
