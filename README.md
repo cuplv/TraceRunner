@@ -126,3 +126,7 @@ Integer i = Integer.valueOf(2);
 
 Failure to do so will result in runtime validation failure on the phone
 the error message is not descriptive of the real problem.
+
+Application versus framework code
+---------------------------------
+This is decided based on a pre defined set of filters in resources/android_packages.txt.  If the package matches one of these then it is considered framework. Otherwise application.
