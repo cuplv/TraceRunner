@@ -21,4 +21,11 @@ public class SomeClass {
             return;
         Log.i("meh","meh");
     }
+    public void takesArray(int[] i){
+        Log.i("meh","" + i[0]);
+    }
+
+    public Object[] returnsArray() {
+        return new Object[]{new Object()};
+    }
 }

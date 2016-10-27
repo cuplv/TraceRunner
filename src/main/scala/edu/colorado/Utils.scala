@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import edu.colorad.cs.TraceRunner.Config
 import soot._
-import soot.jimple.Jimple
+import soot.jimple.{Jimple, NullConstant}
 
 import scala.collection.JavaConversions._
 import scala.util.matching.Regex
@@ -69,6 +69,15 @@ object Utils {
       }
       case i: RefType => v
       case i: ArrayType =>v //TODO: test that this works (https://docs.oracle.com/javase/specs/jls/se7/html/jls-10.html)
+      case i: BooleanType => {
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Boolean")
+          .getMethod("java.lang.Boolean valueOf(boolean)")
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+      }
+      case i: NullType => {
+        NullConstant.v()
+      }
       case _ => {
         ???
       } //Note no boolean type as these are ints

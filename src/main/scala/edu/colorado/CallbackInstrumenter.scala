@@ -32,7 +32,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 //      }
 //    })
     val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
-    if(method_in_app && name != "<clinit>") { //Is this a method we would like to instrument?
+    if(method_in_app && name != "<clinit>" && !method.isStatic) { //Is this a method we would like to instrument?
       val units: PatchingChain[soot.Unit] = b.getUnits;
       val paramCount: Int = method.getParameterCount
 
@@ -78,8 +78,10 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
                   .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
                 units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
                 units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
+                val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+                units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
                 units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
-                  List[Value](lsignature, methodname, l))),i)
+                  List[Value](lsignature, methodname, returnTmp))),i)
               }
               case l: Expr => {
                 ???
