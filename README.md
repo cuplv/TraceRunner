@@ -135,3 +135,7 @@ the error message is not descriptive of the real problem.
 Application versus framework code
 ---------------------------------
 This is decided based on a pre defined set of filters in resources/android_packages.txt.  If the package matches one of these then it is considered framework. Otherwise application.
+
+Logging callbacks
+-------------------------
+All non static methods are logged as potential callbacks.  After trace generation we will filter out the ones which were not callbacks by looking at the type of the thing calling them.  Static methods are not logged in this way as they can never be callbacks.  The effect of this is that in the trace their method calls will appear to be inlined with the callback which invoked them.
