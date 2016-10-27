@@ -1,5 +1,9 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -59,11 +63,33 @@ public class FirstFrameworkResolver {
         }while(superc != null);
         return null;
     }
-    Class getFrameworkOverride(Class clazz, String name){
-        clazz.getInterfaces();
+    List<Class> getFrameworkOverride(Class clazz, String name){
+        //TODO: handle generics
+        //TODO: handle superclass
 
 
-        return null;
+        Class[] interfaces = clazz.getInterfaces();
+        List<Class> classesWithMethod = new ArrayList<>();
+        for(Class intf: interfaces){
+            Method[] methods = intf.getMethods();
+            for(Method method : methods){
+                String methodName = method.getName();
+                Type[] genericParameterTypes = method.getGenericParameterTypes();
+                Class<?> returnType = method.getReturnType();
+
+                String methodSig = returnType.getName() + " " + methodName + "(";
+                for(Type param: genericParameterTypes){
+                    methodSig += param.toString();
+                }
+                methodSig += ")";
+                if(methodSig.equals(name)){
+                    classesWithMethod.add(intf);
+                    break;
+                }
+            }
+        }
+
+        return classesWithMethod;
     }
     public static String createRegexFromGlob(String glob)
     {
