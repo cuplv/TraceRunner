@@ -2,7 +2,9 @@ package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
 import org.junit.Test;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import static org.junit.Assert.*;
@@ -39,9 +41,10 @@ public class InstrumentationTest {
 
             }
         };
-        List<Class> frameworkOverride = f.getFrameworkOverride(r.getClass(), "void run()");
-        assertEquals(1,frameworkOverride.size());
-        assertEquals("java.lang.Runnable", frameworkOverride.get(0).getName());
+        Method frameworkOverride = f.getFrameworkOverride(r.getClass(), "void run()");
+//        assertEquals(1,frameworkOverride.size());
+        assertEquals("void run()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        assertEquals("interface java.lang.Runnable", frameworkOverride.getDeclaringClass().toString());
     }
     @Test
     public void frameworkOverrideParameterTest() throws Exception{
@@ -52,9 +55,10 @@ public class InstrumentationTest {
                 return new Object();
             }
         };
-        List<Class> frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.Object call()");
-        assertEquals(1,frameworkOverride.size());
-        assertEquals("java.util.concurrent.Callable", frameworkOverride.get(0).getName());
+        Method frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.Object call()");
+//        assertEquals(1,frameworkOverride.size());
+        assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
     }
     @Test
     public void frameworkOverrideParameterTestSubclass() throws Exception{
@@ -65,12 +69,21 @@ public class InstrumentationTest {
                 return "hi";
             }
         };
-        List<Class> frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.String call()");
-        assertEquals(1,frameworkOverride.size());
-        assertEquals("java.util.concurrent.Callable", frameworkOverride.get(0).getName());
+        Method frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.String call()");
+        assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
+        assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
     }
-    @Test
-    public void sandbox() throws Exception{
-
-    }
+//    @Test
+//    public void sandbox() throws Exception{
+//        class Foo{
+//            public void bar(){}
+//            public void bar(int i){}
+//        }
+//        Foo f = new Foo();
+//        Class<? extends Foo> aClass = f.getClass();
+//        Method[] methods = aClass.getMethods();
+//        Method bar = aClass.getMethod("bar", methods[1].getParameterTypes()[0]);
+//        System.out.println();
+//
+//    }
 }

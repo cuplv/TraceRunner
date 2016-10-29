@@ -9,15 +9,29 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.concurrent.Callable;
+
 //public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 public class MainActivity extends AppCompatActivity{
     private SomeClass object = new SomeClass();
     private SomeClass nullval = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Log.i("", "" + foo());
+        Callable<String> c = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return null;
+            }
+        };
+
+        try {
+            c.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        setContentView(R.layout.activity_main);
 //        getApplication(); //test return value from non used return
 //        TextView tv = (TextView) findViewById(R.id.h);
