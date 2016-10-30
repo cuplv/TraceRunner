@@ -112,5 +112,19 @@ public class InstrumentationTest {
         Method m = f.getFrameworkOverride(b.getClass(), "void bar(int)");
         assertEquals(null,m);
     }
+    public class MyObject extends Object{
+        @Override
+        public String toString(){
+            return "hi";
+        }
+    }
+    @Test
+    public void extendsTest() throws Exception{
+        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        MyObject o = new MyObject();
+        Method m = f.getFrameworkOverride(o.getClass(), "java.lang.String toString()");
+        assertEquals("java.lang.Object", m.getDeclaringClass().getName());
+        assertEquals("java.lang.String toString()", FirstFrameworkResolver.sootSignatureFromJava(m));
+    }
 
 }
