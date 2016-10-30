@@ -130,12 +130,12 @@ public class FirstFrameworkResolver {
         try {
             List<Class> args = new ArrayList<Class>();
             for(int i = 1; i < parsedSig.length; ++i){
-                if(parsedSig[i].equals(""))
-                    break;
-                try {
-                    args.add(ClassUtils.getClass(parsedSig[i]));
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                if(!parsedSig[i].equals("")) {
+                    try {
+                        args.add(ClassUtils.getClass(parsedSig[i]));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -160,6 +160,7 @@ public class FirstFrameworkResolver {
                 s += ",";
             }
             s += parameter.getName();
+            first = false;
         }
         s += ")";
 

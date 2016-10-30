@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.Formattable;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -90,10 +92,15 @@ public class InstrumentationTest {
                 return false;
             }
         };
-        String m = c.getClass().getMethods()[0].toString();
+//        String m = c.getClass().getMethods()[0].toString();
         Method frameworkOverride = f.getFrameworkOverride(c.getClass(),
                 "boolean equals(java.lang.Object)");
         assertEquals("interface java.util.Comparator",frameworkOverride.getDeclaringClass().toString());
+        assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+
+        Method m = f.getFrameworkOverride(c.getClass(), "int compare(java.lang.String,java.lang.String)");
+        assertEquals("java.util.Comparator", m.getDeclaringClass().getName());
+
     }
     @Test
     public void nonFrameworkOverride() throws Exception{
@@ -132,6 +139,20 @@ public class InstrumentationTest {
         Method m2 = f.getFrameworkOverride(o.getClass(), "boolean equals(java.lang.Object)");
         assertEquals("java.lang.Object", m2.getDeclaringClass().getName());
         assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(m2));
+    }
+    @Test
+    public void formattableTest() throws Exception{
+        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        Formattable fmt = new Formattable(){
+
+            @Override
+            public void formatTo(Formatter formatter, int flags, int width, int precision) {
+
+            }
+        };
+        Method m = f.getFrameworkOverride(fmt.getClass(), "void formatTo(java.util.Formatter,int,int,int)");
+        assertEquals("java.util.Formattable", m.getDeclaringClass().getName());
+        assertEquals("void formatTo(java.util.Formatter,int,int,int)",FirstFrameworkResolver.sootSignatureFromJava(m));
     }
 
 }
