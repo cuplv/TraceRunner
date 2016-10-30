@@ -3,6 +3,7 @@ package edu.colorado.plv.tracerunner_runtime_instrumentation;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -15,7 +16,9 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class InstrumentationTest {
-//    @Test
+    public static final String METHOD_NAME = Thread.currentThread().getStackTrace()[0].getMethodName();
+
+    //    @Test
 //    public void addition_isCorrect() throws Exception {
 //        assertEquals(4, 2 + 2);
 //    }
@@ -72,6 +75,25 @@ public class InstrumentationTest {
         Method frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.String call()");
         assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
         assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+    }
+    @Test
+    public void frameworkOverrideArgsTest() throws Exception{
+        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        Comparator<String> c = new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return 0;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                return false;
+            }
+        };
+        String m = c.getClass().getMethods()[0].toString();
+        Method frameworkOverride = f.getFrameworkOverride(c.getClass(),
+                "boolean equals(java.lang.Object)");
+        assertEquals("interface java.util.Comparator",frameworkOverride.getDeclaringClass().toString());
     }
 //    @Test
 //    public void sandbox() throws Exception{

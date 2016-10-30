@@ -125,7 +125,23 @@ public class FirstFrameworkResolver {
         String[] parsedSig = Strings.extractMethodSignature(name.split(" ")[1]);
         Method method1 = null;
         try {
-            method1 = clazz.getMethod(parsedSig[0]);
+            List<Class> args = new ArrayList<Class>();
+            for(int i = 1; i < parsedSig.length; ++i){
+                if(parsedSig[i].equals( ""))
+                    break;
+                try {
+                    args.add(Class.forName(parsedSig[i]));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            Class[] objects = new Class[args.size()];
+            for(int j = 0; j< args.size(); ++j){
+                objects[j] = args.get(j);
+            }
+            method1 = clazz.getMethod(parsedSig[0], objects);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -184,5 +200,8 @@ public class FirstFrameworkResolver {
         }
         out += '$';
         return out;
+    }
+    public void parseJavaSignature(String sig){
+
     }
 }
