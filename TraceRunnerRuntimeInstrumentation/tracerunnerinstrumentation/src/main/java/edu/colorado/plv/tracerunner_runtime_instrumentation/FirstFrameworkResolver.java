@@ -159,7 +159,7 @@ public class FirstFrameworkResolver {
             if(!first){
                 s += ",";
             }
-            s += parameter.toString();
+            s += parameter.getName();
         }
         s += ")";
 

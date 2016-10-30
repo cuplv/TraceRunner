@@ -117,6 +117,10 @@ public class InstrumentationTest {
         public String toString(){
             return "hi";
         }
+        @Override
+        public boolean equals(Object o){
+            return false;
+        }
     }
     @Test
     public void extendsTest() throws Exception{
@@ -125,6 +129,9 @@ public class InstrumentationTest {
         Method m = f.getFrameworkOverride(o.getClass(), "java.lang.String toString()");
         assertEquals("java.lang.Object", m.getDeclaringClass().getName());
         assertEquals("java.lang.String toString()", FirstFrameworkResolver.sootSignatureFromJava(m));
+        Method m2 = f.getFrameworkOverride(o.getClass(), "boolean equals(java.lang.Object)");
+        assertEquals("java.lang.Object", m2.getDeclaringClass().getName());
+        assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(m2));
     }
 
 }
