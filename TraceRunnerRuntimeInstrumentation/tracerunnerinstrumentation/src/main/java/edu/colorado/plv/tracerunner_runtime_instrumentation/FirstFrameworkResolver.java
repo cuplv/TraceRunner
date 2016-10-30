@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -43,7 +44,7 @@ public class FirstFrameworkResolver {
                 "com.squareup.javawriter.*"};
         frameworkMatchers = new Pattern[globs.length];
         for(int i = 0; i< globs.length; ++i){
-            frameworkMatchers[i] = Pattern.compile(globs[i]);
+            frameworkMatchers[i] = Pattern.compile(createRegexFromGlob(globs[i]));
         }
     }
     boolean classMatches(Class clazz){
@@ -124,6 +125,25 @@ public class FirstFrameworkResolver {
         }
         return result.iterator().next();
     }
+    Map<Class,Map<String,Method>> memTable = new HashMap<>();
+    Method getFrameworkOverrideMemo(Class clazz, String name) throws ClassNotFoundException{
+        if(memTable.containsKey(clazz)){
+            Map<String, Method> stringMethodMap = memTable.get(clazz);
+            if(stringMethodMap.containsKey(name)){
+                return stringMethodMap.get(name);
+            }else{
+                Method fo = getFrameworkOverride(clazz, name);
+                stringMethodMap.put(name,fo);
+                return fo;
+            }
+        }else{
+            HashMap<String, Method> stringMethodMap = new HashMap<>();
+            memTable.put(clazz, stringMethodMap);
+            Method fo = getFrameworkOverride(clazz,name);
+            stringMethodMap.put(name,fo);
+            return fo;
+        }
+    }
     Method getFrameworkOverride(Class clazz, String name) throws ClassNotFoundException {
         String[] parsedSig = Strings.extractMethodSignature(name.split(" ")[1]);
         Method method1 = null;
@@ -134,7 +154,7 @@ public class FirstFrameworkResolver {
                     try {
                         args.add(ClassUtils.getClass(parsedSig[i]));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException(e);
                     }
                 }
 
@@ -146,7 +166,7 @@ public class FirstFrameworkResolver {
             }
             method1 = clazz.getMethod(parsedSig[0], objects);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         Method classesWithMethod = getOverrideHierarchy(method1, ClassUtils.Interfaces.INCLUDE);
 
@@ -183,8 +203,5 @@ public class FirstFrameworkResolver {
         }
         out += '$';
         return out;
-    }
-    public void parseJavaSignature(String sig){
-
     }
 }

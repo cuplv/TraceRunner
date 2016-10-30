@@ -46,7 +46,7 @@ public class InstrumentationTest {
 
             }
         };
-        Method frameworkOverride = f.getFrameworkOverride(r.getClass(), "void run()");
+        Method frameworkOverride = f.getFrameworkOverrideMemo(r.getClass(), "void run()");
 //        assertEquals(1,frameworkOverride.size());
         assertEquals("void run()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
         assertEquals("interface java.lang.Runnable", frameworkOverride.getDeclaringClass().toString());
@@ -60,7 +60,7 @@ public class InstrumentationTest {
                 return new Object();
             }
         };
-        Method frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.Object call()");
+        Method frameworkOverride = f.getFrameworkOverrideMemo(c.getClass(), "java.lang.Object call()");
 //        assertEquals(1,frameworkOverride.size());
         assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
         assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
@@ -74,7 +74,7 @@ public class InstrumentationTest {
                 return "hi";
             }
         };
-        Method frameworkOverride = f.getFrameworkOverride(c.getClass(), "java.lang.String call()");
+        Method frameworkOverride = f.getFrameworkOverrideMemo(c.getClass(), "java.lang.String call()");
         assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
         assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
     }
@@ -93,12 +93,12 @@ public class InstrumentationTest {
             }
         };
 //        String m = c.getClass().getMethods()[0].toString();
-        Method frameworkOverride = f.getFrameworkOverride(c.getClass(),
+        Method frameworkOverride = f.getFrameworkOverrideMemo(c.getClass(),
                 "boolean equals(java.lang.Object)");
         assertEquals("interface java.util.Comparator",frameworkOverride.getDeclaringClass().toString());
         assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
 
-        Method m = f.getFrameworkOverride(c.getClass(), "int compare(java.lang.String,java.lang.String)");
+        Method m = f.getFrameworkOverrideMemo(c.getClass(), "int compare(java.lang.String,java.lang.String)");
         assertEquals("java.util.Comparator", m.getDeclaringClass().getName());
 
     }
@@ -116,7 +116,7 @@ public class InstrumentationTest {
             }
         }
         Bar b = new Bar();
-        Method m = f.getFrameworkOverride(b.getClass(), "void bar(int)");
+        Method m = f.getFrameworkOverrideMemo(b.getClass(), "void bar(int)");
         assertEquals(null,m);
     }
     public class MyObject extends Object{
@@ -133,10 +133,10 @@ public class InstrumentationTest {
     public void extendsTest() throws Exception{
         FirstFrameworkResolver f = new FirstFrameworkResolver();
         MyObject o = new MyObject();
-        Method m = f.getFrameworkOverride(o.getClass(), "java.lang.String toString()");
+        Method m = f.getFrameworkOverrideMemo(o.getClass(), "java.lang.String toString()");
         assertEquals("java.lang.Object", m.getDeclaringClass().getName());
         assertEquals("java.lang.String toString()", FirstFrameworkResolver.sootSignatureFromJava(m));
-        Method m2 = f.getFrameworkOverride(o.getClass(), "boolean equals(java.lang.Object)");
+        Method m2 = f.getFrameworkOverrideMemo(o.getClass(), "boolean equals(java.lang.Object)");
         assertEquals("java.lang.Object", m2.getDeclaringClass().getName());
         assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(m2));
     }
@@ -150,9 +150,12 @@ public class InstrumentationTest {
 
             }
         };
-        Method m = f.getFrameworkOverride(fmt.getClass(), "void formatTo(java.util.Formatter,int,int,int)");
+        Method m = f.getFrameworkOverrideMemo(fmt.getClass(), "void formatTo(java.util.Formatter,int,int,int)");
         assertEquals("java.util.Formattable", m.getDeclaringClass().getName());
         assertEquals("void formatTo(java.util.Formatter,int,int,int)",FirstFrameworkResolver.sootSignatureFromJava(m));
+        Method m2 = f.getFrameworkOverrideMemo(fmt.getClass(), "void formatTo(java.util.Formatter,int,int,int)");
+        assertEquals("java.util.Formattable", m2.getDeclaringClass().getName());
+        assertEquals("void formatTo(java.util.Formatter,int,int,int)",FirstFrameworkResolver.sootSignatureFromJava(m2));
     }
 
 }
