@@ -95,17 +95,22 @@ public class InstrumentationTest {
                 "boolean equals(java.lang.Object)");
         assertEquals("interface java.util.Comparator",frameworkOverride.getDeclaringClass().toString());
     }
-//    @Test
-//    public void sandbox() throws Exception{
-//        class Foo{
-//            public void bar(){}
-//            public void bar(int i){}
-//        }
-//        Foo f = new Foo();
-//        Class<? extends Foo> aClass = f.getClass();
-//        Method[] methods = aClass.getMethods();
-//        Method bar = aClass.getMethod("bar", methods[1].getParameterTypes()[0]);
-//        System.out.println();
-//
-//    }
+    @Test
+    public void nonFrameworkOverride() throws Exception{
+        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        class Foo{
+            public void bar(){}
+            public void bar(int i){}
+        }
+        class Bar extends Foo{
+            @Override
+            public void bar(int i){
+
+            }
+        }
+        Bar b = new Bar();
+        Method m = f.getFrameworkOverride(b.getClass(), "void bar(int)");
+        assertEquals(null,m);
+    }
+
 }

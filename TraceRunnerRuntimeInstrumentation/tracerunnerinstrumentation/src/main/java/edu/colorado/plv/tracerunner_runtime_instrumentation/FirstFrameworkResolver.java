@@ -74,7 +74,15 @@ public class FirstFrameworkResolver {
         }while(superc != null);
         return null;
     }
-    public static Method getOverrideHierarchy(final Method method, final ClassUtils.Interfaces interfacesBehavior) {
+
+    /**
+     * modified from apache reflection library "ClassUtils.java"
+     * this is a version which only gives the first override instead of the whole hierarchy
+     * @param method Method to be checked if is overridden
+     * @param interfacesBehavior Whether to include interfaces in the search
+     * @return null if not overridden otherwise method reference
+     */
+    public Method getOverrideHierarchy(final Method method, final ClassUtils.Interfaces interfacesBehavior) {
         Validate.notNull(method);
         final Set<Method> result = new LinkedHashSet<Method>();
         //result.add(method);
@@ -94,7 +102,8 @@ public class FirstFrameworkResolver {
             }
             if (Arrays.equals(m.getParameterTypes(), parameterTypes)) {
                 // matches without generics
-                result.add(m);
+                if(classMatches(m.getDeclaringClass()))
+                    result.add(m);
                 continue;
             }
             // necessary to get arguments every time in the case that we are including interfaces
@@ -106,7 +115,8 @@ public class FirstFrameworkResolver {
                     continue hierarchyTraversal;
                 }
             }
-            result.add(m);
+            if(classMatches(m.getDeclaringClass()))
+                result.add(m);
             break;
         }
         if(result.size() == 0){
@@ -114,23 +124,16 @@ public class FirstFrameworkResolver {
         }
         return result.iterator().next();
     }
-    Method getFrameworkOverride(Class clazz, String name){
-        //TODO: handle generics
-        //TODO: handle superclass
-
-
-//        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-
-
+    Method getFrameworkOverride(Class clazz, String name) throws ClassNotFoundException {
         String[] parsedSig = Strings.extractMethodSignature(name.split(" ")[1]);
         Method method1 = null;
         try {
             List<Class> args = new ArrayList<Class>();
             for(int i = 1; i < parsedSig.length; ++i){
-                if(parsedSig[i].equals( ""))
+                if(parsedSig[i].equals(""))
                     break;
                 try {
-                    args.add(Class.forName(parsedSig[i]));
+                    args.add(ClassUtils.getClass(parsedSig[i]));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -145,28 +148,7 @@ public class FirstFrameworkResolver {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
-//        MethodUtils.getOverrideHierarcy(null, ClassUtils.Interfaces.)
         Method classesWithMethod = getOverrideHierarchy(method1, ClassUtils.Interfaces.INCLUDE);
-//        Class[] interfaces = clazz.getInterfaces();
-//        List<Class> classesWithMethod = new ArrayList<>();
-//        for(Class intf: interfaces){
-//            Method[] methods = intf.getMethods();
-//            for(Method method : methods){
-//                String methodName = method.getName();
-//                Type[] genericParameterTypes = method.getGenericParameterTypes();
-//                Class<?> returnType = method.getReturnType();
-//
-//                String methodSig = returnType.getName() + " " + methodName + "(";
-//                for(Type param: genericParameterTypes){
-//                    methodSig += param.toString();
-//                }
-//                methodSig += ")";
-//                if(methodSig.equals(name)){
-//                    classesWithMethod.add(intf);
-//                    break;
-//                }
-//            }
-//        }
 
         return classesWithMethod;
     }
