@@ -24,7 +24,13 @@ import java.util.regex.Pattern;
  */
 
 public class FirstFrameworkResolver {
-
+    private static FirstFrameworkResolver instance = null;
+    public static FirstFrameworkResolver get(){
+        if(instance ==null){
+            instance = new FirstFrameworkResolver();
+        }
+        return instance;
+    }
     Pattern[] frameworkMatchers;
     FirstFrameworkResolver(){
         String[] globs = new String[]{
@@ -147,6 +153,7 @@ public class FirstFrameworkResolver {
     Method getFrameworkOverride(Class clazz, String name) throws ClassNotFoundException {
         String[] parsedSig = Strings.extractMethodSignature(name.split(" ")[1]);
         Method method1 = null;
+        Class[] objects = null;
         try {
             List<Class> args = new ArrayList<Class>();
             for(int i = 1; i < parsedSig.length; ++i){
@@ -160,13 +167,15 @@ public class FirstFrameworkResolver {
 
             }
 
-            Class[] objects = new Class[args.size()];
+
+            objects = new Class[args.size()];
             for(int j = 0; j< args.size(); ++j){
                 objects[j] = args.get(j);
             }
-            method1 = clazz.getMethod(parsedSig[0], objects);
+            method1 = clazz.getDeclaredMethod(parsedSig[0], objects);
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+
+            throw new RuntimeException("parsedSig: " + parsedSig[0] + "objects: " + objects.toString(), e);
         }
         Method classesWithMethod = getOverrideHierarchy(method1, ClassUtils.Interfaces.INCLUDE);
 

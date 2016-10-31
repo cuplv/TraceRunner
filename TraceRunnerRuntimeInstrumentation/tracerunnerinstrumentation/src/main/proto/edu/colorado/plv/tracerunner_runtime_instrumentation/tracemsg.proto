@@ -65,15 +65,17 @@ message TraceMsgContainer {
     message CallinExceptionMsg {
     }
 
-    /* TODO: placeholder */
+
     message CallbackEntryMsg {
         required string signature = 1;
         required string method_name = 2;
         repeated ValueMsg param_list = 3;
         required string callback_caller_class = 4;
         required string callback_caller_method = 5;
+        optional string first_framework_override_method = 6;
+        optional string first_framework_override_class = 7;
     }
-    /* TODO: placeholder */
+
     message CallbackExitMsg {
         required string signature = 1;
         required string method_name = 2;

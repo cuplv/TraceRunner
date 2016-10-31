@@ -7,6 +7,7 @@ import edu.colorado.plv.tracerunner_runtime_instrumentation.Tracemsg.TraceMsgCon
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,7 +57,23 @@ public class TraceRunnerRuntimeInstrumentation {
         StackTraceElement callbackCaller = stackTrace[4];
 
         //Get class hierarchy info
-
+        Class firstFramework = null;
+        Method frameworkOverride = null;
+//        if(arguments[0] != null) {
+//            if(methodName.contains("<init>")){
+//                firstFramework = FirstFrameworkResolver.get()
+//                        .getFirstFrameworkClass(arguments[0].getClass());
+//            }else {
+//                try {
+//                    frameworkOverride = FirstFrameworkResolver.get()
+//                            .getFrameworkOverrideMemo(arguments[0].getClass(), methodName);
+//                } catch (ClassNotFoundException e) {
+//                    //parsing soot signature for method is probably most brittle part so log
+//                    //problems well
+//                    throw new RuntimeException("class not found exception for: " + methodName, e);
+//                }
+//            }
+//        }
 
         //Get callback info
         String callerClassName = callbackCaller.getClassName();
@@ -69,6 +86,14 @@ public class TraceRunnerRuntimeInstrumentation {
         callbackEntryMsgBuilder.setMethodName(methodName);
         callbackEntryMsgBuilder.setCallbackCallerClass(callerClassName);
         callbackEntryMsgBuilder.setCallbackCallerMethod(callerMethodName);
+        if(frameworkOverride != null) {
+            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(
+                    frameworkOverride.getClass().getName());
+            callbackEntryMsgBuilder.setFirstFrameworkOverrideMethod(
+                    FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        }else if(firstFramework != null){
+            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(firstFramework.getName());
+        }
         for(Object o: arguments){
             callbackEntryMsgBuilder.addParamList(getValueMsg(o));
         }
@@ -162,9 +187,9 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
 
-    public static void logCallback(String signature, String methodName, Object[] arguments){
-
-    }
+//    public static void logCallback(String signature, String methodName, Object[] arguments){
+//
+//    }
 
     public static void setupNetwork() throws IOException {
         socket = new Socket(hostName, portNumber);
