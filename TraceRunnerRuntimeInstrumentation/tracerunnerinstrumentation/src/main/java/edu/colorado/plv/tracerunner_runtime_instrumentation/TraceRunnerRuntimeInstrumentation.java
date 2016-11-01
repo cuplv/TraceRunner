@@ -50,7 +50,7 @@ public class TraceRunnerRuntimeInstrumentation {
 
     }
 
-    public static void logCallbackEntry(String signature, String methodName, Object[] arguments){
+    public static void logCallbackEntry(String signature, String methodName, String[] argumentTypes, String returnType, Object[] arguments){
 
         //Get caller info
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
