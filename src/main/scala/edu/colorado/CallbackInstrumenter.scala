@@ -131,7 +131,8 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           units.insertAfter(thisAssign,l)
 
           units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),l)
-          units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getSubSignature)),l)
+          val signature2: String = method.getName
+          units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(signature2)),l)
           units.insertAfter(Jimple.v().newAssignStmt(returnType, StringConstant.v( method.getReturnType.toString)),l)
 
 
@@ -207,8 +208,8 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 //              val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
 
 
-
-              units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getSubSignature)),thisRef)
+              val signature1: String = method.getName
+              units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(signature1)),thisRef)
               units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),thisRef)
 
             }

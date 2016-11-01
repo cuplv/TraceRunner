@@ -59,6 +59,7 @@ public class TraceRunnerRuntimeInstrumentation {
         //Get class hierarchy info
         Class firstFramework = null;
         Method frameworkOverride = null;
+        //TODO: get first framework override
 //        if(arguments[0] != null) {
 //            if(methodName.contains("<init>")){
 //                firstFramework = FirstFrameworkResolver.get()
@@ -86,6 +87,10 @@ public class TraceRunnerRuntimeInstrumentation {
         callbackEntryMsgBuilder.setMethodName(methodName);
         callbackEntryMsgBuilder.setCallbackCallerClass(callerClassName);
         callbackEntryMsgBuilder.setCallbackCallerMethod(callerMethodName);
+        callbackEntryMsgBuilder.setMethodReturnType(returnType);
+        for(String argumentType : argumentTypes){
+            callbackEntryMsgBuilder.addMethodParameterTypes(argumentType);
+        }
         if(frameworkOverride != null) {
             callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(
                     frameworkOverride.getClass().getName());
