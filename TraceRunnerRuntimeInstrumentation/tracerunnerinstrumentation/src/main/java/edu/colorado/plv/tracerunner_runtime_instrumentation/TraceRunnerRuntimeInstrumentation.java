@@ -9,6 +9,8 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -58,23 +60,25 @@ public class TraceRunnerRuntimeInstrumentation {
 
         //Get class hierarchy info
         Class firstFramework = null;
-        Method frameworkOverride = null;
+        List<Method> frameworkOverride = null;
+
         //TODO: get first framework override
-//        if(arguments[0] != null) {
-//            if(methodName.contains("<init>")){
-//                firstFramework = FirstFrameworkResolver.get()
-//                        .getFirstFrameworkClass(arguments[0].getClass());
-//            }else {
-//                try {
-//                    frameworkOverride = FirstFrameworkResolver.get()
-//                            .getFrameworkOverrideMemo(arguments[0].getClass(), methodName);
-//                } catch (ClassNotFoundException e) {
-//                    //parsing soot signature for method is probably most brittle part so log
-//                    //problems well
-//                    throw new RuntimeException("class not found exception for: " + methodName, e);
-//                }
-//            }
-//        }
+        if(arguments[0] != null) {
+            firstFramework = FirstFrameworkResolver.get()
+                    .getFirstFrameworkClass(arguments[0].getClass());
+            if(methodName.contains("<init>")){
+
+            }else {
+                try {
+                    frameworkOverride = FirstFrameworkResolver.get()
+                            .getFrameworkOverrideMemo(arguments[0].getClass(), methodName, argumentTypes);
+                } catch (ClassNotFoundException e) {
+                    //parsing soot signature for method is probably most brittle part so log
+                    //problems well
+                    throw new RuntimeException("class not found exception for: " + methodName, e);
+                }
+            }
+        }
 
         //Get callback info
         String callerClassName = callbackCaller.getClassName();
@@ -92,12 +96,21 @@ public class TraceRunnerRuntimeInstrumentation {
             callbackEntryMsgBuilder.addMethodParameterTypes(argumentType);
         }
         if(frameworkOverride != null) {
-            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(
-                    frameworkOverride.getClass().getName());
-            callbackEntryMsgBuilder.setFirstFrameworkOverrideMethod(
-                    FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
-        }else if(firstFramework != null){
-            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(firstFramework.getName());
+
+            for(Method frameworkOverrideItem : frameworkOverride){
+                TraceMsgContainer.FrameworkOverride.Builder builder
+                        = TraceMsgContainer.FrameworkOverride.newBuilder();
+                builder.setClass_(frameworkOverrideItem.getDeclaringClass().getName());
+                builder.setMethod(FirstFrameworkResolver.sootSignatureFromJava(frameworkOverrideItem));
+            }
+//            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(
+//                    frameworkOverride.getClass().getName());
+//            callbackEntryMsgBuilder.setFirstFrameworkOverrideMethod(
+//                    FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        }
+        if(firstFramework != null){
+            callbackEntryMsgBuilder.setReceiverFirstFrameworkSuper(firstFramework.getName());
+//            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(firstFramework.getName());
         }
         for(Object o: arguments){
             callbackEntryMsgBuilder.addParamList(getValueMsg(o));

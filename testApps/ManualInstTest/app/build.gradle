@@ -28,4 +28,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('/home/s/Documents/source/TraceRunner/testApps/ManualInstTest/libs/classes.jar')
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    compile 'com.google.protobuf:protobuf-lite:3.0.1'
 };
