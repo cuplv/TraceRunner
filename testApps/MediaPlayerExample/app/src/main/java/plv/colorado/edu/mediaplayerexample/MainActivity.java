@@ -4,6 +4,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -50,4 +51,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onPrepared(MediaPlayer mediaPlayer) {
         b.setEnabled(true);
     }
+//    @Override
+//    protected void onPause(){
+//        super.onPause();
+//    }
+    public void logEach(String[] strings){
+        for(int i=0; i< strings.length; ++i){
+            Log.i("...",strings[i]);
+        }
+    }
+//    @Override
+//    public void addContentView(View view, ViewGroup.LayoutParams params) {
+//        super.addContentView(view, params);
+//    }
+
 }

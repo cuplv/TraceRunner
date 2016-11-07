@@ -17,6 +17,10 @@ public class MainActivity extends AppCompatActivity{
     private SomeClass nullval = null;
 
     @Override
+    protected void onPause(){
+        super.onPause();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Log.i("", "" + foo());
