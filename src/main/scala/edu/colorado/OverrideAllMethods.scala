@@ -31,15 +31,35 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
     sc.getApplicationClasses.iterator.foreach(applicationClass =>{
       if(!Utils.isFrameworkClass(applicationClass.getName)) {
         val superclass: SootClass = applicationClass.getSuperclass
-        val methodsToOverride = getOverrideableMethodsChain(superclass).map(a => { //TODO: map from method name/type to return
+        val methodsToOverride = getOverrideableMethodsChain(superclass).foldLeft(Map[(String, List[Type]), Type]())((acc, a) => { //TODO: map from method name/type to return
           val parameterTypes: List[Type] = a.getParameterTypes.toList
-          (a.getName, a.getSubSignature,parameterTypes,a.getReturnType,a.getModifiers)
+          val mkey: (String, List[Type]) = (a.getName, parameterTypes)
+          if(acc.contains(mkey)) {
+            val returnTypeInMap: Type = acc(mkey)
+            if (a.getReturnType == returnTypeInMap) {
+              acc
+            } else {
+              //Case where return types do not match
+              //TODO: Implement this. Probably can happen with generics, how else can this happen?
+              //Ideas: take less precise type and override that
+              //If type doesn't intersect then what?
+              val returnTypeName: String = returnTypeInMap.getEscapedName
+              Scene.v().getSootClass(returnTypeName)
+
+              ???
+            }
+          }else{
+            acc + (mkey -> a.getReturnType)
+          }
         })
         methodsToOverride.foreach(methodTup => {
-//          val method: SootMethod = applicationClass.declaresMethod(methodTup._1,methodTup._3)
-          if(!applicationClass.declaresMethod(methodTup._1,methodTup._3) && dbgPred(methodTup._1)){
-            val newMethod: SootMethod = new SootMethod(methodTup._1, methodTup._3, methodTup._4)
+          val methodName: String = methodTup._1._1
+          val methodParams: List[Type] = methodTup._1._2
+          val returnType: Type = methodTup._2
 
+          if(!applicationClass.declaresMethod(methodName,methodParams) && dbgPred(methodName)){
+////          val method: SootMethod = applicationClass.declaresMethod(methodTup._1,methodTup._3)
+            val newMethod: SootMethod = new SootMethod(methodName, methodParams, returnType) //TODO: accessor permissions?
 
             //Create new body for method
             val activeBody: Body = Jimple.v().newBody(newMethod)
@@ -59,17 +79,17 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
               val paramNum = paramNumType._2
               val param = Jimple.v().newLocal(Utils.nextName("param"), paramType)
               activeBody.getLocals.add(param)
-              units.addLast(Jimple.v().newIdentityStmt(param,Jimple.v().newParameterRef(paramType, paramNum))) //TODO
+              units.addLast(Jimple.v().newIdentityStmt(param,Jimple.v().newParameterRef(paramType, paramNum)))
 
               param
             })
 
             //TODO:Call super to units
-            val method: Option[SootMethod] = getSuperMethod(applicationClass.getSuperclass, methodTup._1, methodTup._3)
+            val method: SootMethodRef = getSuperMethod(applicationClass.getSuperclass, methodName,
+              methodParams, returnType)
 
             val b: Boolean = activeBody.getThisLocal == thisRef
-            val methodRef: SootMethodRef = method.get.makeRef()
-            units.addLast(Jimple.v().newInvokeStmt(Jimple.v().newSpecialInvokeExpr(thisRef, methodRef ,args)))
+            units.addLast(Jimple.v().newInvokeStmt(Jimple.v().newSpecialInvokeExpr(thisRef, method ,args)))
           }
         })
 
@@ -77,13 +97,12 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       }
     })
   }
-  def getSuperMethod(clazz: SootClass, name: String, args: List[Type]): Option[SootMethod] = {
+  def getSuperMethod(clazz: SootClass, name: String, args: List[Type], returnType: Type): SootMethodRef = {
     clazz.getMethods()
     if(clazz.declaresMethod(name,args)){
-      Some(clazz.getMethod(name, args))
+      clazz.getMethod(name, args).makeRef()
     }else {
-//      Scene.v().makeMethodRef(clazz, name, ) //TODO: get method return type here
-      ???
+      Scene.v().makeMethodRef(clazz, name, args,returnType,false)
     }
   }
   final def getOverrideableMethodsChain(clazz: SootClass): Set[SootMethod] = {
