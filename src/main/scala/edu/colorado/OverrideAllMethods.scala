@@ -3,9 +3,9 @@ package edu.colorado
 import java.util
 
 import edu.colorad.cs.TraceRunner.Config
-import soot.jimple.Jimple
+import soot.jimple.{Jimple, SpecialInvokeExpr}
 import soot.util.NumberedString
-import soot.{Body, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit}
+import soot.{Body, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
 
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
@@ -89,7 +89,10 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
               methodParams, returnType)
 
             val b: Boolean = activeBody.getThisLocal == thisRef
-            units.addLast(Jimple.v().newInvokeStmt(Jimple.v().newSpecialInvokeExpr(thisRef, method ,args)))
+            val newSpecialInvokeExpr: SpecialInvokeExpr = Jimple.v().newSpecialInvokeExpr(thisRef, method, args)
+            if(method.returnType() == VoidType.v()) {
+              units.addLast(Jimple.v().newInvokeStmt(newSpecialInvokeExpr))
+            }else{ ??? }
           }
         })
 
