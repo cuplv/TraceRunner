@@ -43,7 +43,7 @@ message TraceMsgContainer {
     /* Msg that contains the information of a callin invocation */
     message CallinEntryMsg {
         /* signature of the callin */
-        required string signature = 1;
+        required string class = 1; //TODO: change this to class
         /* name of the invoked callin */
         required string method_name = 2;
         /* list of parameters of the callin */
@@ -70,7 +70,7 @@ message TraceMsgContainer {
         required string class = 2;
     }
     message CallbackEntryMsg {
-        required string signature = 1;
+        required string class = 1; //TODO: change this to class
         required string method_name = 2;
         repeated ValueMsg param_list = 3;
         required string callback_caller_class = 4;
