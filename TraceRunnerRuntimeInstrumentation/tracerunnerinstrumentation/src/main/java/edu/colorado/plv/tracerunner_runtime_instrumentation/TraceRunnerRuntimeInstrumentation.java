@@ -100,9 +100,13 @@ public class TraceRunnerRuntimeInstrumentation {
             for(Method frameworkOverrideItem : frameworkOverride){
                 TraceMsgContainer.FrameworkOverride.Builder builder
                         = TraceMsgContainer.FrameworkOverride.newBuilder();
+
+                builder.setIsInterface(frameworkOverrideItem.getDeclaringClass().isInterface());
+
                 builder.setClass_(frameworkOverrideItem.getDeclaringClass().getName());
                 builder.setMethod(FirstFrameworkResolver.sootSignatureFromJava(frameworkOverrideItem));
                 callbackEntryMsgBuilder.addFrameworkOverrides(builder);
+
             }
 //            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(
 //                    frameworkOverride.getClass().getName());

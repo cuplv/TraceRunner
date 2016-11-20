@@ -102,11 +102,11 @@ object TraceRunner {
         PhaseOptions.v().setPhaseOption("cg", "enabled:false");
 
         /** callin transformer**/
-        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
-//        PackManager.v().getPack("jtp").add(
-//          new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
-//        PackManager.v().getPack("jtp").add(
-//          new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
+//        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
+        PackManager.v().getPack("jtp").add(
+          new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
+        PackManager.v().getPack("jtp").add(
+          new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
 
         /**run soot transformation**/
         val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
