@@ -1,0 +1,711 @@
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 0
+  thread_id: 1
+  callbackEntry {
+    class: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "<init>"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    callback_caller_class: "java.lang.reflect.Constructor"
+    callback_caller_method: "newInstance"
+    method_returnType: "void"
+    receiver_first_framework_super: "android.support.v7.app.AppCompatActivity"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 1
+  thread_id: 1
+  callinEntry {
+    class: "android.support.v7.app.AppCompatActivity"
+    method_name: "void <init>()"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 2
+  thread_id: 1
+  callinExit {
+    signature: "android.support.v7.app.AppCompatActivity"
+    method_name: "void <init>()"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 3
+  thread_id: 1
+  callinEntry {
+    class: "android.media.MediaPlayer"
+    method_name: "void <init>()"
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 4
+  thread_id: 1
+  callinExit {
+    signature: "android.media.MediaPlayer"
+    method_name: "void <init>()"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 5
+  thread_id: 1
+  callbackExit {
+    signature: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 6
+  thread_id: 1
+  callbackEntry {
+    class: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "onCreate"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    param_list {
+      is_null: true
+    }
+    callback_caller_class: "android.app.Activity"
+    callback_caller_method: "performCreate"
+    method_parameter_types: "android.os.Bundle"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class: "android.support.v7.app.AppCompatActivity"
+      is_interface: false
+    }
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class: "android.support.v4.app.FragmentActivity"
+      is_interface: false
+    }
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class: "android.support.v4.app.BaseFragmentActivityGingerbread"
+      is_interface: false
+    }
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class: "android.app.Activity"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.support.v7.app.AppCompatActivity"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 7
+  thread_id: 1
+  callinEntry {
+    class: "android.support.v7.app.AppCompatActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    param_list {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 8
+  thread_id: 1
+  callinExit {
+    signature: "android.support.v7.app.AppCompatActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 9
+  thread_id: 1
+  callinEntry {
+    class: "android.support.v7.app.AppCompatActivity"
+    method_name: "void setContentView(int)"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "2383a0b"
+      value: "2130968602"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 10
+  thread_id: 1
+  callinExit {
+    signature: "android.support.v7.app.AppCompatActivity"
+    method_name: "void setContentView(int)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 11
+  thread_id: 1
+  callinEntry {
+    class: "android.support.v7.app.AppCompatActivity"
+    method_name: "android.view.View findViewById(int)"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "18541cd7"
+      value: "2131427412"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 12
+  thread_id: 1
+  callinExit {
+    signature: "android.support.v7.app.AppCompatActivity"
+    method_name: "android.view.View findViewById(int)"
+    return_value {
+      type: "android.widget.RelativeLayout"
+      object_id: "15c340ad"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 13
+  thread_id: 1
+  callinEntry {
+    class: "android.widget.Button"
+    method_name: "void <init>(android.content.Context)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 14
+  thread_id: 1
+  callinExit {
+    signature: "android.widget.Button"
+    method_name: "void <init>(android.content.Context)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 15
+  thread_id: 1
+  callinEntry {
+    class: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "300c4360"
+      value: "play"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 16
+  thread_id: 1
+  callinExit {
+    signature: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 17
+  thread_id: 1
+  callinEntry {
+    class: "android.view.ViewGroup$LayoutParams"
+    method_name: "void <init>(int,int)"
+    param_list {
+      type: "android.view.ViewGroup$LayoutParams"
+      object_id: "c2b78de"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "32e9a4d5"
+      value: "-1"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "3ba2d3db"
+      value: "-2"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 18
+  thread_id: 1
+  callinExit {
+    signature: "android.view.ViewGroup$LayoutParams"
+    method_name: "void <init>(int,int)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 19
+  thread_id: 1
+  callinEntry {
+    class: "android.view.View"
+    method_name: "void setLayoutParams(android.view.ViewGroup$LayoutParams)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    param_list {
+      type: "android.view.ViewGroup$LayoutParams"
+      object_id: "c2b78de"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 20
+  thread_id: 1
+  callinExit {
+    signature: "android.view.View"
+    method_name: "void setLayoutParams(android.view.ViewGroup$LayoutParams)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 21
+  thread_id: 1
+  callinEntry {
+    class: "android.view.ViewGroup"
+    method_name: "void addView(android.view.View)"
+    param_list {
+      type: "android.widget.RelativeLayout"
+      object_id: "15c340ad"
+    }
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 22
+  thread_id: 1
+  callinExit {
+    signature: "android.view.ViewGroup"
+    method_name: "void addView(android.view.View)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 23
+  thread_id: 1
+  callinEntry {
+    class: "android.view.View"
+    method_name: "void setOnClickListener(android.view.View$OnClickListener)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 24
+  thread_id: 1
+  callinExit {
+    signature: "android.view.View"
+    method_name: "void setOnClickListener(android.view.View$OnClickListener)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 25
+  thread_id: 1
+  callinEntry {
+    class: "android.media.MediaPlayer"
+    method_name: "void setAudioStreamType(int)"
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "39e74490"
+      value: "3"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 26
+  thread_id: 1
+  callinExit {
+    signature: "android.media.MediaPlayer"
+    method_name: "void setAudioStreamType(int)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 27
+  thread_id: 1
+  callinEntry {
+    class: "android.media.MediaPlayer"
+    method_name: "void setDataSource(java.lang.String)"
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "283161af"
+      value: "http://csel.cs.colorado.edu/~krsr8608/panjatheme.mp3"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 28
+  thread_id: 1
+  callinExit {
+    signature: "android.media.MediaPlayer"
+    method_name: "void setDataSource(java.lang.String)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 29
+  thread_id: 1
+  callinEntry {
+    class: "android.media.MediaPlayer"
+    method_name: "void setOnPreparedListener(android.media.MediaPlayer$OnPreparedListener)"
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 30
+  thread_id: 1
+  callinExit {
+    signature: "android.media.MediaPlayer"
+    method_name: "void setOnPreparedListener(android.media.MediaPlayer$OnPreparedListener)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 31
+  thread_id: 1
+  callinEntry {
+    class: "android.media.MediaPlayer"
+    method_name: "void prepareAsync()"
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 32
+  thread_id: 1
+  callinExit {
+    signature: "android.media.MediaPlayer"
+    method_name: "void prepareAsync()"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 33
+  thread_id: 1
+  callinEntry {
+    class: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "11bd98c1"
+      value: "0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 34
+  thread_id: 1
+  callinExit {
+    signature: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 35
+  thread_id: 1
+  callbackExit {
+    signature: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 36
+  thread_id: 1
+  callbackEntry {
+    class: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "onPrepared"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+    callback_caller_class: "android.media.MediaPlayer$EventHandler"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "android.media.MediaPlayer"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onPrepared(android.media.MediaPlayer)"
+      class: "android.media.MediaPlayer$OnPreparedListener"
+      is_interface: true
+    }
+    receiver_first_framework_super: "android.support.v7.app.AppCompatActivity"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 37
+  thread_id: 1
+  callinEntry {
+    class: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "ae49f11"
+      value: "1"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 38
+  thread_id: 1
+  callinExit {
+    signature: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 39
+  thread_id: 1
+  callbackExit {
+    signature: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "void onPrepared(android.media.MediaPlayer)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 40
+  thread_id: 1
+  callbackEntry {
+    class: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "onClick"
+    param_list {
+      type: "plv.colorado.edu.mediaplayerexample.MainActivity"
+      object_id: "2e585b15"
+    }
+    param_list {
+      type: "android.widget.Button"
+      object_id: "3d53af73"
+    }
+    callback_caller_class: "android.view.View"
+    callback_caller_method: "performClick"
+    method_parameter_types: "android.view.View"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onClick(android.view.View)"
+      class: "android.view.View$OnClickListener"
+      is_interface: true
+    }
+    receiver_first_framework_super: "android.support.v7.app.AppCompatActivity"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 41
+  thread_id: 1
+  callinEntry {
+    class: "android.media.MediaPlayer"
+    method_name: "void start()"
+    param_list {
+      type: "android.media.MediaPlayer"
+      object_id: "18b32f6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 42
+  thread_id: 1
+  callinExit {
+    signature: "android.media.MediaPlayer"
+    method_name: "void start()"
+    return_value {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 43
+  thread_id: 1
+  callbackExit {
+    signature: "plv.colorado.edu.mediaplayerexample.MainActivity"
+    method_name: "void onClick(android.view.View)"
+  }
+}
+
