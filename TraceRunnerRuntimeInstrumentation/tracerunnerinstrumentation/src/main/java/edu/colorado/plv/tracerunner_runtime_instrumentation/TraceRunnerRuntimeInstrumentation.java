@@ -91,7 +91,7 @@ public class TraceRunnerRuntimeInstrumentation {
             long threadID = Thread.currentThread().getId();
             TraceMsgContainer.CallbackEntryMsg.Builder callbackEntryMsgBuilder
                     = TraceMsgContainer.CallbackEntryMsg.newBuilder();
-            callbackEntryMsgBuilder.setClass_(signature);
+            callbackEntryMsgBuilder.setClassName(signature);
             callbackEntryMsgBuilder.setMethodName(methodName);
             callbackEntryMsgBuilder.setCallbackCallerClass(callerClassName);
             callbackEntryMsgBuilder.setCallbackCallerMethod(callerMethodName);
