@@ -1,9 +1,6 @@
 syntax = "proto2";
-
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
-
 message TraceMsgContainer {
-
     /* Defines a single message sent by the instrumented App
        The message can be of several types: AppMsg, CallinMsg,
        CallbackMsg.
@@ -15,16 +12,13 @@ message TraceMsgContainer {
                       CALLBACK_ENTRY = 5;
                       CALLBACK_EXIT = 6;
                       CALLBACK_EXCEPTION = 7;}
-
         /* Identifies the type of the message */
         required MsgType type = 1;
         /* Defines the position of the message in the trace */
         required uint64 message_id = 2;
         /* id of the thread on which the message was recorded */
         required uint64 thread_id = 3;
-
         optional AppMsg app = 4;
-
         oneof oneof_message {
             CallinEntryMsg callinEntry = 5;
             CallinExitMsg callinExit = 6;
@@ -34,16 +28,14 @@ message TraceMsgContainer {
             CallbackExceptionMsg callbackException= 10;
         }
     }
-
     /* Defines the information about the instrumented app. */
     message AppMsg {
         optional string app_name = 1;
     }
-
     /* Msg that contains the information of a callin invocation */
     message CallinEntryMsg {
         /* signature of the callin */
-        required string class = 1; //TODO: change this to class
+        required string class_name = 1; //TODO: change this to class
         /* name of the invoked callin */
         required string method_name = 2;
         /* list of parameters of the callin */
@@ -51,20 +43,17 @@ message TraceMsgContainer {
         /* object that calls this callin - document better */
         optional ValueMsg caller = 4;
     }
-
     message CallinExitMsg {
         /* signature of the callin */
-        required string signature = 1;
+        required string class_name = 1;
         /* name of the invoked callin */
         required string method_name = 2;
         /* return value */
         optional ValueMsg return_value = 3;
     }
-
     /* TODO: placeholder */
     message CallinExceptionMsg {
     }
-
     message FrameworkOverride {
         required string method = 1;
         required string class_name = 2;
@@ -81,17 +70,14 @@ message TraceMsgContainer {
         repeated FrameworkOverride framework_overrides = 9;
         optional string receiver_first_framework_super = 10;
     }
-
     message CallbackExitMsg {
-        required string signature = 1;
+        required string class_name = 1;
         required string method_name = 2;
         optional ValueMsg return_value = 3;
     }
     /* TODO: placeholder */
     message CallbackExceptionMsg {
     }
-
-
     /* Object used as caller/parameter/return value */
     message ValueMsg {
         /* is the value null */
@@ -104,8 +90,6 @@ message TraceMsgContainer {
         optional string object_id = 4;
         /* value of the object */
         optional string value = 5;
-
     }
-
     required TraceMsg msg = 1;
 }

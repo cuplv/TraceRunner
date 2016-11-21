@@ -38,7 +38,7 @@ public class TraceRunnerRuntimeInstrumentation {
             long threadID = Thread.currentThread().getId();
             TraceMsgContainer.CallbackExitMsg.Builder builder
                     = TraceMsgContainer.CallbackExitMsg.newBuilder();
-            builder.setSignature(signature);
+            builder.setClassName(signature);
             builder.setMethodName(methodName);
             if (returnVal != null) {
                 builder.setReturnValue(getValueMsg(returnVal));
@@ -144,7 +144,7 @@ public class TraceRunnerRuntimeInstrumentation {
 
             TraceMsgContainer.CallinExitMsg.Builder callinExitMsgBuilder
                     = TraceMsgContainer.CallinExitMsg.newBuilder();
-            callinExitMsgBuilder.setSignature(signature);
+            callinExitMsgBuilder.setClassName(signature);
             callinExitMsgBuilder.setMethodName(methodName);
             callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
 
@@ -168,7 +168,7 @@ public class TraceRunnerRuntimeInstrumentation {
             long threadID = Thread.currentThread().getId();
 
             CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
-            callinMsgBuilder.setClass_(signature);
+            callinMsgBuilder.setClassName(signature);
             callinMsgBuilder.setMethodName(methodName);
 
             for (Object arg : arguments) {
