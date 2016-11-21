@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -31,25 +30,29 @@ public class TraceRunnerRuntimeInstrumentation {
     static final long EXECUTOR_TO = 5;
 
     public static void logCallbackReturn(String signature, String methodName, Object returnVal){
-        int id = count.getAndIncrement();
-        long threadID = Thread.currentThread().getId();
-        TraceMsgContainer.CallbackExitMsg.Builder builder
-                = TraceMsgContainer.CallbackExitMsg.newBuilder();
-        builder.setSignature(signature);
-        builder.setMethodName(methodName);
-        if(returnVal != null){
-            builder.setReturnValue(getValueMsg(returnVal));
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        StackTraceElement callbackCaller = stackTrace[4];
+        String callerClassName = callbackCaller.getClassName();
+        if(FrameworkResolver.get().isFramework(callerClassName)) {
+            int id = count.getAndIncrement();
+            long threadID = Thread.currentThread().getId();
+            TraceMsgContainer.CallbackExitMsg.Builder builder
+                    = TraceMsgContainer.CallbackExitMsg.newBuilder();
+            builder.setSignature(signature);
+            builder.setMethodName(methodName);
+            if (returnVal != null) {
+                builder.setReturnValue(getValueMsg(returnVal));
+            }
+            TraceMsg msg = TraceMsg.newBuilder()
+                    .setType(TraceMsg.MsgType.CALLBACK_EXIT)
+                    .setMessageId(id)
+                    .setThreadId(threadID)
+                    .setCallbackExit(builder)
+                    .build();
+            TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                    .setMsg(msg).build();
+            executorService.execute(new LogDat(container));
         }
-        TraceMsg msg = TraceMsg.newBuilder()
-                .setType(TraceMsg.MsgType.CALLBACK_EXIT)
-                .setMessageId(id)
-                .setThreadId(threadID)
-                .setCallbackExit(builder)
-                .build();
-        TraceMsgContainer container = TraceMsgContainer.newBuilder()
-                .setMsg(msg).build();
-        executorService.execute(new LogDat(container));
-
     }
 
     public static void logCallbackEntry(String signature, String methodName, String[] argumentTypes, String returnType, Object[] arguments){
@@ -57,129 +60,134 @@ public class TraceRunnerRuntimeInstrumentation {
         //Get caller info
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceElement callbackCaller = stackTrace[4];
+        String callerClassName = callbackCaller.getClassName();
+        if(FrameworkResolver.get().isFramework(callerClassName)) {
+            //Get class hierarchy info
+            Class firstFramework = null;
+            List<Method> frameworkOverride = null;
 
-        //Get class hierarchy info
-        Class firstFramework = null;
-        List<Method> frameworkOverride = null;
+            //TODO: get first framework override
+            if (arguments[0] != null) {
+                firstFramework = FrameworkResolver.get()
+                        .getFirstFrameworkClass(arguments[0].getClass());
+                if (methodName.contains("<init>")) {
 
-        //TODO: get first framework override
-        if(arguments[0] != null) {
-            firstFramework = FirstFrameworkResolver.get()
-                    .getFirstFrameworkClass(arguments[0].getClass());
-            if(methodName.contains("<init>")){
-
-            }else {
-                try {
-                    frameworkOverride = FirstFrameworkResolver.get()
-                            .getFrameworkOverrideMemo(arguments[0].getClass(), methodName, argumentTypes);
-                } catch (ClassNotFoundException e) {
-                    //parsing soot signature for method is probably most brittle part so log
-                    //problems well
-                    throw new RuntimeException("class not found exception for: " + methodName, e);
+                } else {
+                    try {
+                        frameworkOverride = FrameworkResolver.get()
+                                .getFrameworkOverrideMemo(arguments[0].getClass(), methodName, argumentTypes);
+                    } catch (ClassNotFoundException e) {
+                        //parsing soot signature for method is probably most brittle part so log
+                        //problems well
+                        throw new RuntimeException("class not found exception for: " + methodName, e);
+                    }
                 }
             }
-        }
 
-        //Get callback info
-        String callerClassName = callbackCaller.getClassName();
-        String callerMethodName = callbackCaller.getMethodName();
-        int id = count.getAndIncrement();
-        long threadID = Thread.currentThread().getId();
-        TraceMsgContainer.CallbackEntryMsg.Builder callbackEntryMsgBuilder
-                = TraceMsgContainer.CallbackEntryMsg.newBuilder();
-        callbackEntryMsgBuilder.setClass_(signature);
-        callbackEntryMsgBuilder.setMethodName(methodName);
-        callbackEntryMsgBuilder.setCallbackCallerClass(callerClassName);
-        callbackEntryMsgBuilder.setCallbackCallerMethod(callerMethodName);
-        callbackEntryMsgBuilder.setMethodReturnType(returnType);
-        for(String argumentType : argumentTypes){
-            callbackEntryMsgBuilder.addMethodParameterTypes(argumentType);
-        }
-        if(frameworkOverride != null) {
+            //Get callback info
 
-            for(Method frameworkOverrideItem : frameworkOverride){
-                TraceMsgContainer.FrameworkOverride.Builder builder
-                        = TraceMsgContainer.FrameworkOverride.newBuilder();
-
-                builder.setIsInterface(frameworkOverrideItem.getDeclaringClass().isInterface());
-
-                builder.setClass_(frameworkOverrideItem.getDeclaringClass().getName());
-                builder.setMethod(FirstFrameworkResolver.sootSignatureFromJava(frameworkOverrideItem));
-                callbackEntryMsgBuilder.addFrameworkOverrides(builder);
-
+            String callerMethodName = callbackCaller.getMethodName();
+            int id = count.getAndIncrement();
+            long threadID = Thread.currentThread().getId();
+            TraceMsgContainer.CallbackEntryMsg.Builder callbackEntryMsgBuilder
+                    = TraceMsgContainer.CallbackEntryMsg.newBuilder();
+            callbackEntryMsgBuilder.setClass_(signature);
+            callbackEntryMsgBuilder.setMethodName(methodName);
+            callbackEntryMsgBuilder.setCallbackCallerClass(callerClassName);
+            callbackEntryMsgBuilder.setCallbackCallerMethod(callerMethodName);
+            callbackEntryMsgBuilder.setMethodReturnType(returnType);
+            for (String argumentType : argumentTypes) {
+                callbackEntryMsgBuilder.addMethodParameterTypes(argumentType);
             }
+            if (frameworkOverride != null) {
+
+                for (Method frameworkOverrideItem : frameworkOverride) {
+                    TraceMsgContainer.FrameworkOverride.Builder builder
+                            = TraceMsgContainer.FrameworkOverride.newBuilder();
+
+                    builder.setIsInterface(frameworkOverrideItem.getDeclaringClass().isInterface());
+
+                    builder.setClass_(frameworkOverrideItem.getDeclaringClass().getName());
+                    builder.setMethod(FrameworkResolver.sootSignatureFromJava(frameworkOverrideItem));
+                    callbackEntryMsgBuilder.addFrameworkOverrides(builder);
+
+                }
 //            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(
 //                    frameworkOverride.getClass().getName());
 //            callbackEntryMsgBuilder.setFirstFrameworkOverrideMethod(
-//                    FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
-        }
-        if(firstFramework != null){
-            callbackEntryMsgBuilder.setReceiverFirstFrameworkSuper(firstFramework.getName());
+//                    FrameworkResolver.sootSignatureFromJava(frameworkOverride));
+            }
+            if (firstFramework != null) {
+                callbackEntryMsgBuilder.setReceiverFirstFrameworkSuper(firstFramework.getName());
 //            callbackEntryMsgBuilder.setFirstFrameworkOverrideClass(firstFramework.getName());
-        }
-        for(Object o: arguments){
-            callbackEntryMsgBuilder.addParamList(getValueMsg(o));
-        }
+            }
+            for (Object o : arguments) {
+                callbackEntryMsgBuilder.addParamList(getValueMsg(o));
+            }
 
-        TraceMsg msg = TraceMsg.newBuilder()
-                .setType(TraceMsg.MsgType.CALLBACK_ENTRY)
-                .setMessageId(id)
-                .setThreadId(threadID)
-                .setCallbackEntry(callbackEntryMsgBuilder)
-                .build();
-        TraceMsgContainer container = TraceMsgContainer.newBuilder()
-                .setMsg(msg).build();
-        executorService.execute(new LogDat(container));
+            TraceMsg msg = TraceMsg.newBuilder()
+                    .setType(TraceMsg.MsgType.CALLBACK_ENTRY)
+                    .setMessageId(id)
+                    .setThreadId(threadID)
+                    .setCallbackEntry(callbackEntryMsgBuilder)
+                    .build();
+            TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                    .setMsg(msg).build();
+            executorService.execute(new LogDat(container));
+        }
     }
 
     public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
-        int id = count.getAndIncrement();
-        long threadID = Thread.currentThread().getId();
+        if(FrameworkResolver.get().isFramework(signature)) {
+            int id = count.getAndIncrement();
+            long threadID = Thread.currentThread().getId();
 
-        TraceMsgContainer.CallinExitMsg.Builder callinExitMsgBuilder
-                = TraceMsgContainer.CallinExitMsg.newBuilder();
-        callinExitMsgBuilder.setSignature(signature);
-        callinExitMsgBuilder.setMethodName(methodName);
-        callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
+            TraceMsgContainer.CallinExitMsg.Builder callinExitMsgBuilder
+                    = TraceMsgContainer.CallinExitMsg.newBuilder();
+            callinExitMsgBuilder.setSignature(signature);
+            callinExitMsgBuilder.setMethodName(methodName);
+            callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
 
-        TraceMsg msg = TraceMsg.newBuilder()
-                .setType(TraceMsg.MsgType.CALLIN_EXIT)
-                .setMessageId(id)
-                .setThreadId(threadID)
-                .setCallinExit(callinExitMsgBuilder)
-                .build();
-        TraceMsgContainer container = TraceMsgContainer.newBuilder()
-                .setMsg(msg).build();
-        executorService.execute(new LogDat(container));
-
+            TraceMsg msg = TraceMsg.newBuilder()
+                    .setType(TraceMsg.MsgType.CALLIN_EXIT)
+                    .setMessageId(id)
+                    .setThreadId(threadID)
+                    .setCallinExit(callinExitMsgBuilder)
+                    .build();
+            TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                    .setMsg(msg).build();
+            executorService.execute(new LogDat(container));
+        }
     }
     public static void logCallin(String signature, String methodName, //TODO: add location
                                  Object[] arguments, Object caller) {
-        //called on Activity Thread
-        //TODO: add callers
-        int id = count.getAndIncrement();
-        long threadID = Thread.currentThread().getId();
+        if(FrameworkResolver.get().isFramework(signature)) {
+            //called on Activity Thread
+            //TODO: add callers
+            int id = count.getAndIncrement();
+            long threadID = Thread.currentThread().getId();
 
-        CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
-        callinMsgBuilder.setClass_(signature);
-        callinMsgBuilder.setMethodName(methodName);
+            CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
+            callinMsgBuilder.setClass_(signature);
+            callinMsgBuilder.setMethodName(methodName);
 
-        for (Object arg : arguments) {
-            callinMsgBuilder.addParamList(getValueMsg(arg));
+            for (Object arg : arguments) {
+                callinMsgBuilder.addParamList(getValueMsg(arg));
+            }
+
+            //if (null != caller) callinMsgBuilder.setCaller(getValueMsg(caller));
+
+            TraceMsg msg = TraceMsg.newBuilder()
+                    .setType(TraceMsg.MsgType.CALLIN_ENTRY)
+                    .setMessageId(id)
+                    .setThreadId(threadID)
+                    .setCallinEntry(callinMsgBuilder.build()).build();
+
+            TraceMsgContainer container = TraceMsgContainer.newBuilder()
+                    .setMsg(msg).build();
+
+            executorService.execute(new LogDat(container));
         }
-
-        //if (null != caller) callinMsgBuilder.setCaller(getValueMsg(caller));
-
-        TraceMsg msg = TraceMsg.newBuilder()
-                .setType(TraceMsg.MsgType.CALLIN_ENTRY)
-                .setMessageId(id)
-                .setThreadId(threadID)
-                .setCallinEntry(callinMsgBuilder.build()).build();
-
-        TraceMsgContainer container = TraceMsgContainer.newBuilder()
-                .setMsg(msg).build();
-
-        executorService.execute(new LogDat(container));
     }
 
     /**

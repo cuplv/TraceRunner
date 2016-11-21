@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 import static org.junit.Assert.*;
@@ -26,7 +25,7 @@ public class InstrumentationTest {
 //    }
     @Test
     public void firstFrameworkSuperTest() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -39,7 +38,7 @@ public class InstrumentationTest {
     }
     @Test
     public void frameworkOverrideTest() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -48,12 +47,12 @@ public class InstrumentationTest {
         };
         Method frameworkOverride = f.getFrameworkOverrideMemo(r.getClass(), "run", new String[0]).iterator().next();
 //        assertEquals(1,frameworkOverride.size());
-        assertEquals("void run()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        assertEquals("void run()", FrameworkResolver.sootSignatureFromJava(frameworkOverride));
         assertEquals("interface java.lang.Runnable", frameworkOverride.getDeclaringClass().toString());
     }
     @Test
     public void frameworkOverrideParameterTest() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         Callable<Object> c = new Callable() {
             @Override
             public Object call(){
@@ -62,12 +61,12 @@ public class InstrumentationTest {
         };
         Method frameworkOverride = f.getFrameworkOverrideMemo(c.getClass(), "call", new String[0]).iterator().next();
 //        assertEquals(1,frameworkOverride.size());
-        assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        assertEquals("java.lang.Object call()", FrameworkResolver.sootSignatureFromJava(frameworkOverride));
         assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
     }
     @Test
     public void frameworkOverrideParameterTestSubclass() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         Callable<String> c = new Callable() {
             @Override
             public String call(){
@@ -76,11 +75,11 @@ public class InstrumentationTest {
         };
         Method frameworkOverride = f.getFrameworkOverrideMemo(c.getClass(), "call", new String[0]).iterator().next();
         assertEquals("interface java.util.concurrent.Callable", frameworkOverride.getDeclaringClass().toString());
-        assertEquals("java.lang.Object call()", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        assertEquals("java.lang.Object call()", FrameworkResolver.sootSignatureFromJava(frameworkOverride));
     }
     @Test
     public void frameworkOverrideArgsTest() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         Comparator<String> c = new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
@@ -96,7 +95,7 @@ public class InstrumentationTest {
         Method frameworkOverride = f.getFrameworkOverrideMemo(c.getClass(),
                 "equals", new String[]{"java.lang.Object"}).iterator().next();
         assertEquals("interface java.util.Comparator",frameworkOverride.getDeclaringClass().toString());
-        assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(frameworkOverride));
+        assertEquals("boolean equals(java.lang.Object)", FrameworkResolver.sootSignatureFromJava(frameworkOverride));
 
         List<Method> overrides = f.getFrameworkOverrideMemo(c.getClass(), "compare", new String[]{"java.lang.String", "java.lang.String"});
         Method m = overrides.iterator().next();
@@ -105,7 +104,7 @@ public class InstrumentationTest {
     }
     @Test
     public void nonFrameworkOverride() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         class Foo{
             public void bar(){}
             public void bar(int i){}
@@ -134,18 +133,18 @@ public class InstrumentationTest {
     }
     @Test
     public void extendsTest() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         MyObject o = new MyObject();
         Method m = f.getFrameworkOverrideMemo(o.getClass(), "toString", new String[0]).iterator().next();
         assertEquals("java.lang.Object", m.getDeclaringClass().getName());
-        assertEquals("java.lang.String toString()", FirstFrameworkResolver.sootSignatureFromJava(m));
+        assertEquals("java.lang.String toString()", FrameworkResolver.sootSignatureFromJava(m));
         Method m2 = f.getFrameworkOverrideMemo(o.getClass(), "equals", new String[]{"java.lang.Object"}).iterator().next();
         assertEquals("java.lang.Object", m2.getDeclaringClass().getName());
-        assertEquals("boolean equals(java.lang.Object)", FirstFrameworkResolver.sootSignatureFromJava(m2));
+        assertEquals("boolean equals(java.lang.Object)", FrameworkResolver.sootSignatureFromJava(m2));
     }
     @Test
     public void formattableTest() throws Exception{
-        FirstFrameworkResolver f = new FirstFrameworkResolver();
+        FrameworkResolver f = new FrameworkResolver();
         Formattable fmt = new Formattable(){
 
             @Override
@@ -156,10 +155,10 @@ public class InstrumentationTest {
         Method m = f.getFrameworkOverrideMemo(fmt.getClass(), "formatTo", new String[]{"java.util.Formatter","int","int","int"}).iterator().next();
 
         assertEquals("java.util.Formattable", m.getDeclaringClass().getName());
-        assertEquals("void formatTo(java.util.Formatter,int,int,int)",FirstFrameworkResolver.sootSignatureFromJava(m));
+        assertEquals("void formatTo(java.util.Formatter,int,int,int)", FrameworkResolver.sootSignatureFromJava(m));
         Method m2 = f.getFrameworkOverrideMemo(fmt.getClass(), "formatTo", new String[]{"java.util.Formatter","int","int","int"}).iterator().next();
         assertEquals("java.util.Formattable", m2.getDeclaringClass().getName());
-        assertEquals("void formatTo(java.util.Formatter,int,int,int)",FirstFrameworkResolver.sootSignatureFromJava(m2));
+        assertEquals("void formatTo(java.util.Formatter,int,int,int)", FrameworkResolver.sootSignatureFromJava(m2));
     }
 
 }

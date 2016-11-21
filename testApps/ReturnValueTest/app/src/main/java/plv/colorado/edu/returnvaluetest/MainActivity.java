@@ -49,23 +49,23 @@ public class MainActivity extends AppCompatActivity{
 //        s.takesArray(new int[]{1,2,3});
 //        s.returnsArray();
 //        tv.setOnClickListener(null);
-//        Log.i("",this.getObject(3).toString());
+        Log.i("",this.getObject(3).toString());
 //        FragmentManager fragmentManager = getFragmentManager();
     }
 
-//    protected SomeClass getObject(int i){
-//        SomeClass o = null;
-//        switch (i) {
-//            case 3 :
-//                o = new SomeClass();
-//                break;
-//            case 4 :
-//                o = this.object;
-//                break;
-//
-//        }
-//        return o;
-//    }
+    protected SomeClass getObject(int i){
+        SomeClass o = null;
+        switch (i) {
+            case 3 :
+                o = new SomeClass();
+                break;
+            case 4 :
+                o = this.object;
+                break;
+
+        }
+        return o;
+    }
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        return super.onCreateOptionsMenu(menu);

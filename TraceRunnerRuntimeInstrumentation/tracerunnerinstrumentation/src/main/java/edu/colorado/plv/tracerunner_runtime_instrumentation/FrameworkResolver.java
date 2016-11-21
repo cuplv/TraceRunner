@@ -12,7 +12,6 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,16 +23,16 @@ import java.util.regex.Pattern;
  * Created by s on 10/26/16.
  */
 
-public class FirstFrameworkResolver {
-    private static FirstFrameworkResolver instance = null;
-    public static FirstFrameworkResolver get(){
+public class FrameworkResolver {
+    private static FrameworkResolver instance = null;
+    public static FrameworkResolver get(){
         if(instance ==null){
-            instance = new FirstFrameworkResolver();
+            instance = new FrameworkResolver();
         }
         return instance;
     }
     Pattern[] frameworkMatchers;
-    FirstFrameworkResolver(){
+    FrameworkResolver(){
         String[] globs = new String[]{
                 "android.*" ,
                 "com.android.*" ,
@@ -55,8 +54,13 @@ public class FirstFrameworkResolver {
         }
     }
     boolean isFramework(Class clazz){
+        String name = clazz.getName();
+        return isFramework(name);
+    }
+
+    boolean isFramework(String name) {
         for(Pattern p:frameworkMatchers){
-            if(p.matcher(clazz.getName()).find()){
+            if(p.matcher(name).find()){
                 return true;
             }
         }
@@ -187,7 +191,7 @@ public class FirstFrameworkResolver {
         return bestMatch;
     }
     static boolean isMatchingMethod(Method method, Class<?>[] parameterTypes) {
-        return isMatchingExecutable(FirstFrameworkResolver.Executable.of(method), parameterTypes);
+        return isMatchingExecutable(FrameworkResolver.Executable.of(method), parameterTypes);
     }
     static int compareMethodFit(final Method left, final Method right, final Class<?>[] actual) {
         return compareParameterTypes(Executable.of(left), Executable.of(right), actual);
@@ -306,8 +310,8 @@ public class FirstFrameworkResolver {
         private final Class<?>[] parameterTypes;
         private final boolean  isVarArgs;
 
-        private static FirstFrameworkResolver.Executable of(Method method) { return new FirstFrameworkResolver.Executable(method); }
-        private static FirstFrameworkResolver.Executable of(Constructor<?> constructor) { return new FirstFrameworkResolver.Executable(constructor); }
+        private static FrameworkResolver.Executable of(Method method) { return new FrameworkResolver.Executable(method); }
+        private static FrameworkResolver.Executable of(Constructor<?> constructor) { return new FrameworkResolver.Executable(constructor); }
 
         private Executable(Method method) {
             parameterTypes = method.getParameterTypes();
