@@ -67,7 +67,7 @@ message TraceMsgContainer {
 
     message FrameworkOverride {
         required string method = 1;
-        required string class = 2;
+        required string class_name = 2;
         required bool is_interface = 3;
     }
     message CallbackEntryMsg {

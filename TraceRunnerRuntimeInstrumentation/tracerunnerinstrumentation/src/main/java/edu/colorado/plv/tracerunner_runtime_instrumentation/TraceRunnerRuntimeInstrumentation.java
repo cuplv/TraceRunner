@@ -107,7 +107,7 @@ public class TraceRunnerRuntimeInstrumentation {
 
                     builder.setIsInterface(frameworkOverrideItem.getDeclaringClass().isInterface());
 
-                    builder.setClass_(frameworkOverrideItem.getDeclaringClass().getName());
+                    builder.setClassName(frameworkOverrideItem.getDeclaringClass().getName());
                     builder.setMethod(FrameworkResolver.sootSignatureFromJava(frameworkOverrideItem));
                     callbackEntryMsgBuilder.addFrameworkOverrides(builder);
 
