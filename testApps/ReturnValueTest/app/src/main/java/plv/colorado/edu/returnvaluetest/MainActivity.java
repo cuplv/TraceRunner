@@ -13,8 +13,8 @@ import java.util.concurrent.Callable;
 
 //public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 public class MainActivity extends AppCompatActivity{
-    private SomeClass object = new SomeClass();
-    private SomeClass nullval = null;
+//    private SomeClass object = new SomeClass();
+//    private SomeClass nullval = null;
 
     @Override
     protected void onPause(){
@@ -23,16 +23,16 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        Log.i("", "" + foo());
-        Callable<String> c = new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return null;
-            }
-        };
+//        Log.i("", "" + foo());
+//        Callable<String> c = new Callable<String>() {
+//            @Override
+//            public String call() throws Exception {
+//                return null;
+//            }
+//        };
 
         try {
-            c.call();
+            throw new Exception();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,23 +49,23 @@ public class MainActivity extends AppCompatActivity{
 //        s.takesArray(new int[]{1,2,3});
 //        s.returnsArray();
 //        tv.setOnClickListener(null);
-        Log.i("",this.getObject(3).toString());
+//        Log.i("",this.getObject(3).toString());
 //        FragmentManager fragmentManager = getFragmentManager();
     }
 
-    protected SomeClass getObject(int i){
-        SomeClass o = null;
-        switch (i) {
-            case 3 :
-                o = new SomeClass();
-                break;
-            case 4 :
-                o = this.object;
-                break;
-
-        }
-        return o;
-    }
+//    protected SomeClass getObject(int i){
+//        SomeClass o = null;
+//        switch (i) {
+//            case 3 :
+//                o = new SomeClass();
+//                break;
+//            case 4 :
+////                o = this.object;
+//                break;
+//
+//        }
+//        return o;
+//    }
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        return super.onCreateOptionsMenu(menu);
@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity{
 //        Log.i("====clicked","Clicked!!!");
 //
 //    }
-    public boolean foo(/*SomeClass s*/){
+//    public boolean foo(/*SomeClass s*/){
 //        Log.i("",s.toString());
         //return s.hashCode() > 0;
-        return true;
-    }
+//        return true;
+//    }
 //    private View.OnClickListener onClickListener = new View.OnClickListener() {
 //        @Override
 //        public void onClick(View v) {
