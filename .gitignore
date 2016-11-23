@@ -2,8 +2,12 @@ target/**
 *.class
 build/**
 .gradle/**
-.idea/workspace.xml
-.idea/tasks.xml
+.idea/**
+TraceRunnerRuntimeInstrumentation/.idea/**
+testApps/ManualInstTest/.idea/**
+testApps/ManualInstTest/libs/**
+testApps/MediaPlayerExample/.idea/**
+testApps/ReturnValueTest/.idea/**
 *.iml
 *.iws
 *.ipr
@@ -12,3 +16,4 @@ testApps/output/
 project/
 utils/ProtoConverter/tracemsg_pb2.py
 utils/ProtoConverter/tracemsg_pb2.pyc
+
