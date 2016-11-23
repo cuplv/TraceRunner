@@ -3,7 +3,7 @@ package edu.colorado
 import java.util
 
 import edu.colorad.cs.TraceRunner.Config
-import soot.jimple.{Jimple, StringConstant}
+import soot.jimple.{GotoStmt, Jimple, NopStmt, StringConstant}
 import soot.jimple.internal.JIdentityStmt
 import soot.util.Chain
 import soot.{Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootMethod, Trap, Unit, UnitBox, Value}
@@ -25,7 +25,8 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
     val signature: String = b.getMethod.getDeclaringClass.getName
     val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
     if(method_in_app && name != "<clinit>" && !method.isStatic) {
-      //Is this a method we would like to instrument?
+
+      // put an exception log in every existing catch block
       val units: PatchingChain[Unit] = b.getUnits
       val traps: Chain[Trap] = b.getTraps
       traps.iterator().foreach((a: Trap) => {
@@ -41,17 +42,22 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
             units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),h)
 
             units.insertAfter(Jimple.v().newAssignStmt(lval, h.getLeftOp),h)
-
-
-
           }
           case h =>{
             ???
           } //Is it ever the case that identity stmt doesn't come after catch? TODO: test empty catch block
         }
       })
-//      units.addFirst(Jimple.v().new)
-      println()
+
+      //***put a catch block around full method to log and rethrow***
+      val nop1: NopStmt = Jimple.v().newNopStmt() //insert exn handling after this nop
+      units.addLast(nop1)
+      val endingNop: NopStmt = Jimple.v().newNopStmt()
+      units.addLast(endingNop)
+      val gotoNop: GotoStmt = Jimple.v().newGotoStmt(endingNop)
+      units.insertBefore(gotoNop,nop1)
+      //Trap that sends exceptions from method body to new end block
+      b.getTraps.addLast(Jimple.v.newTrap(RefType.v("java.lang.Throwable"), ???, ???, ???))
     }
   }
 }
