@@ -12,3 +12,7 @@ in trace generation, from UI interaction scripts written by a human being.
 
 For full automation, stay tuned for the sister sub-repository 'monkeyTracer'.
 
+Instructions
+=========================
+
+TODO

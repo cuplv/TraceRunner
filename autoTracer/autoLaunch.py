@@ -16,13 +16,14 @@ def dirName(path):
    return stdout.replace('\n','')
 
 if __name__ == "__main__":
-   if len(sys.argv) != 4:
-      print "usage: python autoLaunch.py <Path to (Resigned) Instrumented APK> <Path to (Resigned) Auto Tracer APK> <Path to Output Trace ProtoBuf File>"
+   if len(sys.argv) != 5:
+      print "usage: python autoLaunch.py <Path to (Resigned) Instrumented APK> <Path to (Resigned) Auto Tracer APK> <Auto Tracer Class Name> <Path to Output Trace ProtoBuf File>"
       sys.exit(1)
 
    instrumented_apk_path = sys.argv[1]
    auto_tracer_apk_path  = sys.argv[2]
-   output_proto_path     = sys.argv[3]
+   auto_tracer_name      = sys.argv[3]
+   output_proto_path     = sys.argv[4]
 
    appName,activityName = getAPKInfo(instrumented_apk_path)
    tracerName,_ = getAPKInfo(auto_tracer_apk_path)
@@ -59,7 +60,7 @@ if __name__ == "__main__":
 
 
    print "Running Auto Tracer on Instrumented App..."
-   trace_proc = Popen(['adb','shell','am','instrument','-w','-r','-e','debug','false','-e','class','plv.colorado.edu.testapp0.RobotTest','%s/android.support.test.runner.AndroidJUnitRunner' % tracerName], stdout=PIPE)
+   trace_proc = Popen(['adb','shell','am','instrument','-w','-r','-e','debug','false','-e','class','%s.%s' % (appName,auto_tracer_name),'%s/android.support.test.runner.AndroidJUnitRunner' % tracerName], stdout=PIPE)
    outcome,error = trace_proc.communicate()
    print "Trace Completed: %s, %s" % (outcome,error)
 
