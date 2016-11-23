@@ -57,7 +57,7 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
       val gotoNop: GotoStmt = Jimple.v().newGotoStmt(endingNop)
       units.insertBefore(gotoNop,nop1)
       //Trap that sends exceptions from method body to new end block
-      b.getTraps.addLast(Jimple.v.newTrap(RefType.v("java.lang.Throwable"), ???, ???, ???))
+//      b.getTraps.addLast(Jimple.v.newTrap(RefType.v("java.lang.Throwable"), ???, ???, ???))
     }
   }
 }
