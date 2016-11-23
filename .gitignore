@@ -11,3 +11,4 @@ build/**
 testApps/output/
 project/
 utils/ProtoConverter/tracemsg_pb2.py
+utils/ProtoConverter/tracemsg_pb2.pyc
