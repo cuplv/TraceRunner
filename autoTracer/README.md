@@ -1,6 +1,6 @@
 
-Auto Tracer Trace Runner
-========================
+Auto Tracer for Trace Runner
+============================
 
 This sub-repository contains examples on how to use Robotium (https://github.com/RobotiumTech/robotium)
 an Android test automation framework, to develop trace generation scripts that can be used to automatically
@@ -12,7 +12,17 @@ in trace generation, from UI interaction scripts written by a human being.
 
 For full automation, stay tuned for the sister sub-repository 'monkeyTracer'.
 
+Quick Overview
+==============
+
+This sub-repository contains the following:
+
+  * examples - Folder containing test apps with example auto tracer scripts
+  * autoInstrument.py - Script that instruments the test app and resigns both the test app APK and auto tracer APK
+  * autoLaunch.py - Script that runs the test app with the auto tracer script
+  * launch.py - Script that runs the test app for manual trace collection
+
 Instructions
-=========================
+============
 
 TODO
