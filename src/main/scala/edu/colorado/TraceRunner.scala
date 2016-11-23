@@ -1,18 +1,12 @@
 package edu.colorad.cs.TraceRunner
 //import soot.G;
 
-import java.io.{File, OutputStream}
-import java.nio.file.{Files, Path}
-import java.util
-import javax.tools.{JavaCompiler, StandardJavaFileManager, ToolProvider}
 
 import edu.colorado._
-import soot.jimple.NullConstant
-import soot.{PackManager, PhaseOptions, Scene, SootClass, SootMethod, Transform, Type}
 import soot.options.Options
+import soot.{PackManager, PhaseOptions, Scene, SootClass, Transform}
 
 import scala.collection.JavaConverters._
-import scala.util.matching.Regex
 
 case class Config(apkPath: String = null,
                   androidJars: String = null,
@@ -101,12 +95,11 @@ object TraceRunner {
         //Disable callgraph construction
         PhaseOptions.v().setPhaseOption("cg", "enabled:false");
 
-        /** callin transformer**/
+        /** transformers**/
 //        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
-        PackManager.v().getPack("jtp").add(
-          new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
-        PackManager.v().getPack("jtp").add(
-          new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
+        PackManager.v().getPack("jtp").add(new Transform("jtp.exceptionInstrumenter", new ExceptionInstrumenter(config,classes)))
 
         /**run soot transformation**/
         val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)

@@ -11,7 +11,7 @@ import edu.colorad.cs.TraceRunner.Config
  */
 object TraceRunnerOptions {
   val  USE_PHANTOM_CLASSES = true
-  val CALLIN_INATRUMENTATION_CLASS: String =
+  val CALLIN_INSTRUMENTATION_CLASS: String =
     "edu.colorado.plv.tracerunner_runtime_instrumentation.TraceRunnerRuntimeInstrumentation"
   val FRAMEWORK_FILTER_FILE: String = "./resources/android_packages.txt"
 

@@ -30,7 +30,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
 
 
-  val callinInstrumentClass: String = TraceRunnerOptions.CALLIN_INATRUMENTATION_CLASS
+  val callinInstrumentClass: String = TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS
 
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]){
 
