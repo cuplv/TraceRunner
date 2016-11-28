@@ -16,6 +16,7 @@ import scala.collection.JavaConversions._
 class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collection.mutable.Buffer[String]) extends BodyTransformer {
 
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]) = {
+
     val logException: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
       .getMethod("void logException(java.lang.Throwable,java.lang.String,java.lang.String)")
     val declaration: String = b.getMethod.getDeclaration
@@ -28,6 +29,7 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
 
       // put an exception log in every existing catch block
       val units: PatchingChain[Unit] = b.getUnits
+      val endstmt: Unit = units.getLast
       val traps: Chain[Trap] = b.getTraps
       traps.iterator().foreach((a: Trap) => {
         val handlerUnit: Unit = a.getHandlerUnit
@@ -50,14 +52,25 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
       })
 
       //***put a catch block around full method to log and rethrow***
-      val nop1: NopStmt = Jimple.v().newNopStmt() //insert exn handling after this nop
-      units.addLast(nop1)
-      val endingNop: NopStmt = Jimple.v().newNopStmt()
-      units.addLast(endingNop)
-      val gotoNop: GotoStmt = Jimple.v().newGotoStmt(endingNop)
-      units.insertBefore(gotoNop,nop1)
+//      val nop1: NopStmt = Jimple.v().newNopStmt() //insert exn handling after this nop
+//      units.addLast(nop1)
+//      val endingNop: NopStmt = Jimple.v().newNopStmt()
+//      units.addLast(endingNop)
+//      val gotoNop: GotoStmt = Jimple.v().newGotoStmt(endingNop)
+//      units.insertBefore(gotoNop,nop1)
       //Trap that sends exceptions from method body to new end block
-//      b.getTraps.addLast(Jimple.v.newTrap(RefType.v("java.lang.Throwable"), ???, ???, ???))
+
+      val beginstmt: Unit = units.getFirst
+      val exceptionType: RefType = RefType.v("java.lang.Throwable")
+
+      val exceptionLocal: Local = Jimple.v.newLocal(Utils.nextName("exception"), exceptionType)
+      val exnUnit = Jimple.v.newIdentityStmt(exceptionLocal, Jimple.v().newCaughtExceptionRef())
+      b.getTraps.addLast(Jimple.v.newTrap(exceptionType.getSootClass,beginstmt,exnUnit,exnUnit))
+
+
+      b.getLocals.addLast(exceptionLocal)
+//      units.insertAfter(exnUnit,nop1)
+      units.addLast(exnUnit)
     }
   }
 }

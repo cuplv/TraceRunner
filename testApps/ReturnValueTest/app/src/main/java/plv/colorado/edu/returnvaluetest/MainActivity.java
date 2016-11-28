@@ -31,11 +31,11 @@ public class MainActivity extends AppCompatActivity{
 //            }
 //        };
 
-        try {
-            throw new Exception();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            throw new Exception();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 //        setContentView(R.layout.activity_main);
 //        getApplication(); //test return value from non used return
 //        TextView tv = (TextView) findViewById(R.id.h);

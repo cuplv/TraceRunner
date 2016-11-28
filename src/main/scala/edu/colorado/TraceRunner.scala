@@ -13,7 +13,8 @@ case class Config(apkPath: String = null,
                   outputDir: String = null,
                   applicationPackages: Array[String] = Array(),
                   instDir: String = null,
-                  jimpleOutput: Boolean = false
+                  jimpleOutput: Boolean = false,
+                  useJava: Boolean = false
                  ){
   val applicationPackagesr = applicationPackages.map((a:String) =>{
     Utils.packageGlobToSignatureMatchingRegex(a).r
@@ -49,6 +50,7 @@ object TraceRunner {
         c.copy(applicationPackages = x.split(":").filter(a => a != "")))
       opt[String]('i', "instrumentation-directory").action((x,c) => c.copy(instDir = x)).required()
       opt[Unit]('m', "output_jimple").action((x,c) => c.copy(jimpleOutput = true))
+      opt[Unit]('v', "use_java").action((x,c) => c.copy(useJava = true))
 
     }
     parser.parse(args,Config()) match {
@@ -63,23 +65,32 @@ object TraceRunner {
         }
         //** Set Options **
         //prefer Android APK files// -src-prec apk
-        Options.v().set_src_prec(Options.src_prec_apk)
-        if(!config.jimpleOutput) {
-          Options.v().set_output_format(Options.output_format_dex)
-        }
-        Options.v().set_android_jars(config.androidJars)
-        if(TraceRunnerOptions.USE_PHANTOM_CLASSES) {
+        if(!config.useJava) {
+          Options.v().set_src_prec(Options.src_prec_apk)
+          if (!config.jimpleOutput) {
+            Options.v().set_output_format(Options.output_format_dex)
+          }
+          Options.v().set_android_jars(config.androidJars)
+          if (TraceRunnerOptions.USE_PHANTOM_CLASSES) {
+            Options.v().set_allow_phantom_refs(true)
+          }
+          Options.v().set_whole_program(true)
+        }else{
+          Options.v().set_src_prec(Options.src_prec_java)
           Options.v().set_allow_phantom_refs(true)
+//          Scene.v().loadNecessaryClasses();
+//          Scene.v().addBasicClass("java.io.InterruptedIOException", SootClass.SIGNATURES);
+//          Options.v().set_whole_program(true);
         }
 
         Options.v().set_process_dir(List(config.apkPath).asJava)
         Options.v().set_output_dir(config.outputDir)
-        Options.v().set_whole_program(true)
 
 
 
-        Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
-        Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
+
+//        Scene.v().addBasicClass("java.io.PrintStream", SootClass.SIGNATURES);
+//        Scene.v().addBasicClass("java.lang.System", SootClass.SIGNATURES);
 
 
 
@@ -97,8 +108,8 @@ object TraceRunner {
 
         /** transformers**/
 //        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
-        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
-        PackManager.v().getPack("jtp").add(new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
 //        PackManager.v().getPack("jtp").add(new Transform("jtp.exceptionInstrumenter", new ExceptionInstrumenter(config,classes)))
 
         /**run soot transformation**/
@@ -106,6 +117,7 @@ object TraceRunner {
 //        val value: Type = NullConstant.v().getType
 
         soot.Main.main(config1);
+//        soot.Main.main(Array[String]())
 //        }else{
 //          throw new IllegalArgumentException("Application packages must be non empty")
 //        }
