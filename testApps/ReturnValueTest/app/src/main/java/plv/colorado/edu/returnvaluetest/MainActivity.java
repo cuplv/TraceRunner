@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        throw new RuntimeException("meh");
 //        Log.i("", "" + foo());
 //        Callable<String> c = new Callable<String>() {
 //            @Override

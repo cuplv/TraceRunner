@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         m.setOnPreparedListener(this);
         m.prepareAsync();
+//        m.start();
         b.setEnabled(false);
 
     }
