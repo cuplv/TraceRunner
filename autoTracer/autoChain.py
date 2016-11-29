@@ -4,10 +4,10 @@ import sys
 
 from ConfigParser import ConfigParser
 
-from utils.fsUtils import createPathIfEmpty
+from utils.fsUtils import createPathIfEmpty, recreatePath
 from startEmulator import startEmulator, killEmulator
 from autoLaunch import autoLaunch
-
+from autoInstrument import autoInstrument
 
 def get(conf, section, option, default=None):
      if conf.has_option(section, option):
@@ -15,6 +15,7 @@ def get(conf, section, option, default=None):
      else:
          return default
 
+# Extract configurations from config file.
 def getConfigs(iniFilePath='tracerConfig.ini'):
     conf = ConfigParser()
     conf.read(iniFilePath)
@@ -25,9 +26,12 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     else: 
         startEmu = True
 
-    output = get(conf, 'tracerOptions', 'outputpath', default='output')
+    inputPath      = get(conf, 'tracerOptions', 'input', default='/traceRunner/input')
+    instrumentPath = get(conf, 'tracerOptions', 'instrument', default='/traceRunner/instrument')
+    outputPath     = get(conf, 'tracerOptions', 'output', default='/traceRunner/output')
+    androidJarPath = get(conf, 'tracerOptions', 'androidJars', default='/usr/local/android-sdk/platforms')
 
-    configs = { 'startEmulator': startEmu, 'output': output }
+    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -50,8 +54,8 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     for section in conf.sections():
        if section.startswith("app:"):
            appName = section[4:]
-           appAPK  = conf.get(section, 'app')
-           tracerAPK = conf.get(section, 'tracer')
+           appAPK  = get(conf, section, 'app', default='app-debug.apk') 
+           tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
            traces = map(lambda s: s.strip(), conf.get(section, 'traces').split(','))
 
            apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'traces':traces } 
@@ -68,11 +72,14 @@ if __name__ == "__main__":
   
    configs = getConfigs(iniFilePath)
 
+   # Start emulator if requested
    if configs['startEmulator']:
        startEmulator(configs['name'], configs['sdpath'], devicePort=configs['port'], noWindow=configs['noWindow'])
 
-   createPathIfEmpty( configs['output'] )
+   recreatePath( configs['instrument'] )
+   recreatePath( configs['output'] )
 
+   # Run Auto Tracer for each test app listed in the conf file
    for appName in configs['apps']:
        print "Running Test Cases for App: %s" % appName
        
@@ -81,10 +88,21 @@ if __name__ == "__main__":
        tracerAPK = appData['tracer']
        traces = ':'.join( appData['traces'] )
 
+       # Instrument the App APK and Resign both the App and Tracer APKs
+       appInputPath    = configs['input'] + "/" + appName + "/" + appData['app']
+       tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
+       instrumentPath  = configs['instrument'] + "/" + appName
+       createPathIfEmpty( instrumentPath )
+       autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars'])
+
+       # Launch auto tracer and write outputs to the output path
+       appInstrPath = configs['instrument'] + "/" + appName + "/" + appData['app']
+       tracerInstrPath = configs['instrument'] + "/" + appName + "/" + appData['tracer']
        output = configs['output'] + "/" + appName
        createPathIfEmpty( output )
-       autoLaunch(appAPK, tracerAPK, traces, output)
+       autoLaunch(appInstrPath, tracerInstrPath, traces, output)
   
+   # Kill emulator if it was started here
    if configs['startEmulator']:
        killEmulator(configs['port'])
 

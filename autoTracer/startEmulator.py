@@ -78,6 +78,6 @@ if __name__ == "__main__":
    devicePort = sys.argv[2]
    emulatorSDPath = sys.argv[3]
     
-   startEmulator(deviceName, emulatorSDPath, devicePort=devicePort, noWindow=True)
+   startEmulator(deviceName, emulatorSDPath, devicePort=devicePort, noWindow=False)
 
 
