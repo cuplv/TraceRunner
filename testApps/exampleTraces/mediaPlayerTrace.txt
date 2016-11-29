@@ -491,8 +491,37 @@ msg {
 }
 
 msg {
-  type: CALLBACK_EXIT
+  type: CALLIN_ENTRY
   message_id: 33
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "20dd94a"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "38552250"
+      value: "0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 34
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 35
   thread_id: 1
   callbackExit {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
@@ -502,7 +531,7 @@ msg {
 
 msg {
   type: CALLBACK_ENTRY
-  message_id: 34
+  message_id: 36
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
@@ -529,8 +558,37 @@ msg {
 }
 
 msg {
+  type: CALLIN_ENTRY
+  message_id: 37
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "20dd94a"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "395efde0"
+      value: "1"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 38
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+  }
+}
+
+msg {
   type: CALLBACK_EXIT
-  message_id: 35
+  message_id: 39
   thread_id: 1
   callbackExit {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
@@ -540,7 +598,7 @@ msg {
 
 msg {
   type: CALLBACK_ENTRY
-  message_id: 36
+  message_id: 40
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
@@ -568,7 +626,7 @@ msg {
 
 msg {
   type: CALLIN_ENTRY
-  message_id: 37
+  message_id: 41
   thread_id: 1
   callinEntry {
     class_name: "android.media.MediaPlayer"
@@ -582,7 +640,7 @@ msg {
 
 msg {
   type: CALLIN_EXIT
-  message_id: 38
+  message_id: 42
   thread_id: 1
   callinExit {
     class_name: "android.media.MediaPlayer"
@@ -592,7 +650,7 @@ msg {
 
 msg {
   type: CALLBACK_EXIT
-  message_id: 39
+  message_id: 43
   thread_id: 1
   callbackExit {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
