@@ -4,15 +4,7 @@ import sys
 from subprocess import Popen, PIPE
 from shutil import copyfile
 
-if __name__ == "__main__":
-   if len(sys.argv) != 5:
-      print "usage: python autoInstrument.py <Path to App APK> <Path to Robotium Tester APK> <Path to Output> <Path to Android Jars>"
-      sys.exit(1)
-
-   appAPKPath   = sys.argv[1]
-   roboAPKPath  = sys.argv[2]
-   outputPath   = sys.argv[3]
-   andrJarsPath = sys.argv[4]
+def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath):
 
    appOutPath   = outputPath + "/" + appAPKPath.split('/')[-1]
    roboOutPath  = outputPath + "/" + roboAPKPath.split('/')[-1]
@@ -42,4 +34,18 @@ if __name__ == "__main__":
    print "   %s" % appOutPath
    print "   %s" % roboOutPath
 
-   print "All Done!"
+   print "Instrumentation and Resigning Done!"
+
+if __name__ == "__main__":
+   if len(sys.argv) != 5:
+      print "usage: python autoInstrument.py <Path to App APK> <Path to Robotium Tester APK> <Path to Output> <Path to Android Jars>"
+      sys.exit(1)
+
+   appAPKPath   = sys.argv[1]
+   roboAPKPath  = sys.argv[2]
+   outputPath   = sys.argv[3]
+   andrJarsPath = sys.argv[4]
+
+   autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath)
+
+
