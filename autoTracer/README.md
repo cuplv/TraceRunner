@@ -18,6 +18,7 @@ Quick Overview
 This sub-repository contains the following:
 
   * examples - Folder containing test apps with example auto tracer scripts
+  * startEmulator.py - Script that starts and stops a given avd device image
   * launch.py - Script that runs the test app for manual trace collection
   * autoInstrument.py - Script that instruments the test app and resigns both the test app APK and auto tracer APK
   * autoLaunch.py - Script that runs the test app with the auto tracer scripts
