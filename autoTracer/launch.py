@@ -7,7 +7,7 @@ from utils.getAPKInfo import getAPKInfo
 
 if __name__ == "__main__":
    if len(sys.argv) != 3:
-      print "usage: python autoLaunch.py <Path to (Resigned) Instrumented APK> <Path to Output Trace ProtoBuf File>"
+      print "usage: python launch.py <Path to (Resigned) Instrumented APK> <Path to Output Trace ProtoBuf File>"
       sys.exit(1)
 
    instrumented_apk_path = sys.argv[1]
