@@ -7,7 +7,7 @@ msg {
     method_name: "<init>"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     callback_caller_class: "java.lang.reflect.Constructor"
     callback_caller_method: "newInstance"
@@ -25,7 +25,7 @@ msg {
     method_name: "void <init>()"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
   }
 }
@@ -37,9 +37,6 @@ msg {
   callinExit {
     class_name: "android.support.v7.app.AppCompatActivity"
     method_name: "void <init>()"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -52,7 +49,7 @@ msg {
     method_name: "void <init>()"
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
   }
 }
@@ -64,9 +61,6 @@ msg {
   callinExit {
     class_name: "android.media.MediaPlayer"
     method_name: "void <init>()"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -89,7 +83,7 @@ msg {
     method_name: "onCreate"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     param_list {
       is_null: true
@@ -131,7 +125,7 @@ msg {
     method_name: "void onCreate(android.os.Bundle)"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     param_list {
       is_null: true
@@ -146,9 +140,6 @@ msg {
   callinExit {
     class_name: "android.support.v7.app.AppCompatActivity"
     method_name: "void onCreate(android.os.Bundle)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -161,11 +152,11 @@ msg {
     method_name: "void setContentView(int)"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     param_list {
       type: "java.lang.Integer"
-      object_id: "2383a0b"
+      object_id: "1e438042"
       value: "2130968602"
     }
   }
@@ -178,9 +169,6 @@ msg {
   callinExit {
     class_name: "android.support.v7.app.AppCompatActivity"
     method_name: "void setContentView(int)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -193,11 +181,11 @@ msg {
     method_name: "android.view.View findViewById(int)"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     param_list {
       type: "java.lang.Integer"
-      object_id: "18541cd7"
+      object_id: "2fd4873e"
       value: "2131427412"
     }
   }
@@ -212,7 +200,7 @@ msg {
     method_name: "android.view.View findViewById(int)"
     return_value {
       type: "android.widget.RelativeLayout"
-      object_id: "15c340ad"
+      object_id: "1c9edaec"
     }
   }
 }
@@ -226,11 +214,11 @@ msg {
     method_name: "void <init>(android.content.Context)"
     param_list {
       type: "android.widget.Button"
-      object_id: "3d53af73"
+      object_id: "20dd94a"
     }
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
   }
 }
@@ -242,9 +230,6 @@ msg {
   callinExit {
     class_name: "android.widget.Button"
     method_name: "void <init>(android.content.Context)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -257,11 +242,11 @@ msg {
     method_name: "void setText(java.lang.CharSequence)"
     param_list {
       type: "android.widget.Button"
-      object_id: "3d53af73"
+      object_id: "20dd94a"
     }
     param_list {
       type: "java.lang.String"
-      object_id: "300c4360"
+      object_id: "3294ceab"
       value: "play"
     }
   }
@@ -274,9 +259,6 @@ msg {
   callinExit {
     class_name: "android.widget.TextView"
     method_name: "void setText(java.lang.CharSequence)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -289,16 +271,16 @@ msg {
     method_name: "void <init>(int,int)"
     param_list {
       type: "android.view.ViewGroup$LayoutParams"
-      object_id: "c2b78de"
+      object_id: "356db8a1"
     }
     param_list {
       type: "java.lang.Integer"
-      object_id: "32e9a4d5"
+      object_id: "27caedb4"
       value: "-1"
     }
     param_list {
       type: "java.lang.Integer"
-      object_id: "3ba2d3db"
+      object_id: "cfddd52"
       value: "-2"
     }
   }
@@ -311,9 +293,6 @@ msg {
   callinExit {
     class_name: "android.view.ViewGroup$LayoutParams"
     method_name: "void <init>(int,int)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -326,11 +305,11 @@ msg {
     method_name: "void setLayoutParams(android.view.ViewGroup$LayoutParams)"
     param_list {
       type: "android.widget.Button"
-      object_id: "3d53af73"
+      object_id: "20dd94a"
     }
     param_list {
       type: "android.view.ViewGroup$LayoutParams"
-      object_id: "c2b78de"
+      object_id: "356db8a1"
     }
   }
 }
@@ -342,9 +321,6 @@ msg {
   callinExit {
     class_name: "android.view.View"
     method_name: "void setLayoutParams(android.view.ViewGroup$LayoutParams)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -357,11 +333,11 @@ msg {
     method_name: "void addView(android.view.View)"
     param_list {
       type: "android.widget.RelativeLayout"
-      object_id: "15c340ad"
+      object_id: "1c9edaec"
     }
     param_list {
       type: "android.widget.Button"
-      object_id: "3d53af73"
+      object_id: "20dd94a"
     }
   }
 }
@@ -373,9 +349,6 @@ msg {
   callinExit {
     class_name: "android.view.ViewGroup"
     method_name: "void addView(android.view.View)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -388,11 +361,11 @@ msg {
     method_name: "void setOnClickListener(android.view.View$OnClickListener)"
     param_list {
       type: "android.widget.Button"
-      object_id: "3d53af73"
+      object_id: "20dd94a"
     }
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
   }
 }
@@ -404,9 +377,6 @@ msg {
   callinExit {
     class_name: "android.view.View"
     method_name: "void setOnClickListener(android.view.View$OnClickListener)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -419,11 +389,11 @@ msg {
     method_name: "void setAudioStreamType(int)"
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
     param_list {
       type: "java.lang.Integer"
-      object_id: "39e74490"
+      object_id: "284ab89b"
       value: "3"
     }
   }
@@ -436,9 +406,6 @@ msg {
   callinExit {
     class_name: "android.media.MediaPlayer"
     method_name: "void setAudioStreamType(int)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -451,11 +418,11 @@ msg {
     method_name: "void setDataSource(java.lang.String)"
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
     param_list {
       type: "java.lang.String"
-      object_id: "283161af"
+      object_id: "27198176"
       value: "http://csel.cs.colorado.edu/~krsr8608/panjatheme.mp3"
     }
   }
@@ -468,9 +435,6 @@ msg {
   callinExit {
     class_name: "android.media.MediaPlayer"
     method_name: "void setDataSource(java.lang.String)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -483,11 +447,11 @@ msg {
     method_name: "void setOnPreparedListener(android.media.MediaPlayer$OnPreparedListener)"
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
   }
 }
@@ -499,9 +463,6 @@ msg {
   callinExit {
     class_name: "android.media.MediaPlayer"
     method_name: "void setOnPreparedListener(android.media.MediaPlayer$OnPreparedListener)"
-    return_value {
-      is_null: true
-    }
   }
 }
 
@@ -514,7 +475,7 @@ msg {
     method_name: "void prepareAsync()"
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
   }
 }
@@ -526,15 +487,41 @@ msg {
   callinExit {
     class_name: "android.media.MediaPlayer"
     method_name: "void prepareAsync()"
-    return_value {
-      is_null: true
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 33
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "20dd94a"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "38552250"
+      value: "0"
     }
   }
 }
 
 msg {
+  type: CALLIN_EXIT
+  message_id: 34
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+  }
+}
+
+msg {
   type: CALLBACK_EXIT
-  message_id: 33
+  message_id: 35
   thread_id: 1
   callbackExit {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
@@ -544,18 +531,18 @@ msg {
 
 msg {
   type: CALLBACK_ENTRY
-  message_id: 34
+  message_id: 36
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
     method_name: "onPrepared"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
     callback_caller_class: "android.media.MediaPlayer$EventHandler"
     callback_caller_method: "handleMessage"
@@ -571,8 +558,37 @@ msg {
 }
 
 msg {
+  type: CALLIN_ENTRY
+  message_id: 37
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+    param_list {
+      type: "android.widget.Button"
+      object_id: "20dd94a"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "395efde0"
+      value: "1"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 38
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setEnabled(boolean)"
+  }
+}
+
+msg {
   type: CALLBACK_EXIT
-  message_id: 35
+  message_id: 39
   thread_id: 1
   callbackExit {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
@@ -582,18 +598,18 @@ msg {
 
 msg {
   type: CALLBACK_ENTRY
-  message_id: 36
+  message_id: 40
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
     method_name: "onClick"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
-      object_id: "2e585b15"
+      object_id: "17252cf4"
     }
     param_list {
       type: "android.widget.Button"
-      object_id: "3d53af73"
+      object_id: "20dd94a"
     }
     callback_caller_class: "android.view.View"
     callback_caller_method: "performClick"
@@ -610,34 +626,31 @@ msg {
 
 msg {
   type: CALLIN_ENTRY
-  message_id: 37
+  message_id: 41
   thread_id: 1
   callinEntry {
     class_name: "android.media.MediaPlayer"
     method_name: "void start()"
     param_list {
       type: "android.media.MediaPlayer"
-      object_id: "18b32f6"
+      object_id: "79eed19"
     }
   }
 }
 
 msg {
   type: CALLIN_EXIT
-  message_id: 38
+  message_id: 42
   thread_id: 1
   callinExit {
     class_name: "android.media.MediaPlayer"
     method_name: "void start()"
-    return_value {
-      is_null: true
-    }
   }
 }
 
 msg {
   type: CALLBACK_EXIT
-  message_id: 39
+  message_id: 43
   thread_id: 1
   callbackExit {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"

@@ -178,7 +178,9 @@ public class TraceRunnerRuntimeInstrumentation {
                     = TraceMsgContainer.CallinExitMsg.newBuilder();
             callinExitMsgBuilder.setClassName(signature);
             callinExitMsgBuilder.setMethodName(methodName);
-            callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
+
+            if(!methodName.matches("void .*"))
+                callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
 
             TraceMsg msg = TraceMsg.newBuilder()
                     .setType(TraceMsg.MsgType.CALLIN_EXIT)
@@ -228,7 +230,7 @@ public class TraceRunnerRuntimeInstrumentation {
      * Taken from the javadoc of ExecutorService
      *
      */
-    static void  shutdownAndAwaitTermination() {
+    public static void  shutdownAndAwaitTermination() {
         // Disable new tasks from being submitted
         TraceRunnerRuntimeInstrumentation.executorService.shutdown();
 
