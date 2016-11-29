@@ -18,11 +18,16 @@ Quick Overview
 This sub-repository contains the following:
 
   * examples - Folder containing test apps with example auto tracer scripts
-  * autoInstrument.py - Script that instruments the test app and resigns both the test app APK and auto tracer APK
-  * autoLaunch.py - Script that runs the test app with the auto tracer script
   * launch.py - Script that runs the test app for manual trace collection
+  * autoInstrument.py - Script that instruments the test app and resigns both the test app APK and auto tracer APK
+  * autoLaunch.py - Script that runs the test app with the auto tracer scripts
+  * autoChain.py - Top-level script that optionally starts an emulator, and runs all auto test scripts specified in tracerConfig.ini
 
 Instructions
 ============
 
-TODO
+Once setup correctly, all you need to do to generate all traces is to run:
+
+> python autoChain.py
+
+TODO: Setup & Install instructions
