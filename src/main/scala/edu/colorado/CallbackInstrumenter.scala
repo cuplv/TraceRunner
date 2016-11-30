@@ -110,7 +110,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           }
         })
       }
-      val logCallbackEntrySig: String = "void logCallbackEntry(java.lang.String,java.lang.String,java.lang.String[],java.lang.String,java.lang.Object[])"
+      val logCallbackEntrySig: String = "void logCallbackEntry(java.lang.String,java.lang.String,java.lang.String[],java.lang.String,java.lang.Object[],java.lang.String)"
       val lastArgU = lastArg match {
         case Some(l) => {
 
@@ -123,16 +123,19 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
           val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
           val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
+          val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
 
-          val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes, returnType, inputArgs)))//TODO: update method call
+          val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes, returnType, inputArgs, simpleName)))//TODO: update method call
           units.insertAfter(expr,l)
           val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
           val thisAssign = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(0)), newThisRef)
           units.insertAfter(thisAssign,l)
 
           units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),l)
-          val signature2: String = method.getName
+          val signature2: String = method.getSubSignature
+          val simpleNameValue: String = method.getName
           units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(signature2)),l)
+          units.insertAfter(Jimple.v().newAssignStmt(simpleName, StringConstant.v(simpleNameValue)),l)
           units.insertAfter(Jimple.v().newAssignStmt(returnType, StringConstant.v( method.getReturnType.toString)),l)
 
 
@@ -177,7 +180,8 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
                 .getMethod(logCallbackEntrySig)
               val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
               val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
-              val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes ,returnType ,inputArgs)))
+              val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
+              val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes ,returnType ,inputArgs, simpleName)))
 
               units.insertAfter(expr,thisRef)
               //TODO: assign return type
@@ -208,8 +212,10 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 //              val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
 
 
-              val signature1: String = method.getName
+              val signature1: String = method.getSubSignature
+              val simpleNameVal: String = method.getName
               units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(signature1)),thisRef)
+              units.insertAfter(Jimple.v().newAssignStmt(simpleName, StringConstant.v(simpleNameVal)), thisRef)
               units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),thisRef)
 
             }

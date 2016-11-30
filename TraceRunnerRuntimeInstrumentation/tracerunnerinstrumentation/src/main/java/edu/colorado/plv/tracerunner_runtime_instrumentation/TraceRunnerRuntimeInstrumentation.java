@@ -87,7 +87,7 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
 
-    public static void logCallbackEntry(String signature, String methodName, String[] argumentTypes, String returnType, Object[] arguments){
+    public static void logCallbackEntry(String signature, String methodName, String[] argumentTypes, String returnType, Object[] arguments, String simpleMethodName){
 
         //Get caller info
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -107,7 +107,7 @@ public class TraceRunnerRuntimeInstrumentation {
                 } else {
                     try {
                         frameworkOverride = FrameworkResolver.get()
-                                .getFrameworkOverrideMemo(arguments[0].getClass(), methodName, argumentTypes);
+                                .getFrameworkOverrideMemo(arguments[0].getClass(), simpleMethodName, argumentTypes);
                     } catch (ClassNotFoundException e) {
                         //parsing soot signature for method is probably most brittle part so log
                         //problems well
