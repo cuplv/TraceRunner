@@ -4,7 +4,7 @@ msg {
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
-    method_name: "<init>"
+    method_name: "void <init>()"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
       object_id: "17252cf4"
@@ -80,7 +80,7 @@ msg {
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
-    method_name: "onCreate"
+    method_name: "void onCreate(android.os.Bundle)"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
       object_id: "17252cf4"
@@ -506,7 +506,7 @@ msg {
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
-    method_name: "onPrepared"
+    method_name: "void onPrepared(android.media.MediaPlayer)"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
       object_id: "17252cf4"
@@ -544,7 +544,7 @@ msg {
   thread_id: 1
   callbackEntry {
     class_name: "plv.colorado.edu.mediaplayerexample.MainActivity"
-    method_name: "onClick"
+    method_name: "void onClick(android.view.View)"
     param_list {
       type: "plv.colorado.edu.mediaplayerexample.MainActivity"
       object_id: "17252cf4"
