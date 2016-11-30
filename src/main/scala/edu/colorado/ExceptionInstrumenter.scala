@@ -57,19 +57,21 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
 
       val exceptionLocal: Local = Jimple.v.newLocal(Utils.nextName("exception"), exceptionType)
       val exnUnit: IdentityStmt = Jimple.v.newIdentityStmt(exceptionLocal, Jimple.v().newCaughtExceptionRef())
+      val shutdownMethod: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
+        .getMethod("void shutdownAndAwaitTermination()")
+      //TODO: test await shutdown cmd
+      units.addLast(exnUnit)
+
       b.getTraps.addLast(Jimple.v.newTrap(exceptionType.getSootClass,beginstmt,exnUnit,exnUnit))
 
 
       b.getLocals.addLast(exceptionLocal)
 //      units.insertAfter(exnUnit,nop1)
-      units.addLast(exnUnit)
       units.insertAfter(Jimple.v().newReturnVoidStmt(), exnUnit)
-      logExceptionUnits(b, logException, units, exnUnit)
-      units.insertAfter(Jimple.v().newThrowStmt(exceptionLocal),exnUnit)
-      val shutdownMethod: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
-        .getMethod("void shutdownAndAwaitTermination()")
-      //TODO: test await shutdown cmd
-      units.insertAfter(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(shutdownMethod.makeRef())), exnUnit)
+      val logStmt: Unit = logExceptionUnits(b, logException, units, exnUnit)
+      units.insertAfter(Jimple.v().newThrowStmt(exceptionLocal),logStmt)
+      units.insertAfter(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(shutdownMethod.makeRef())), logStmt)
+
     }
   }
 
@@ -78,9 +80,12 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
     val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
     val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
     val logCall = Jimple.v().newStaticInvokeExpr(logException.makeRef(), List[Local](lval, lsignature, methodname))
-    units.insertAfter(Jimple.v().newInvokeStmt(logCall), h)
+    val logStmt: InvokeStmt = Jimple.v().newInvokeStmt(logCall)
+    units.insertAfter(logStmt, h)
     units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(b.getMethod.getName)), h)
     units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(b.getMethod.getDeclaringClass.getName)), h)
     units.insertAfter(Jimple.v().newAssignStmt(lval, h.getLeftOp), h)
+    logStmt
+
   }
 }

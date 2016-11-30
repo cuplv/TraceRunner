@@ -87,7 +87,7 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
 
-    public static void logCallbackEntry(String signature, String methodName, String[] argumentTypes, String returnType, Object[] arguments){
+    public static void logCallbackEntry(String signature, String methodName, String[] argumentTypes, String returnType, Object[] arguments, String simpleMethodName){
 
         //Get caller info
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -107,7 +107,7 @@ public class TraceRunnerRuntimeInstrumentation {
                 } else {
                     try {
                         frameworkOverride = FrameworkResolver.get()
-                                .getFrameworkOverrideMemo(arguments[0].getClass(), methodName, argumentTypes);
+                                .getFrameworkOverrideMemo(arguments[0].getClass(), simpleMethodName, argumentTypes);
                     } catch (ClassNotFoundException e) {
                         //parsing soot signature for method is probably most brittle part so log
                         //problems well
@@ -178,7 +178,9 @@ public class TraceRunnerRuntimeInstrumentation {
                     = TraceMsgContainer.CallinExitMsg.newBuilder();
             callinExitMsgBuilder.setClassName(signature);
             callinExitMsgBuilder.setMethodName(methodName);
-            callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
+
+            if(!methodName.matches("void .*"))
+                callinExitMsgBuilder.setReturnValue(getValueMsg(returnValue));
 
             TraceMsg msg = TraceMsg.newBuilder()
                     .setType(TraceMsg.MsgType.CALLIN_EXIT)
@@ -228,7 +230,7 @@ public class TraceRunnerRuntimeInstrumentation {
      * Taken from the javadoc of ExecutorService
      *
      */
-    static void  shutdownAndAwaitTermination() {
+    public static void  shutdownAndAwaitTermination() {
         // Disable new tasks from being submitted
         TraceRunnerRuntimeInstrumentation.executorService.shutdown();
 
