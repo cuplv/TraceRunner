@@ -1,0 +1,1164 @@
+/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/bin/java -Didea.launcher.port=7535 "-Didea.launcher.bin.path=/Applications/IntelliJ IDEA 14.app/Contents/bin" -Dfile.encoding=UTF-8 -classpath "/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/ant-javafx.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/dt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/javafx-doclet.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/javafx-mx.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/jconsole.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/sa-jdi.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib/tools.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/deploy.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/htmlconverter.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/javaws.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jfxrt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/management-agent.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/plugin.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext/dnsns.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext/localedata.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext/sunec.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext/sunjce_provider.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext/sunpkcs11.jar:/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/jre/lib/ext/zipfs.jar:/Users/s/Documents/source/TraceRunner/out/production/TraceRunner:/Users/s/.gradle/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/2.6.1/d9521f2aecb909835746b7a5facf612af5e890e8/protobuf-java-2.6.1.jar:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-darwin:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/plat-mac/lib-scriptpackages:/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-tk:/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload:/System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/PyObjC:/Library/Python/2.7/site-packages:/Users/s/Library/Application Support/IntelliJIdea14/python/helpers/python-skeletons:/Users/s/Library/Caches/IntelliJIdea14/python_stubs/348993582:/Users/s/Documents/source/TraceRunner/libs/json-simple-1.1.1.jar:/Applications/IntelliJ IDEA 14.app/Contents/lib/idea_rt.jar" com.intellij.rt.execution.application.AppMain edu.colorado.plv.TraceRunner 7778 /Users/s/Desktop/log.proto plv.colorado* com.shawnmeier.*
+Attached to process 'Dalvik'
+event took (ms): 4268
+event took (ms): 18
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.<init>()
+event took (ms): 164
+com.shawnmeier.frameworkbench.Callins.<init>()
+event took (ms): 14
+event took (ms): 8
+event took (ms): 35
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.onCreate(android.os.Bundle)
+event took (ms): 42
+event took (ms): 80
+event took (ms): 16
+event took (ms): 13
+event took (ms): 20
+event took (ms): 1480
+event took (ms): 4
+event took (ms): 15
+event took (ms): 6
+event took (ms): 11
+event took (ms): 6
+event took (ms): 11
+event took (ms): 6
+event took (ms): 19
+event took (ms): 6
+event took (ms): 6
+event took (ms): 10
+event took (ms): 8
+event took (ms): 9
+event took (ms): 24
+event took (ms): 7
+event took (ms): 7
+event took (ms): 8
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 207
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 22
+event took (ms): 10
+event took (ms): 10
+event took (ms): 14
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 10017
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 26
+event took (ms): 6
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 4
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 5
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 8
+event took (ms): 5
+event took (ms): 60
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 3
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 2
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 2
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 3
+event took (ms): 2
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 2
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 3
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 4
+event took (ms): 3
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 27
+event took (ms): 3
+event took (ms): 3
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 2
+event took (ms): 1
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 8
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 4
+event took (ms): 5
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 9
+event took (ms): 6
+event took (ms): 30
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 23
+event took (ms): 6
+event took (ms): 2
+event took (ms): 21
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 18
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 14
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 25
+event took (ms): 28
+event took (ms): 24
+event took (ms): 23
+event took (ms): 29
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 4994
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 5
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 19
+event took (ms): 5
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 6
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 2
+event took (ms): 22
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 19
+event took (ms): 7
+event took (ms): 3
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 20
+event took (ms): 5
+event took (ms): 4
+event took (ms): 21
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 24
+event took (ms): 6
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 2
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 25
+event took (ms): 6
+event took (ms): 5
+event took (ms): 23
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 26
+event took (ms): 6
+event took (ms): 3
+event took (ms): 24
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 7
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 4
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 23
+event took (ms): 6
+event took (ms): 4
+event took (ms): 29
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 27
+event took (ms): 6
+event took (ms): 4
+event took (ms): 28
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 20
+event took (ms): 5
+event took (ms): 3
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 2
+event took (ms): 26
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 27
+event took (ms): 5
+event took (ms): 4
+event took (ms): 27
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 25
+event took (ms): 6
+event took (ms): 4
+event took (ms): 19
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 6
+event took (ms): 4
+event took (ms): 15
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 21
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 50
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 45
+event took (ms): 40
+event took (ms): 31
+event took (ms): 20
+event took (ms): 34
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 4989
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 6
+event took (ms): 3
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 8
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 3
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 3
+event took (ms): 2
+event took (ms): 10
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 13
+event took (ms): 3
+event took (ms): 1
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 3
+event took (ms): 2
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 13
+event took (ms): 3
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 4
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 2
+event took (ms): 1
+event took (ms): 10
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 8
+event took (ms): 2
+event took (ms): 22
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 23
+event took (ms): 5
+event took (ms): 3
+event took (ms): 21
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 46
+event took (ms): 3
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 7
+event took (ms): 4
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 5
+event took (ms): 3
+event took (ms): 36
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 28
+event took (ms): 8
+event took (ms): 4
+event took (ms): 33
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 23
+event took (ms): 5
+event took (ms): 2
+event took (ms): 15
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 21
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 15
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 17
+event took (ms): 27
+event took (ms): 19
+event took (ms): 28
+event took (ms): 27
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 4995
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 4
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 4
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 6
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 4
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 20
+event took (ms): 3
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 3
+event took (ms): 2
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 3
+event took (ms): 1
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 3
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 3
+event took (ms): 2
+event took (ms): 10
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 2
+event took (ms): 2
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 3
+event took (ms): 1
+event took (ms): 10
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 3
+event took (ms): 4
+event took (ms): 23
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 19
+event took (ms): 10
+event took (ms): 4
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 6
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 5
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 19
+event took (ms): 6
+event took (ms): 3
+event took (ms): 19
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 6
+event took (ms): 4
+event took (ms): 23
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 22
+event took (ms): 5
+event took (ms): 2
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 18
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 17
+event took (ms): 16
+event took (ms): 20
+event took (ms): 19
+event took (ms): 25
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 4999
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 4
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 6
+event took (ms): 5
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 8
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 6
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 1
+event took (ms): 1
+event took (ms): 6
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 8
+event took (ms): 2
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 3
+event took (ms): 1
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 3
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 3
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 3
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 1
+event took (ms): 4
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 3
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 13
+event took (ms): 3
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 19
+event took (ms): 4
+event took (ms): 2
+event took (ms): 23
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 22
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 6
+event took (ms): 4
+event took (ms): 21
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 27
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 18
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 27
+event took (ms): 24
+event took (ms): 14
+event took (ms): 13
+event took (ms): 19
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 5005
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 7
+event took (ms): 3
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 1
+event took (ms): 2
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 2
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 2
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 8
+event took (ms): 2
+event took (ms): 3
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 2
+event took (ms): 4
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 2
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 2
+event took (ms): 2
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 13
+event took (ms): 3
+event took (ms): 3
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 4
+event took (ms): 4
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 9
+event took (ms): 3
+event took (ms): 28
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 28
+event took (ms): 8
+event took (ms): 3
+event took (ms): 22
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 5
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 3
+event took (ms): 26
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 29
+event took (ms): 6
+event took (ms): 4
+event took (ms): 24
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 24
+event took (ms): 6
+event took (ms): 3
+event took (ms): 17
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 20
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 16
+event took (ms): 19
+event took (ms): 20
+event took (ms): 22
+event took (ms): 30
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 4982
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 5
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 4
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 2
+event took (ms): 1
+event took (ms): 8
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 6
+event took (ms): 1
+event took (ms): 1
+event took (ms): 6
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 3
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 8
+event took (ms): 2
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 2
+event took (ms): 1
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 2
+event took (ms): 1
+event took (ms): 8
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 3
+event took (ms): 3
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 3
+event took (ms): 1
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 3
+event took (ms): 2
+event took (ms): 10
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 5
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 4
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 4
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 7
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 3
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 19
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 19
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 27
+event took (ms): 24
+event took (ms): 20
+event took (ms): 20
+event took (ms): 23
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 4998
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 4
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 6
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 6
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 2
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 4
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 3
+event took (ms): 2
+event took (ms): 12
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 3
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 13
+event took (ms): 2
+event took (ms): 2
+event took (ms): 10
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 3
+event took (ms): 2
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 9
+event took (ms): 2
+event took (ms): 1
+event took (ms): 9
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 10
+event took (ms): 3
+event took (ms): 1
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 3
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 4
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 5
+event took (ms): 2
+event took (ms): 19
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 4
+event took (ms): 3
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 5
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 20
+event took (ms): 7
+event took (ms): 3
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 6
+event took (ms): 3
+event took (ms): 23
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 23
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 12
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 17
+event took (ms): 17
+event took (ms): 12
+event took (ms): 14
+event took (ms): 21
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 5003
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 4
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 5
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 5
+event took (ms): 4
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 4
+event took (ms): 3
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 6
+event took (ms): 3
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 26
+event took (ms): 5
+event took (ms): 3
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 22
+event took (ms): 5
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 20
+event took (ms): 4
+event took (ms): 2
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 13
+event took (ms): 7
+event took (ms): 4
+event took (ms): 23
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 2
+event took (ms): 1
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 3
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 25
+event took (ms): 4
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 8
+event took (ms): 2
+event took (ms): 1
+event took (ms): 8
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 2
+event took (ms): 2
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 7
+event took (ms): 2
+event took (ms): 1
+event took (ms): 7
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 20
+event took (ms): 5
+event took (ms): 3
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 5
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 18
+event took (ms): 5
+event took (ms): 5
+event took (ms): 20
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 5
+event took (ms): 3
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 19
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 26
+event took (ms): 26
+event took (ms): 17
+event took (ms): 23
+event took (ms): 25
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.run()
+event took (ms): 5003
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 24
+event took (ms): 5
+event took (ms): 4
+event took (ms): 22
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 25
+event took (ms): 6
+event took (ms): 9
+event took (ms): 19
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 22
+event took (ms): 7
+event took (ms): 4
+event took (ms): 26
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 26
+event took (ms): 5
+event took (ms): 4
+event took (ms): 22
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 22
+event took (ms): 6
+event took (ms): 3
+event took (ms): 26
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 25
+event took (ms): 5
+event took (ms): 3
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 4
+event took (ms): 3
+event took (ms): 18
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 3
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 1
+event took (ms): 1
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 14
+event took (ms): 2
+event took (ms): 2
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 15
+event took (ms): 3
+event took (ms): 1
+event took (ms): 14
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 2
+event took (ms): 1
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 2
+event took (ms): 2
+event took (ms): 17
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 12
+event took (ms): 4
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 11
+event took (ms): 3
+event took (ms): 2
+event took (ms): 11
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 3
+event took (ms): 16
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 4
+event took (ms): 2
+event took (ms): 13
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 16
+event took (ms): 5
+event took (ms): 2
+event took (ms): 19
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 21
+event took (ms): 5
+event took (ms): 2
+event took (ms): 15
+com.shawnmeier.frameworkbench.Callins.call_n_times(int, java.lang.String)
+event took (ms): 17
+event took (ms): 6
+event took (ms): 2
+event took (ms): 16
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.access$000(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 24
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark.getR()
+event took (ms): 14
+plv.colorado.edu.callinsbenchmark.CallinsBenchmark$1.<init>(plv.colorado.edu.callinsbenchmark.CallinsBenchmark)
+event took (ms): 19
+event took (ms): 16
+event took (ms): 13
+event took (ms): 13
+event took (ms): 20
+
+Process finished with exit code 130
+

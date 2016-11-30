@@ -1,0 +1,15 @@
+android.*
+com.android.*
+com.google.*
+dalvik.*
+java.*
+javax.*
+junit.*
+org.apache.http.*
+org.json.*
+org.w3c.dom.*
+org.xml.sax.*
+org.xmlpull.v1.*
+org.hamcrest.*
+com.squareup.javawriter.*
+

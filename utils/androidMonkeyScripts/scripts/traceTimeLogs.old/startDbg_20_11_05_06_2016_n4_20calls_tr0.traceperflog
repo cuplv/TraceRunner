@@ -1,0 +1,589 @@
+--------- beginning of main
+D/AndroidRuntime(27915): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(27915): CheckJNI is OFF
+D/AndroidRuntime(27915): Calling main entry com.android.commands.pm.Pm
+--------- beginning of system
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10122 user=-1: uninstall pkg
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10122 user=0: pkg removed
+I/art     ( 1011): Explicit concurrent mark sweep GC freed 846(37KB) AllocSpace objects, 12(360KB) LOS objects, 39% free, 12MB/20MB, paused 946us total 24.538ms
+I/art     ( 1128): Explicit concurrent mark sweep GC freed 1903(162KB) AllocSpace objects, 0(0B) LOS objects, 25% free, 10MB/14MB, paused 457us total 33.633ms
+I/InputReader(  577): Reconfiguring input devices.  changes=0x00000010
+I/art     (  710): Explicit concurrent mark sweep GC freed 9136(355KB) AllocSpace objects, 1(576KB) LOS objects, 39% free, 14MB/23MB, paused 1.129ms total 83.961ms
+I/ConfigFetchService(17991): PackageReceiver: Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 cmp=com.google.android.gms/.config.ConfigFetchService$PackageReceiver (has extras) }
+D/VoicemailCleanupService(26409): Cleaning up data for package: plv.colorado.edu.callinsbenchmark
+I/ConfigService(17963): onCreate
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.UPDATE pkg=com.google.android.gms } action com.google.android.gms.config.UPDATE
+I/ConfigFetchService(17991): onStartCommand Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark cmp=com.google.android.gms/.config.ConfigFetchService (has extras) }
+I/ConfigService(17963): onBind returning update interface
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.START pkg=com.google.android.gms } action com.google.android.gms.config.START
+I/ConfigService(17963): onBind returning config service
+I/LocationSettingsChecker(26471): Removing dialog suppression flag for package plv.colorado.edu.callinsbenchmark
+D/Documents(26581): Update found 6 roots in 122ms
+I/art     (  577): Explicit concurrent mark sweep GC freed 24853(1633KB) AllocSpace objects, 5(80KB) LOS objects, 33% free, 18MB/27MB, paused 1.648ms total 150.648ms
+I/art     (  577): WaitForGcToComplete blocked for 36.380ms for cause Explicit
+I/ConfigService(17963): onDestroy
+D/PackageBroadcastService(17991): Received broadcast action=android.intent.action.PACKAGE_REMOVED and uri=plv.colorado.edu.callinsbenchmark
+D/AccountUtils(17991): Clearing selected account for plv.colorado.edu.callinsbenchmark
+I/UpdateIcingCorporaServi( 1128): Updating corpora: APPS=plv.colorado.edu.callinsbenchmark, CONTACTS=MAYBE
+W/ContextImpl(26561): Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1692 android.content.ContextWrapper.startService:516 android.content.ContextWrapper.startService:516 com.android.keychain.KeyChainBroadcastReceiver.onReceive:12 android.app.ActivityThread.handleReceiver:2609 
+I/PeopleContactsSync(17991): CP2 sync disabled
+I/Icing   (17991): doRemovePackageData plv.colorado.edu.callinsbenchmark
+D/JobSchedulerService(  577): Receieved: android.intent.action.PACKAGE_REMOVED
+D/BackupManagerService(  577): Received broadcast Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 (has extras) }
+I/LatinIME:LogUtils(  899): Dictionary info: dictionary = main:en_us ; version = 47 ; date = 1402373181
+I/LatinIME:LogUtils(  899): Dictionary info: dictionary = main:en_us ; version = 47 ; date = 1402373181
+I/art     (  577): Explicit concurrent mark sweep GC freed 9675(525KB) AllocSpace objects, 0(0B) LOS objects, 33% free, 17MB/26MB, paused 8.393ms total 189.378ms
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/history_query.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+D/DownloadManager(  732): [94] Starting
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/help_responses.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/DownloadManager(  732): [94] Stop requested with status WAITING_FOR_NETWORK: NO_CONNECTION
+D/DownloadManager(  732): [94] Finished with status WAITING_FOR_NETWORK
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/metrics.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/history_query.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/help_responses.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+I/art     (17991): Explicit concurrent mark sweep GC freed 18931(1175KB) AllocSpace objects, 8(128KB) LOS objects, 25% free, 10MB/14MB, paused 885us total 61.315ms
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/metrics.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+I/ApplicationLogger( 1128): canRun() : Opted Out
+I/UpdateIcingCorporaServi( 1128): UpdateCorporaTask done [took 199 ms] updated apps [took 199 ms] 
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/history_query.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/help_responses.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/metrics.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+I/art     (27915): System.exit called, status: 0
+I/AndroidRuntime(27915): VM exiting with result code 0.
+W/ResourcesManager( 1011): Asset path '/system/framework/com.google.android.maps.jar' does not exist or contains no resources.
+D/AndroidRuntime(27996): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(27996): CheckJNI is OFF
+D/AndroidRuntime(27996): Calling main entry com.android.commands.pm.Pm
+D/Finsky  (21399): [1] PackageVerificationReceiver.checkPrerequisites: Skipping verification because network inactive
+D/Finsky  (21399): [1] PackageVerificationReceiver.checkPrerequisites: Skipping verification because network inactive
+D/DefContainer(26449): Copying /data/local/tmp/app-debug.apk to base.apk
+W/PackageManager(  577): Invalid verification token 20 received
+I/Icing   (17991): Indexing 49F237D35ED71596F6BAF877928397A88F50332C from com.google.android.googlequicksearchbox
+I/Icing   (17991): Indexing done 49F237D35ED71596F6BAF877928397A88F50332C
+D/PackageManager(  577): Renaming /data/app/vmdl1793861804.tmp to /data/app/plv.colorado.edu.callinsbenchmark-1
+I/PackageManager(  577): Running dexopt on: /data/app/plv.colorado.edu.callinsbenchmark-1/base.apk pkg=plv.colorado.edu.callinsbenchmark isa=arm vmSafeMode=false
+I/dex2oat (28023): /system/bin/dex2oat --zip-fd=6 --zip-location=/data/app/plv.colorado.edu.callinsbenchmark-1/base.apk --oat-fd=7 --oat-location=/data/dalvik-cache/arm/data@app@plv.colorado.edu.callinsbenchmark-1@base.apk@classes.dex --instruction-set=arm --instruction-set-features=div --runtime-arg -Xms64m --runtime-arg -Xmx512m --swap-fd=8
+I/dex2oat (28023): Decided to run without swap.
+W/dex2oat (28023): Before Android 4.1, method int android.support.v7.widget.ListViewCompat.lookForSelectablePosition(int, boolean) would have incorrectly overridden the package-private method in android.widget.ListView
+W/dex2oat (28023): Before Android 4.1, method android.graphics.PorterDuffColorFilter android.support.graphics.drawable.VectorDrawableCompat.updateTintFilter(android.graphics.PorterDuffColorFilter, android.content.res.ColorStateList, android.graphics.PorterDuff$Mode) would have incorrectly overridden the package-private method in android.graphics.drawable.Drawable
+I/dex2oat (28023): dex2oat took 3.051s (threads: 4) arena alloc=76KB java alloc=3MB native alloc=5MB free=869KB
+V/BackupManagerService(  577): restoreAtInstall pkg=plv.colorado.edu.callinsbenchmark token=15 restoreSet=0
+V/BackupManagerService(  577): Finishing install immediately
+I/InputReader(  577): Reconfiguring input devices.  changes=0x00000010
+W/Settings(  577): Setting install_non_market_apps has moved from android.provider.Settings.Global to android.provider.Settings.Secure, returning read-only value.
+D/BackupManagerService(  577): Received broadcast Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 (has extras) }
+W/BackupManagerService(  577): Removing schedule queue dupe of plv.colorado.edu.callinsbenchmark
+I/ConfigFetchService(17991): PackageReceiver: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 cmp=com.google.android.gms/.config.ConfigFetchService$PackageReceiver (has extras) }
+I/ConfigService(17963): onCreate
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.UPDATE pkg=com.google.android.gms } action com.google.android.gms.config.UPDATE
+I/ConfigFetchService(17991): onStartCommand Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark cmp=com.google.android.gms/.config.ConfigFetchService (has extras) }
+I/ConfigFetchService(17991): launchTask
+I/ConfigService(17963): onBind returning update interface
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.START pkg=com.google.android.gms } action com.google.android.gms.config.START
+I/ConfigService(17963): onBind returning config service
+I/ConfigFetchService(17991): service connected
+D/PackageBroadcastService(17991): Received broadcast action=android.intent.action.PACKAGE_ADDED and uri=plv.colorado.edu.callinsbenchmark
+V/ConfigFetchTask(17991): ConfigFetchTask getDeviceDataVersionInfo(): ABFEt1WW3aLMk8ZlcQohWVZTitGLEhaq-RTkVQrk5h0KeHGYXiJXflfLRf3A-EQtQDY3RZo-C5ZZXBxp81s9kxzjbz2q7LK-S-aJZWUCMkO1edmYdu56QZkXImZazcDuGVgt9jBkH5XUqpNDwXb1EaoRb6rZT6pFt6YFsLZy_3nKInPiugakbDgzjEUbJCTv5x1UmX8e68bnKOOU35V8oF9OZnhghhUwjv9SWI5byr6AB0PVdSb-j5A
+D/Documents(26581): Update found 6 roots in 108ms
+I/GoogleURLConnFactory(17991): binding HttpService
+I/ConfigClient(17991): service connected
+I/UpdateIcingCorporaServi( 1128): Updating corpora: APPS=plv.colorado.edu.callinsbenchmark, CONTACTS=MAYBE
+I/GoogleHttpClient(17991): Falling back to old SSLCertificateSocketFactory
+I/PeopleContactsSync(17991): CP2 sync disabled
+W/ConfigFetchTask(17991): exception on config fetch: java.net.UnknownHostException: Unable to resolve host "android.clients.google.com": No address associated with hostname
+I/GoogleURLConnFactory(17991): unbinding HttpService
+I/ConfigFetchService(17991): fetch service done; releasing wakelock
+I/ConfigFetchService(17991): stopping self
+I/ConfigService(17963): onDestroy
+I/art     (  577): Explicit concurrent mark sweep GC freed 57763(2MB) AllocSpace objects, 28(1588KB) LOS objects, 33% free, 17MB/25MB, paused 1.556ms total 249.717ms
+I/art     (  577): WaitForGcToComplete blocked for 192.705ms for cause HeapTrim
+I/art     (27996): System.exit called, status: 0
+I/AndroidRuntime(27996): VM exiting with result code 0.
+I/ApplicationLogger( 1128): canRun() : Opted Out
+I/UpdateIcingCorporaServi( 1128): UpdateCorporaTask done [took 226 ms] updated apps [took 226 ms] 
+D/AndroidRuntime(28068): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(28068): CheckJNI is OFF
+D/AndroidRuntime(28068): Calling main entry com.android.commands.am.Am
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10123 user=-1: set debug app
+I/ActivityManager(  577): START u0 {flg=0x10000000 cmp=plv.colorado.edu.callinsbenchmark/.CallinsBenchmark} from uid 2000 on display 0
+V/WindowManager(  577): addAppToken: AppWindowToken{152fa9d8 token=Token{2646f0bb ActivityRecord{693494a u0 plv.colorado.edu.callinsbenchmark/.CallinsBenchmark t198}}} to stack=1 task=198 at 0
+D/AndroidRuntime(28068): Shutting down VM
+V/WindowManager(  577): Adding window Window{e64bc33 u0 Starting plv.colorado.edu.callinsbenchmark} at 3 of 8 (after Window{2e3a1a90 u0 com.android.launcher/com.android.launcher2.Launcher})
+I/art     (28087): Late-enabling -Xcheck:jni
+I/ActivityManager(  577): Start proc 28087:plv.colorado.edu.callinsbenchmark/u0a123 for activity plv.colorado.edu.callinsbenchmark/.CallinsBenchmark
+W/ActivityThread(28087): Application plv.colorado.edu.callinsbenchmark is waiting for the debugger on port 8100...
+I/System.out(28087): Sending WAIT chunk
+I/OpenGLRenderer(  577): Initialized EGL, version 1.4
+I/Icing   (17991): Indexing 49F237D35ED71596F6BAF877928397A88F50332C from com.google.android.googlequicksearchbox
+I/Icing   (17991): Indexing done 49F237D35ED71596F6BAF877928397A88F50332C
+I/art     (28087): Debugger is active
+I/System.out(28087): Debugger has connected
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): waiting for debugger to settle...
+I/System.out(28087): debugger has settled (1329)
+W/ActivityManager(  577): Launch timeout has expired, giving up wake lock!
+W/art     (28087): Verification of boolean android.support.v7.view.WindowCallbackWrapper.onSearchRequested(android.view.SearchEvent) took 157.301ms
+D/Finsky  (21399): [1] 5.onFinished: Installation state replication succeeded.
+D/OpenGLRenderer(28087): Use EGL_SWAP_BEHAVIOR_PRESERVED: true
+D/Atlas   (28087): Validating map...
+V/WindowManager(  577): Adding window Window{1b4faf02 u0 plv.colorado.edu.callinsbenchmark/plv.colorado.edu.callinsbenchmark.CallinsBenchmark} at 3 of 9 (before Window{e64bc33 u0 Starting plv.colorado.edu.callinsbenchmark})
+I/Adreno-EGL(28087): <qeglDrvAPI_eglInitialize:379>: QUALCOMM Build: 01/15/15, ab0075f, Id3510ff6dc
+I/OpenGLRenderer(28087): Initialized EGL, version 1.4
+D/OpenGLRenderer(28087): Enabling debug mode 0
+I/ActivityManager(  577): Displayed plv.colorado.edu.callinsbenchmark/.CallinsBenchmark: +16s94ms
+I/benchtime(ms): (28087): 510
+I/benchtime(ms): (28087): 858
+I/benchtime(ms): (28087): 577
+I/benchtime(ms): (28087): 573
+I/benchtime(ms): (28087): 628
+I/benchtime(ms): (28087): 559
+I/benchtime(ms): (28087): 503
+I/benchtime(ms): (28087): 527
+I/benchtime(ms): (28087): 542
+I/benchtime(ms): (28087): 531
+I/benchtime(ms): (28087): 463
+I/benchtime(ms): (28087): 832
+I/benchtime(ms): (28087): 488
+I/benchtime(ms): (28087): 498
+I/benchtime(ms): (28087): 542
+I/benchtime(ms): (28087): 779
+I/benchtime(ms): (28087): 538
+I/benchtime(ms): (28087): 508
+I/benchtime(ms): (28087): 521
+I/benchtime(ms): (28087): 590
+I/Process (28087): Sending signal. PID: 28087 SIG: 9
+I/WindowState(  577): WIN DEATH: Window{1b4faf02 u0 plv.colorado.edu.callinsbenchmark/plv.colorado.edu.callinsbenchmark.CallinsBenchmark}
+I/ActivityManager(  577): Process plv.colorado.edu.callinsbenchmark (pid 28087) has died
+W/ActivityManager(  577): Force removing ActivityRecord{693494a u0 plv.colorado.edu.callinsbenchmark/.CallinsBenchmark t198}: app died, no saved state
+W/InputMethodManagerService(  577): Got RemoteException sending setActive(false) notification to pid 28087 uid 10123
+W/OpenGLRenderer( 1011): Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+W/OpenGLRenderer( 1011): Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+I/UsageStatsService(  577): User[0] Flushing usage stats to disk
+I/ActivityManager(  577): Killing 25127:com.android.chrome/u0a37 (adj 15): empty for 1800s
+I/ProcessStatsService(  577): Prepared write state in 3ms
+I/ProcessStatsService(  577): Prepared write state in 3ms
+I/ProcessStatsService(  577): Prepared write state in 10ms
+I/ActivityManager(  577): Killing 27283:com.android.providers.calendar/u0a2 (adj 15): empty for 1810s
+I/ActivityManager(  577): Killing 27314:com.google.android.calendar/u0a34 (adj 15): empty for 1814s
+D/AndroidRuntime(28221): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(28221): CheckJNI is OFF
+D/AndroidRuntime(28221): Calling main entry com.android.commands.pm.Pm
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10123 user=-1: uninstall pkg
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10123 user=0: pkg removed
+I/art     ( 1011): Explicit concurrent mark sweep GC freed 750(33KB) AllocSpace objects, 12(360KB) LOS objects, 40% free, 12MB/20MB, paused 763us total 27.895ms
+I/art     (  710): Explicit concurrent mark sweep GC freed 26734(1020KB) AllocSpace objects, 1(36KB) LOS objects, 40% free, 14MB/23MB, paused 885us total 48.283ms
+I/art     ( 1128): Explicit concurrent mark sweep GC freed 6445(444KB) AllocSpace objects, 0(0B) LOS objects, 24% free, 10MB/14MB, paused 457us total 83.564ms
+I/InputReader(  577): Reconfiguring input devices.  changes=0x00000010
+D/TaskPersister(  577): removeObsoleteFile: deleting file=198_task.xml
+D/VoicemailCleanupService(26409): Cleaning up data for package: plv.colorado.edu.callinsbenchmark
+I/art     (  577): Explicit concurrent mark sweep GC freed 37767(2MB) AllocSpace objects, 14(259KB) LOS objects, 33% free, 17MB/26MB, paused 1.709ms total 125.835ms
+I/ConfigFetchService(17991): PackageReceiver: Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 cmp=com.google.android.gms/.config.ConfigFetchService$PackageReceiver (has extras) }
+I/art     (  577): WaitForGcToComplete blocked for 23.409ms for cause Explicit
+D/Documents(26581): Update found 6 roots in 24ms
+I/ConfigService(17963): onCreate
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.UPDATE pkg=com.google.android.gms } action com.google.android.gms.config.UPDATE
+I/ConfigFetchService(17991): onStartCommand Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark cmp=com.google.android.gms/.config.ConfigFetchService (has extras) }
+I/ConfigService(17963): onBind returning update interface
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.START pkg=com.google.android.gms } action com.google.android.gms.config.START
+I/ConfigService(17963): onBind returning config service
+I/LocationSettingsChecker(26471): Removing dialog suppression flag for package plv.colorado.edu.callinsbenchmark
+I/ConfigService(17963): onDestroy
+D/PackageBroadcastService(17991): Received broadcast action=android.intent.action.PACKAGE_REMOVED and uri=plv.colorado.edu.callinsbenchmark
+D/AccountUtils(17991): Clearing selected account for plv.colorado.edu.callinsbenchmark
+I/UpdateIcingCorporaServi( 1128): Updating corpora: APPS=plv.colorado.edu.callinsbenchmark, CONTACTS=MAYBE
+W/ContextImpl(26561): Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1692 android.content.ContextWrapper.startService:516 android.content.ContextWrapper.startService:516 com.android.keychain.KeyChainBroadcastReceiver.onReceive:12 android.app.ActivityThread.handleReceiver:2609 
+I/PeopleContactsSync(17991): CP2 sync disabled
+I/Icing   (17991): doRemovePackageData plv.colorado.edu.callinsbenchmark
+D/JobSchedulerService(  577): Receieved: android.intent.action.PACKAGE_REMOVED
+D/BackupManagerService(  577): Received broadcast Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 (has extras) }
+I/art     (  577): Explicit concurrent mark sweep GC freed 11049(682KB) AllocSpace objects, 0(0B) LOS objects, 33% free, 17MB/25MB, paused 1.709ms total 166.702ms
+I/LatinIME:LogUtils(  899): Dictionary info: dictionary = main:en_us ; version = 47 ; date = 1402373181
+I/LatinIME:LogUtils(  899): Dictionary info: dictionary = main:en_us ; version = 47 ; date = 1402373181
+I/art     (28221): System.exit called, status: 0
+I/AndroidRuntime(28221): VM exiting with result code 0.
+D/DownloadManager(  732): [95] Starting
+W/DownloadManager(  732): [95] Stop requested with status WAITING_FOR_NETWORK: NO_CONNECTION
+D/DownloadManager(  732): [95] Finished with status WAITING_FOR_NETWORK
+I/ApplicationLogger( 1128): canRun() : Opted Out
+I/UpdateIcingCorporaServi( 1128): UpdateCorporaTask done [took 160 ms] updated apps [took 160 ms] 
+W/ResourcesManager( 1011): Asset path '/system/framework/com.google.android.maps.jar' does not exist or contains no resources.
+D/AndroidRuntime(28292): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(28292): CheckJNI is OFF
+D/AndroidRuntime(28292): Calling main entry com.android.commands.pm.Pm
+D/Finsky  (21399): [1] PackageVerificationReceiver.checkPrerequisites: Skipping verification because network inactive
+D/Finsky  (21399): [1] PackageVerificationReceiver.checkPrerequisites: Skipping verification because network inactive
+D/DefContainer(26449): Copying /data/local/tmp/app-debug.apk to base.apk
+W/PackageManager(  577): Invalid verification token 21 received
+D/PackageManager(  577): Renaming /data/app/vmdl1696714063.tmp to /data/app/plv.colorado.edu.callinsbenchmark-1
+I/Icing   (17991): Indexing 49F237D35ED71596F6BAF877928397A88F50332C from com.google.android.googlequicksearchbox
+I/PackageManager(  577): Running dexopt on: /data/app/plv.colorado.edu.callinsbenchmark-1/base.apk pkg=plv.colorado.edu.callinsbenchmark isa=arm vmSafeMode=false
+I/dex2oat (28329): /system/bin/dex2oat --zip-fd=6 --zip-location=/data/app/plv.colorado.edu.callinsbenchmark-1/base.apk --oat-fd=7 --oat-location=/data/dalvik-cache/arm/data@app@plv.colorado.edu.callinsbenchmark-1@base.apk@classes.dex --instruction-set=arm --instruction-set-features=div --runtime-arg -Xms64m --runtime-arg -Xmx512m --swap-fd=8
+I/Icing   (17991): Indexing done 49F237D35ED71596F6BAF877928397A88F50332C
+I/dex2oat (28329): Decided to run without swap.
+W/dex2oat (28329): Before Android 4.1, method int android.support.v7.widget.ListViewCompat.lookForSelectablePosition(int, boolean) would have incorrectly overridden the package-private method in android.widget.ListView
+W/dex2oat (28329): Before Android 4.1, method android.graphics.PorterDuffColorFilter android.support.graphics.drawable.VectorDrawableCompat.updateTintFilter(android.graphics.PorterDuffColorFilter, android.content.res.ColorStateList, android.graphics.PorterDuff$Mode) would have incorrectly overridden the package-private method in android.graphics.drawable.Drawable
+I/dex2oat (28329): dex2oat took 2.961s (threads: 4) arena alloc=110KB java alloc=3MB native alloc=5MB free=870KB
+V/BackupManagerService(  577): restoreAtInstall pkg=plv.colorado.edu.callinsbenchmark token=16 restoreSet=0
+V/BackupManagerService(  577): Finishing install immediately
+W/Settings(  577): Setting install_non_market_apps has moved from android.provider.Settings.Global to android.provider.Settings.Secure, returning read-only value.
+I/InputReader(  577): Reconfiguring input devices.  changes=0x00000010
+D/BackupManagerService(  577): Received broadcast Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 (has extras) }
+W/BackupManagerService(  577): Removing schedule queue dupe of plv.colorado.edu.callinsbenchmark
+I/ConfigFetchService(17991): PackageReceiver: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 cmp=com.google.android.gms/.config.ConfigFetchService$PackageReceiver (has extras) }
+I/ConfigService(17963): onCreate
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.UPDATE pkg=com.google.android.gms } action com.google.android.gms.config.UPDATE
+I/ConfigFetchService(17991): onStartCommand Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark cmp=com.google.android.gms/.config.ConfigFetchService (has extras) }
+D/Documents(26581): Update found 6 roots in 58ms
+I/ConfigFetchService(17991): launchTask
+I/ConfigService(17963): onBind returning update interface
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.START pkg=com.google.android.gms } action com.google.android.gms.config.START
+I/ConfigService(17963): onBind returning config service
+D/PackageBroadcastService(17991): Received broadcast action=android.intent.action.PACKAGE_ADDED and uri=plv.colorado.edu.callinsbenchmark
+I/ConfigFetchService(17991): service connected
+I/ConfigClient(17991): service connected
+V/ConfigFetchTask(17991): ConfigFetchTask getDeviceDataVersionInfo(): ABFEt1WW3aLMk8ZlcQohWVZTitGLEhaq-RTkVQrk5h0KeHGYXiJXflfLRf3A-EQtQDY3RZo-C5ZZXBxp81s9kxzjbz2q7LK-S-aJZWUCMkO1edmYdu56QZkXImZazcDuGVgt9jBkH5XUqpNDwXb1EaoRb6rZT6pFt6YFsLZy_3nKInPiugakbDgzjEUbJCTv5x1UmX8e68bnKOOU35V8oF9OZnhghhUwjv9SWI5byr6AB0PVdSb-j5A
+I/UpdateIcingCorporaServi( 1128): Updating corpora: APPS=plv.colorado.edu.callinsbenchmark, CONTACTS=MAYBE
+I/GoogleURLConnFactory(17991): binding HttpService
+I/GoogleHttpClient(17991): Falling back to old SSLCertificateSocketFactory
+I/PeopleContactsSync(17991): CP2 sync disabled
+W/ConfigFetchTask(17991): exception on config fetch: java.net.UnknownHostException: Unable to resolve host "android.clients.google.com": No address associated with hostname
+I/GoogleURLConnFactory(17991): unbinding HttpService
+I/ConfigFetchService(17991): fetch service done; releasing wakelock
+I/ConfigFetchService(17991): stopping self
+I/ConfigService(17963): onDestroy
+I/art     (  577): Explicit concurrent mark sweep GC freed 58648(3MB) AllocSpace objects, 26(760KB) LOS objects, 33% free, 17MB/25MB, paused 2.899ms total 260.399ms
+I/art     (28292): System.exit called, status: 0
+I/AndroidRuntime(28292): VM exiting with result code 0.
+I/ApplicationLogger( 1128): canRun() : Opted Out
+I/UpdateIcingCorporaServi( 1128): UpdateCorporaTask done [took 223 ms] updated apps [took 223 ms] 
+D/AndroidRuntime(28373): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(28373): CheckJNI is OFF
+D/AndroidRuntime(28373): Calling main entry com.android.commands.am.Am
+I/ActivityManager(  577): START u0 {flg=0x10000000 cmp=plv.colorado.edu.callinsbenchmark/.CallinsBenchmark} from uid 2000 on display 0
+V/WindowManager(  577): addAppToken: AppWindowToken{16b60b4 token=Token{17ae0987 ActivityRecord{3b6f55c6 u0 plv.colorado.edu.callinsbenchmark/.CallinsBenchmark t199}}} to stack=1 task=199 at 0
+V/WindowManager(  577): Adding window Window{1764a27f u0 Starting plv.colorado.edu.callinsbenchmark} at 3 of 8 (after Window{2e3a1a90 u0 com.android.launcher/com.android.launcher2.Launcher})
+D/AndroidRuntime(28373): Shutting down VM
+I/art     (28390): Late-enabling -Xcheck:jni
+I/ActivityManager(  577): Start proc 28390:plv.colorado.edu.callinsbenchmark/u0a124 for activity plv.colorado.edu.callinsbenchmark/.CallinsBenchmark
+D/OpenGLRenderer(28390): Use EGL_SWAP_BEHAVIOR_PRESERVED: true
+D/Atlas   (28390): Validating map...
+V/WindowManager(  577): Adding window Window{26025ee4 u0 plv.colorado.edu.callinsbenchmark/plv.colorado.edu.callinsbenchmark.CallinsBenchmark} at 3 of 9 (before Window{1764a27f u0 Starting plv.colorado.edu.callinsbenchmark})
+I/Adreno-EGL(28390): <qeglDrvAPI_eglInitialize:379>: QUALCOMM Build: 01/15/15, ab0075f, Id3510ff6dc
+I/OpenGLRenderer(28390): Initialized EGL, version 1.4
+D/OpenGLRenderer(28390): Enabling debug mode 0
+I/ActivityManager(  577): Displayed plv.colorado.edu.callinsbenchmark/.CallinsBenchmark: +529ms
+I/Icing   (17991): Indexing 49F237D35ED71596F6BAF877928397A88F50332C from com.google.android.googlequicksearchbox
+I/Icing   (17991): Indexing done 49F237D35ED71596F6BAF877928397A88F50332C
+I/benchtime(ms): (28390): 0
+D/Finsky  (21399): [1] 5.onFinished: Installation state replication succeeded.
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+I/PowerManagerService(  577): Going to sleep due to power button (uid 1000)...
+I/PowerManagerService(  577): Sleeping (uid 1000)...
+E/WifiStateMachine(  577): cancelDelayedScan -> 16
+D/audio_hw_primary(  195): adev_set_parameters: enter: screen_state=off
+D/PhoneStatusBar(  710): disable: < expand ICONS* alerts SYSTEM_INFO* back home recent clock search >
+D/BluetoothAdapter(  710): 1055489222: getState() :  mService = null. Returning STATE_OFF
+D/BluetoothAdapter(  710): 1055489222: getState() :  mService = null. Returning STATE_OFF
+D/BluetoothAdapter(  710): 1055489222: getState() :  mService = null. Returning STATE_OFF
+D/BluetoothAdapter(  710): 1055489222: getState() :  mService = null. Returning STATE_OFF
+I/DisplayManagerService(  577): Display device changed: DisplayDeviceInfo{"Built-in Screen": uniqueId="local:0", 768 x 1280, 60.0 fps, supportedRefreshRates [60.0], density 320, 319.79 x 318.745 dpi, appVsyncOff 0, presDeadline 17666667, touch INTERNAL, rotation 0, type BUILT_IN, state OFF, FLAG_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+D/SurfaceFlinger(  172): Set power mode=0, type=0 flinger=0xb7282550
+V/ActivityManager(  577): Display changed displayId=0
+D/audio_hw_primary(  195): select_devices: out_snd_device(2: speaker) in_snd_device(0: none)
+D/ACDB-LOADER(  195): ACDB -> send_afe_cal
+D/audio_hw_primary(  195): enable_snd_device: snd_device(2: speaker)
+D/audio_hw_primary(  195): enable_audio_route: apply and update mixer path: low-latency-playback
+D/SurfaceControl(  577): Excessive delay in setPowerMode(): 186ms
+E/ANDR-PERF-LOCK(  206): Failed to apply optimization for resource: 4 level: 0
+D/PhoneStatusBar(  710): disable: < expand ICONS alerts SYSTEM_INFO back HOME* RECENT* clock SEARCH* >
+I/PowerManagerService(  577): Waking up from sleep (uid 1000)...
+V/KeyguardServiceDelegate(  577): onScreenTurnedOn(showListener = com.android.internal.policy.impl.PhoneWindowManager$2@700a4e0)
+I/DisplayPowerController(  577): Blocking screen on until initial contents have been drawn.
+E/WifiStateMachine(  577): cancelDelayedScan -> 17
+E/qcom_sensors_hal(  577): hal_process_time_resp: Resetting rollover count from 0 to 1
+D/audio_hw_primary(  195): adev_set_parameters: enter: screen_state=on
+E/ANDR-PERF-LOCK(  206): Failed to reset optimization for resource: 4 level: 0
+D/SurfaceFlinger(  172): Set power mode=2, type=0 flinger=0xb7282550
+I/DisplayManagerService(  577): Display device changed: DisplayDeviceInfo{"Built-in Screen": uniqueId="local:0", 768 x 1280, 60.0 fps, supportedRefreshRates [60.0], density 320, 319.79 x 318.745 dpi, appVsyncOff 0, presDeadline 17666667, touch INTERNAL, rotation 0, type BUILT_IN, state ON, FLAG_DEFAULT_DISPLAY, FLAG_ROTATES_WITH_CONTENT, FLAG_SECURE, FLAG_SUPPORTS_PROTECTED_BUFFERS}
+V/ActivityManager(  577): Display changed displayId=0
+V/KeyguardServiceDelegate(  577): **** SHOWN CALLED ****
+I/DisplayPowerController(  577): Unblocked screen on after 123 ms
+D/audio_hw_primary(  195): disable_audio_route: reset and update mixer path: low-latency-playback
+D/audio_hw_primary(  195): disable_snd_device: snd_device(2: speaker)
+I/benchtime(ms): (28390): 0
+D/PhoneStatusBar(  710): disable: < expand ICONS alerts SYSTEM_INFO back HOME RECENT clock SEARCH >
+D/PhoneStatusBar(  710): disable: < expand icons* alerts system_info* back HOME RECENT clock SEARCH >
+D/audio_hw_primary(  195): select_devices: out_snd_device(2: speaker) in_snd_device(0: none)
+D/ACDB-LOADER(  195): ACDB -> send_afe_cal
+D/audio_hw_primary(  195): enable_snd_device: snd_device(2: speaker)
+D/audio_hw_primary(  195): enable_audio_route: apply and update mixer path: low-latency-playback
+D/BluetoothAdapter(  710): 1055489222: getState() :  mService = null. Returning STATE_OFF
+D/BluetoothAdapter(  710): 1055489222: getState() :  mService = null. Returning STATE_OFF
+V/UserPresentBroadcastReceiver(17945): Received Intent { act=android.intent.action.USER_PRESENT flg=0x24000010 cmp=com.google.android.gms/.auth.trustagent.UserPresentBroadcastReceiver }.
+D/PhoneStatusBar(  710): disable: < expand icons alerts system_info back home* recent* clock search* >
+W/InputMethodManagerService(  577): Window already focused, ignoring focus gain of: com.android.internal.view.IInputMethodClient$Stub$Proxy@13bf1f44 attribute=android.view.inputmethod.EditorInfo@167f382d, token = android.os.BinderProxy@33466277
+D/audio_hw_primary(  195): disable_audio_route: reset and update mixer path: low-latency-playback
+D/audio_hw_primary(  195): disable_snd_device: snd_device(2: speaker)
+I/benchtime(ms): (28390): 0
+I/benchtime(ms): (28390): 0
+W/ResourceType(  710): No package identifier when getting value for resource number 0x00000000
+W/PackageManager(  710): Failure retrieving resources for plv.colorado.edu.callinsbenchmark: Resource ID #0x0
+D/audio_hw_primary(  195): select_devices: out_snd_device(2: speaker) in_snd_device(0: none)
+D/ACDB-LOADER(  195): ACDB -> send_afe_cal
+D/audio_hw_primary(  195): enable_snd_device: snd_device(2: speaker)
+D/audio_hw_primary(  195): enable_audio_route: apply and update mixer path: low-latency-playback
+I/ActivityManager(  577): START u0 {act=com.android.systemui.recents.SHOW_RECENTS flg=0x10804000 cmp=com.android.systemui/.recents.RecentsActivity} from uid 10024 on display 0
+I/ActivityManager(  577): Killing 28390:plv.colorado.edu.callinsbenchmark/u0a124 (adj 9): remove task
+I/WindowState(  577): WIN DEATH: Window{26025ee4 u0 plv.colorado.edu.callinsbenchmark/plv.colorado.edu.callinsbenchmark.CallinsBenchmark}
+I/ActivityManager(  577): START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10200000 cmp=com.android.launcher/com.android.launcher2.Launcher} from uid 10024 on display 0
+D/TaskPersister(  577): removeObsoleteFile: deleting file=199_task.xml
+D/TaskPersister(  577): removeObsoleteFile: deleting file=199_task_thumbnail.png
+W/OpenGLRenderer( 1011): Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+W/OpenGLRenderer( 1011): Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+D/audio_hw_primary(  195): disable_audio_route: reset and update mixer path: low-latency-playback
+D/audio_hw_primary(  195): disable_snd_device: snd_device(2: speaker)
+I/GoogleURLConnFactory(17963): binding HttpService
+I/GoogleHttpClient(17963): Falling back to old SSLCertificateSocketFactory
+W/Uploader(17963): No account for auth token provided
+D/Uploader(17963): Network request failed class java.net.UnknownHostException(Unable to resolve host "play.googleapis.com": No address associated with hostname)
+I/EventLogService(17991): Opted in for usage reporting
+I/EventLogService(17991): Aggregate from 1462555003365 (log), 1462555003365 (data)
+I/ServiceDumpSys(17991): dumping service [account]
+D/AlarmManagerService(  577): Kernel timezone updated to 360 minutes west of GMT
+I/ActivityManager(  577): Start proc 28583:com.google.android.calendar/u0a34 for broadcast com.google.android.calendar/com.android.calendar.widget.CalendarAppWidgetProvider
+E/SQLiteLog(28583): (283) recovered 17 frames from WAL file /data/data/com.google.android.calendar/databases/timelydata.db-wal
+I/ActivityManager(  577): Start proc 28607:com.android.providers.calendar/u0a2 for content provider com.android.providers.calendar/.CalendarProvider2
+W/ResourcesManager(28607): Asset path '/system/framework/android.test.runner.jar' does not exist or contains no resources.
+I/CalendarProvider2(28607): Created com.android.providers.calendar.CalendarAlarmManager@26160189(com.android.providers.calendar.CalendarProvider2@24cc958e)
+E/TimelyPrefService(28583): Primary account is null
+I/AnalyticsLogBase(28583): PlayLogger.onLoggerConnected
+I/CalendarProvider2(28607): Sending notification intent: Intent { act=android.intent.action.PROVIDER_CHANGED dat=content://com.android.calendar }
+W/ContentResolver(28607): Failed to get type for: content://com.android.calendar (Unknown URL content://com.android.calendar)
+I/GAV2    (28583): Thread[GAThread,5,main]: No campaign data found.
+I/UsageStatsService(  577): User[0] Flushing usage stats to disk
+I/ProcessStatsService(  577): Prepared write state in 15ms
+I/ProcessStatsService(  577): Prepared write state in 40ms
+I/ActivityManager(  577): Killing 26409:android.process.acore/u0a4 (adj 13): empty for 1802s
+I/ActivityManager(  577): Killing 26449:com.android.defcontainer/u0a5 (adj 15): empty for 1802s
+I/ActivityManager(  577): Killing 26581:com.android.documentsui/u0a42 (adj 15): empty for 1806s
+I/ActivityManager(  577): Killing 26561:com.android.keychain/1000 (adj 15): empty for 1806s
+I/ActivityManager(  577): Killing 26471:com.google.android.gms.ui/u0a9 (adj 15): empty for 1807s
+I/EventLogService(17991): Opted in for usage reporting
+I/EventLogService(17991): Aggregate from 1462556803754 (log), 1462556803754 (data)
+I/ServiceDumpSys(17991): dumping service [account]
+I/ProcessStatsService(  577): Prepared write state in 15ms
+I/ProcessStatsService(  577): Prepared write state in 11ms
+D/AndroidRuntime(28788): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(28788): CheckJNI is OFF
+D/AndroidRuntime(28788): Calling main entry com.android.commands.pm.Pm
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10124 user=-1: uninstall pkg
+I/ActivityManager(  577): Force stopping plv.colorado.edu.callinsbenchmark appid=10124 user=0: pkg removed
+I/art     ( 1011): Explicit concurrent mark sweep GC freed 901(40KB) AllocSpace objects, 12(360KB) LOS objects, 39% free, 12MB/20MB, paused 763us total 48.863ms
+I/InputReader(  577): Reconfiguring input devices.  changes=0x00000010
+I/ActivityManager(  577): Start proc 28812:android.process.acore/u0a4 for broadcast com.android.providers.contacts/.PackageIntentReceiver
+I/art     (  710): Explicit concurrent mark sweep GC freed 94753(3MB) AllocSpace objects, 2(828KB) LOS objects, 40% free, 14MB/23MB, paused 1.617ms total 103.982ms
+I/art     (  577): Explicit concurrent mark sweep GC freed 74001(4MB) AllocSpace objects, 22(424KB) LOS objects, 33% free, 18MB/28MB, paused 2.075ms total 120.921ms
+I/art     ( 1128): Explicit concurrent mark sweep GC freed 1846(161KB) AllocSpace objects, 0(0B) LOS objects, 24% free, 10MB/14MB, paused 457us total 154.188ms
+I/art     (  577): Explicit concurrent mark sweep GC freed 13116(876KB) AllocSpace objects, 1(16KB) LOS objects, 33% free, 18MB/27MB, paused 3.265ms total 111.887ms
+D/VoicemailCleanupService(28812): Cleaning up data for package: plv.colorado.edu.callinsbenchmark
+I/ConfigFetchService(17991): PackageReceiver: Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 cmp=com.google.android.gms/.config.ConfigFetchService$PackageReceiver (has extras) }
+I/ConfigService(17963): onCreate
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.UPDATE pkg=com.google.android.gms } action com.google.android.gms.config.UPDATE
+D/JobSchedulerService(  577): Receieved: android.intent.action.PACKAGE_REMOVED
+D/BackupManagerService(  577): Received broadcast Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 (has extras) }
+I/ConfigService(17963): onBind returning update interface
+I/ConfigFetchService(17991): onStartCommand Intent { act=android.intent.action.PACKAGE_REMOVED dat=package:plv.colorado.edu.callinsbenchmark cmp=com.google.android.gms/.config.ConfigFetchService (has extras) }
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.START pkg=com.google.android.gms } action com.google.android.gms.config.START
+I/ConfigService(17963): onBind returning config service
+I/art     (28788): System.exit called, status: 0
+I/AndroidRuntime(28788): VM exiting with result code 0.
+I/ActivityManager(  577): Start proc 28839:com.google.android.gms.ui/u0a9 for broadcast com.google.android.gms/com.google.android.location.settings.PackageChangeReceiver
+I/ConfigFetchService(17991): service connected
+I/ContactLocale(28812): AddressBook Labels [en-US]: [, A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, Α, Β, Γ, Δ, Ε, Ζ, Η, Θ, Ι, Κ, Λ, Μ, Ν, Ξ, Ο, Π, Ρ, Σ, Τ, Υ, Φ, Χ, Ψ, Ω, , А, Б, В, Г, Д, Ђ, Е, Є, Ж, З, И, І, Ї, Й, Ј, К, Л, Љ, М, Н, Њ, О, П, Р, С, Т, Ћ, У, Ф, Х, Ц, Ч, Џ, Ш, Щ, Ю, Я, , א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל, מ, נ, ס, ע, פ, צ, ק, ר, ש, ת, , ا, ب, ت, ث, ج, ح, خ, د, ذ, ر, ز, س, ش, ص, ض, ط, ظ, ع, غ, ف, ق, ك, ل, م, ن, ه, و, ي, , ก, ข, ฃ, ค, ฅ, ฆ, ง, จ, ฉ, ช, ซ, ฌ, ญ, ฎ, ฏ, ฐ, ฑ, ฒ, ณ, ด, ต, ถ, ท, ธ, น, บ, ป, ผ, ฝ, พ, ฟ, ภ, ม, ย, ร, ฤ, ล, ฦ, ว, ศ, ษ, ส, ห, ฬ, อ, ฮ, , ㄱ, ㄴ, ㄷ, ㄹ, ㅁ, ㅂ, ㅅ, ㅇ, ㅈ, ㅊ, ㅋ, ㅌ, ㅍ, ㅎ, , あ, か, さ, た, な, は, ま, や, ら, わ, #, ]
+I/ActivityManager(  577): Start proc 28857:com.android.defcontainer/u0a5 for service com.android.defcontainer/.DefaultContainerService
+I/ActivityManager(  577): Killing 26292:com.google.android.partnersetup/u0a14 (adj 15): empty for 4466s
+W/ResourcesManager(28839): Asset path '/system/framework/com.android.media.remotedisplay.jar' does not exist or contains no resources.
+W/ResourcesManager(28839): Asset path '/system/framework/com.android.location.provider.jar' does not exist or contains no resources.
+I/MultiDex(28839): VM with version 2.1.0 has multidex support
+I/MultiDex(28839): install
+I/MultiDex(28839): VM has multidex support, MultiDex support library is disabled.
+I/ConfigService(17963): onDestroy
+I/ProviderInstaller(28839): Insert disabled by gate 'gms:security:enable_conscrypt_in_gms_application'
+W/ResourcesManager( 1011): Asset path '/system/framework/com.google.android.maps.jar' does not exist or contains no resources.
+I/LatinIME:LogUtils(  899): Dictionary info: dictionary = main:en_us ; version = 47 ; date = 1402373181
+I/LatinIME:LogUtils(  899): Dictionary info: dictionary = main:en_us ; version = 47 ; date = 1402373181
+I/ActivityManager(  577): Killing 26502:com.google.android.apps.docs/u0a43 (adj 15): empty for 4466s
+I/LocationSettingsChecker(28839): Removing dialog suppression flag for package plv.colorado.edu.callinsbenchmark
+D/DownloadManager(  732): [96] Starting
+W/DownloadManager(  732): [96] Stop requested with status WAITING_FOR_NETWORK: NO_CONNECTION
+D/DownloadManager(  732): [96] Finished with status WAITING_FOR_NETWORK
+I/ActivityManager(  577): Killing 21601:com.google.android.apps.plus/u0a71 (adj 15): empty for 4466s
+D/AndroidRuntime(28881): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(28881): CheckJNI is OFF
+D/PackageBroadcastService(17991): Received broadcast action=android.intent.action.PACKAGE_REMOVED and uri=plv.colorado.edu.callinsbenchmark
+D/AccountUtils(17991): Clearing selected account for plv.colorado.edu.callinsbenchmark
+I/UpdateIcingCorporaServi( 1128): Updating corpora: APPS=plv.colorado.edu.callinsbenchmark, CONTACTS=MAYBE
+I/ActivityManager(  577): Start proc 28900:com.google.android.apps.docs/u0a43 for broadcast com.google.android.apps.docs/.receivers.AppPackageAddRemoveReceiver
+I/PeopleContactsSync(17991): CP2 sync disabled
+I/Icing   (17991): doRemovePackageData plv.colorado.edu.callinsbenchmark
+D/AndroidRuntime(28881): Calling main entry com.android.commands.pm.Pm
+W/ActivityManager(  577): getRunningAppProcesses: caller 10043 does not hold REAL_GET_TASKS; limiting output
+W/ActivityManager(  577): getRunningAppProcesses: caller 10043 does not hold REAL_GET_TASKS; limiting output
+D/DocsApplication(28900): Plugin installer initialized.
+W/ActivityManager(  577): getRunningAppProcesses: caller 10043 does not hold REAL_GET_TASKS; limiting output
+D/Finsky  (21399): [1] PackageVerificationReceiver.checkPrerequisites: Skipping verification because network inactive
+I/PackageInfoHelper(28900): Provided clientMode=RELEASE, packageInfo=PackageInfo{14f0598d com.google.android.apps.docs}
+I/ApplicationLogger( 1128): canRun() : Opted Out
+I/UpdateIcingCorporaServi( 1128): UpdateCorporaTask done [took 152 ms] updated apps [took 152 ms] 
+D/DefContainer(28857): Copying /data/local/tmp/app-debug.apk to base.apk
+D/TAG     (28900): onCreate()
+D/CrossAppStateProvider(28900): Initialized StateProvider with authority: com.google.android.apps.docs.statesyncer
+W/ActivityManager(  577): getRunningAppProcesses: caller 10043 does not hold REAL_GET_TASKS; limiting output
+D/PackageManager(  577): Renaming /data/app/vmdl894414772.tmp to /data/app/plv.colorado.edu.callinsbenchmark-1
+I/PackageManager(  577): Running dexopt on: /data/app/plv.colorado.edu.callinsbenchmark-1/base.apk pkg=plv.colorado.edu.callinsbenchmark isa=arm vmSafeMode=false
+I/dex2oat (28935): /system/bin/dex2oat --zip-fd=6 --zip-location=/data/app/plv.colorado.edu.callinsbenchmark-1/base.apk --oat-fd=7 --oat-location=/data/dalvik-cache/arm/data@app@plv.colorado.edu.callinsbenchmark-1@base.apk@classes.dex --instruction-set=arm --instruction-set-features=div --runtime-arg -Xms64m --runtime-arg -Xmx512m --swap-fd=8
+I/dex2oat (28935): Decided to run without swap.
+W/dex2oat (28935): Before Android 4.1, method int android.support.v7.widget.ListViewCompat.lookForSelectablePosition(int, boolean) would have incorrectly overridden the package-private method in android.widget.ListView
+W/dex2oat (28935): Before Android 4.1, method android.graphics.PorterDuffColorFilter android.support.graphics.drawable.VectorDrawableCompat.updateTintFilter(android.graphics.PorterDuffColorFilter, android.content.res.ColorStateList, android.graphics.PorterDuff$Mode) would have incorrectly overridden the package-private method in android.graphics.drawable.Drawable
+I/Icing   (17991): Indexing 49F237D35ED71596F6BAF877928397A88F50332C from com.google.android.googlequicksearchbox
+I/Icing   (17991): Indexing done 49F237D35ED71596F6BAF877928397A88F50332C
+W/GAV2    (28900): Thread[main,5,main]: Need to call initialize() and be in fallback mode to start dispatch.
+I/ActivityManager(  577): Start proc 28959:com.android.keychain/1000 for broadcast com.android.keychain/.KeyChainBroadcastReceiver
+W/ContextImpl(28959): Calling a method in the system process without a qualified user: android.app.ContextImpl.startService:1692 android.content.ContextWrapper.startService:516 android.content.ContextWrapper.startService:516 com.android.keychain.KeyChainBroadcastReceiver.onReceive:12 android.app.ActivityThread.handleReceiver:2609 
+I/ActivityManager(  577): Start proc 28977:com.google.android.apps.plus/u0a71 for broadcast com.google.android.apps.plus/.service.PackagesMediaMonitor
+I/art     (  208): Explicit concurrent mark sweep GC freed 709(30KB) AllocSpace objects, 0(0B) LOS objects, 40% free, 7MB/11MB, paused 305us total 18.464ms
+I/art     (  208): Explicit concurrent mark sweep GC freed 5(160B) AllocSpace objects, 0(0B) LOS objects, 40% free, 7MB/11MB, paused 274us total 17.579ms
+W/ResourcesManager(28977): Asset path '/system/framework/com.google.android.maps.jar' does not exist or contains no resources.
+I/art     (  208): Explicit concurrent mark sweep GC freed 5(160B) AllocSpace objects, 0(0B) LOS objects, 40% free, 7MB/11MB, paused 305us total 16.236ms
+I/ActivityManager(  577): Start proc 29001:com.android.documentsui/u0a42 for broadcast com.android.documentsui/.PackageReceiver
+I/ActivityManager(  577): Killing 28607:com.android.providers.calendar/u0a2 (adj 15): empty for 3386s
+D/GCM     (17963): GcmService start Intent { act=com.google.android.gms.INITIALIZE flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.gcm.GcmService } com.google.android.gms.INITIALIZE
+D/AuthorizationBluetoothService(17963): Received GmsCore event: Intent { act=com.google.android.gms.INITIALIZE flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.auth.be.proximity.authorization.bt.AuthorizationBluetoothService$AutoStarter }.
+D/c       (17963): Getting all permits...
+D/a       (17963): Opening database...
+D/a       (17963): Opening database auth.proximity.permit_store...
+D/a       (17963): Closing database...
+V/GmsCoreStatsServiceLauncher(17991): Received broadcast intent Intent { act=com.google.android.gms.INITIALIZE flg=0x10 pkg=com.google.android.gms cmp=com.google.android.gms/.common.stats.GmsCoreStatsServiceLauncher }
+D/Finsky  (21399): [1] PackageVerificationReceiver.checkPrerequisites: Skipping verification because network inactive
+D/LocationInitializer(17991): Restart initialization of location
+I/ActivityManager(  577): Start proc 29050:com.android.externalstorage/u0a7 for content provider com.android.externalstorage/.ExternalStorageProvider
+I/ActivityManager(  577): Killing 28583:com.google.android.calendar/u0a34 (adj 15): empty for 3385s
+I/EventLogService(17991): Opted in for usage reporting
+I/EventLogService(17991): Aggregate from 1462558807988 (log), 1462558807988 (data)
+D/ExternalStorage(29050): After updating volumes, found 1 active roots
+D/Documents(29001): Update found 6 roots in 518ms
+I/ServiceDumpSys(17991): dumping service [account]
+D/Documents(29001): Update found 6 roots in 129ms
+I/dex2oat (28935): dex2oat took 3.505s (threads: 4) arena alloc=59KB java alloc=3MB native alloc=5MB free=865KB
+V/BackupManagerService(  577): restoreAtInstall pkg=plv.colorado.edu.callinsbenchmark token=17 restoreSet=0
+V/BackupManagerService(  577): Finishing install immediately
+W/PackageManager(  577): Invalid verification token 22 received
+W/Settings(  577): Setting install_non_market_apps has moved from android.provider.Settings.Global to android.provider.Settings.Secure, returning read-only value.
+D/BackupManagerService(  577): Received broadcast Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 (has extras) }
+I/InputReader(  577): Reconfiguring input devices.  changes=0x00000010
+W/BackupManagerService(  577): Removing schedule queue dupe of plv.colorado.edu.callinsbenchmark
+I/ActivityManager(  577): Start proc 29092:com.google.android.partnersetup/u0a14 for broadcast com.google.android.partnersetup/.RlzPingBroadcastReceiver
+D/Documents(29001): Update found 6 roots in 83ms
+I/ConfigFetchService(17991): PackageReceiver: Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark flg=0x4000010 cmp=com.google.android.gms/.config.ConfigFetchService$PackageReceiver (has extras) }
+I/ConfigService(17963): onCreate
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.UPDATE pkg=com.google.android.gms } action com.google.android.gms.config.UPDATE
+I/ConfigFetchService(17991): onStartCommand Intent { act=android.intent.action.PACKAGE_ADDED dat=package:plv.colorado.edu.callinsbenchmark cmp=com.google.android.gms/.config.ConfigFetchService (has extras) }
+I/ConfigFetchService(17991): launchTask
+I/ConfigService(17963): onBind returning update interface
+I/ConfigService(17963): onBind for Intent { act=com.google.android.gms.config.START pkg=com.google.android.gms } action com.google.android.gms.config.START
+I/ConfigService(17963): onBind returning config service
+I/ConfigFetchService(17991): service connected
+I/ConfigClient(17991): service connected
+D/PackageBroadcastService(17991): Received broadcast action=android.intent.action.PACKAGE_ADDED and uri=plv.colorado.edu.callinsbenchmark
+I/UpdateIcingCorporaServi( 1128): Updating corpora: APPS=plv.colorado.edu.callinsbenchmark, CONTACTS=MAYBE
+I/art     (  577): Explicit concurrent mark sweep GC freed 64411(3MB) AllocSpace objects, 29(2MB) LOS objects, 33% free, 17MB/26MB, paused 2.502ms total 233.145ms
+I/PeopleContactsSync(17991): CP2 sync disabled
+I/art     (17991): Explicit concurrent mark sweep GC freed 18672(1206KB) AllocSpace objects, 13(208KB) LOS objects, 25% free, 10MB/14MB, paused 793us total 40.134ms
+I/art     (28881): System.exit called, status: 0
+I/AndroidRuntime(28881): VM exiting with result code 0.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/history_query.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/help_responses.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/metrics.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/history_query.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/help_responses.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+W/SQLiteConnectionPool(17991): A SQLiteConnection object for database '/data/data/com.google.android.gms/databases/metrics.db' was leaked!  Please fix your application to end transactions in progress properly and to close the database when it is no longer needed.
+I/ApplicationLogger( 1128): canRun() : Opted Out
+I/UpdateIcingCorporaServi( 1128): UpdateCorporaTask done [took 120 ms] updated apps [took 120 ms] 
+D/AndroidRuntime(29131): >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+D/AndroidRuntime(29131): CheckJNI is OFF
+D/AndroidRuntime(29131): Calling main entry com.android.commands.am.Am
+I/ActivityManager(  577): START u0 {flg=0x10000000 cmp=plv.colorado.edu.callinsbenchmark/.CallinsBenchmark} from uid 2000 on display 0
+V/WindowManager(  577): addAppToken: AppWindowToken{13f4deb0 token=Token{31af11f3 ActivityRecord{2e9ecc62 u0 plv.colorado.edu.callinsbenchmark/.CallinsBenchmark t200}}} to stack=1 task=200 at 0
+V/WindowManager(  577): Adding window Window{3118cc6b u0 Starting plv.colorado.edu.callinsbenchmark} at 3 of 8 (after Window{2e3a1a90 u0 com.android.launcher/com.android.launcher2.Launcher})
+D/AndroidRuntime(29131): Shutting down VM
+I/ActivityManager(  577): Start proc 29149:plv.colorado.edu.callinsbenchmark/u0a125 for activity plv.colorado.edu.callinsbenchmark/.CallinsBenchmark
+I/art     (29149): Late-enabling -Xcheck:jni
+W/ContextImpl(29149): Unable to create files subdir /data/data/plv.colorado.edu.callinsbenchmark/cache
+E/ActivityThread(29149): Unable to setupGraphicsSupport due to missing cache directory
+D/OpenGLRenderer(29149): Use EGL_SWAP_BEHAVIOR_PRESERVED: true
+D/Atlas   (29149): Validating map...
+V/WindowManager(  577): Adding window Window{71553e0 u0 plv.colorado.edu.callinsbenchmark/plv.colorado.edu.callinsbenchmark.CallinsBenchmark} at 3 of 9 (before Window{3118cc6b u0 Starting plv.colorado.edu.callinsbenchmark})
+I/Adreno-EGL(29149): <qeglDrvAPI_eglInitialize:379>: QUALCOMM Build: 01/15/15, ab0075f, Id3510ff6dc
+I/OpenGLRenderer(29149): Initialized EGL, version 1.4
+D/OpenGLRenderer(29149): Enabling debug mode 0
+I/ActivityManager(  577): Displayed plv.colorado.edu.callinsbenchmark/.CallinsBenchmark: +516ms
+I/Icing   (17991): Indexing 49F237D35ED71596F6BAF877928397A88F50332C from com.google.android.googlequicksearchbox
+I/Icing   (17991): Indexing done 49F237D35ED71596F6BAF877928397A88F50332C
+W/GAV2    (28900): Thread[main,5,main]: dispatch call queued.  Need to call GAServiceManager.getInstance().initialize().
+I/GAV2    (28900): Thread[GAThread,5,main]: No campaign data found.
+V/ConfigFetchTask(17991): ConfigFetchTask getDeviceDataVersionInfo(): ABFEt1WW3aLMk8ZlcQohWVZTitGLEhaq-RTkVQrk5h0KeHGYXiJXflfLRf3A-EQtQDY3RZo-C5ZZXBxp81s9kxzjbz2q7LK-S-aJZWUCMkO1edmYdu56QZkXImZazcDuGVgt9jBkH5XUqpNDwXb1EaoRb6rZT6pFt6YFsLZy_3nKInPiugakbDgzjEUbJCTv5x1UmX8e68bnKOOU35V8oF9OZnhghhUwjv9SWI5byr6AB0PVdSb-j5A
+I/GoogleURLConnFactory(17991): binding HttpService
+I/GoogleHttpClient(17991): Falling back to old SSLCertificateSocketFactory
+W/ConfigFetchTask(17991): exception on config fetch: java.net.UnknownHostException: Unable to resolve host "android.clients.google.com": No address associated with hostname
+I/GoogleURLConnFactory(17991): unbinding HttpService
+I/ConfigFetchService(17991): fetch service done; releasing wakelock
+I/ConfigFetchService(17991): stopping self
+I/ConfigService(17963): onDestroy
+I/benchtime(ms): (29149): 0
+D/Finsky  (21399): [1] 5.onFinished: Installation state replication succeeded.
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/benchtime(ms): (29149): 0
+I/Process (29149): Sending signal. PID: 29149 SIG: 9
+I/WindowState(  577): WIN DEATH: Window{71553e0 u0 plv.colorado.edu.callinsbenchmark/plv.colorado.edu.callinsbenchmark.CallinsBenchmark}
+I/ActivityManager(  577): Process plv.colorado.edu.callinsbenchmark (pid 29149) has died
+W/ActivityManager(  577): Force removing ActivityRecord{2e9ecc62 u0 plv.colorado.edu.callinsbenchmark/.CallinsBenchmark t200}: app died, no saved state
+W/InputMethodManagerService(  577): Got RemoteException sending setActive(false) notification to pid 29149 uid 10125
+W/OpenGLRenderer( 1011): Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+W/OpenGLRenderer( 1011): Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
