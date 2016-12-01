@@ -18,6 +18,7 @@ Quick Overview
 This sub-repository contains the following:
 
   * examples - Folder containing test apps with example auto tracer scripts
+  * createEmulator.py - Script that helps you create an avd device image. Choose between x86/Android-6.0 or Arm/Android-5.1.1
   * startEmulator.py - Script that starts and stops a given avd device image
   * launch.py - Script that runs the test app for manual trace collection
   * autoInstrument.py - Script that instruments the test app and resigns both the test app APK and auto tracer APK
@@ -36,6 +37,12 @@ Once setup correctly, all you need to do to generate all traces is to run:
 
 ```
 python autoChain.py
+```
+
+If you like to run this with your own custom init file 'custom.ini', simply do the following:
+
+```
+python autoChain.py custom.ini
 ```
 
 But before that, you'll need to make sure you have set somethings up:

@@ -9,7 +9,7 @@ ARM = 2
 
 def createEmulator(avdName, abiType=ARM):
 
-    sdkHomePath = os.environ['ANDROID_SDK_HOME']
+    sdkHomePath = os.environ['ANDROID_HOME']
 
     print "Deleting existing avd " + avdName
     subprocess.call(['android', 'delete', 'avd', '-n', avdName])
@@ -39,8 +39,8 @@ if __name__ == "__main__":
       print "usage: python createEmulator.py <Name of AVD> <ABI: arm or x86>"
       sys.exit(1)
 
-   if os.environ['ANDROID_SDK_HOME'] == "":
-      print "Please set your \'ANDROID_SDK_HOME\' environment variable"
+   if os.environ['ANDROID_HOME'] == "":
+      print "Please set your \'ANDROID_HOME\' environment variable"
       sys.exit(1)
 
    avdName  = sys.argv[1]
