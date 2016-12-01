@@ -28,7 +28,7 @@ def createEmulator(avdName, abiType=ARM):
     print "Creating avd " + avdName + " @ API " + apiLevel + " and ABI " + abiType
     subprocess.call(['android','create','avd','--force','-n',avdName, '-t', apiLevel, '--abi', abiType])
 
-    #increase android vm ram
+    # increase android vm ram
     print "Replacing default config.ini with %s" % avdConfig
     shutil.copyfile(avdConfig, sdkHomePath + '/.android/avd/' + avdName + '.avd/config.ini')
 
