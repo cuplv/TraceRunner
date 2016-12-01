@@ -16,11 +16,11 @@ def createEmulator(avdName, abiType=ARM):
 
     if abiType == X86:
         abiType   = "google_apis/x86"
-        apiLevel  = '22' 
+        apiLevel  = 'android-22' 
 	avdConfig = "avdConfig/x86-6.0/config.ini"
     else:
         abiType   = "google_apis/armeabi-v7a"
-        apiLevel  = '21'
+        apiLevel  = 'android-21'
 	avdConfig = "avdConfig/arm-5.1.1/config.ini"
 
     #create new android vm
