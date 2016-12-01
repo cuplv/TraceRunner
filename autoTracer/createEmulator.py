@@ -7,7 +7,7 @@ import shutil
 X86 = 1
 ARM = 2
 
-def createEmulator(avdName, avdConfig="avdConfig/config.ini", apiLevel='21', abiType=ARM):
+def createEmulator(avdName, abiType=ARM):
 
     sdkHomePath = os.environ['ANDROID_SDK_HOME']
 
@@ -15,9 +15,13 @@ def createEmulator(avdName, avdConfig="avdConfig/config.ini", apiLevel='21', abi
     subprocess.call(['android', 'delete', 'avd', '-n', avdName])
 
     if abiType == X86:
-        abiType = "google_apis/x86"
+        abiType   = "google_apis/x86"
+        apiLevel  = '22' 
+	avdConfig = "avdConfig/x86-6.0/config.ini"
     else:
-        abiType = "google_apis/armeabi-v7a"
+        abiType   = "google_apis/armeabi-v7a"
+        apiLevel  = '21'
+	avdConfig = "avdConfig/arm-5.1.1/config.ini"
 
     #create new android vm
     #android create avd --force -n gapi_64 -t 45 --abi google_apis/x86
@@ -31,8 +35,8 @@ def createEmulator(avdName, avdConfig="avdConfig/config.ini", apiLevel='21', abi
     print "Emulator Creation Done!"
 
 if __name__ == "__main__":
-   if len(sys.argv) != 4:
-      print "usage: python createEmulator.py <Name of AVD> <Android API Level> <ABI: arm or x86>"
+   if len(sys.argv) != 3:
+      print "usage: python createEmulator.py <Name of AVD> <ABI: arm or x86>"
       sys.exit(1)
 
    if os.environ['ANDROID_SDK_HOME'] == "":
@@ -40,14 +44,13 @@ if __name__ == "__main__":
       sys.exit(1)
 
    avdName  = sys.argv[1]
-   apiLevel = sys.argv[2]
-   abiType  = sys.argv[3]
+   abiType  = sys.argv[2]
  
    if abiType in ['1','x86', 'X86']:
        abiType = X86
    else:
        abiType = ARM
 
-   createEmulator(avdName, apiLevel=apiLevel, abiType=abiType)
+   createEmulator(avdName, abiType=abiType)
 
 
