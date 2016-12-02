@@ -40,6 +40,9 @@ See the custom config file 'openstackConfig.ini' for configurations and also run
 /data/cuplv/TracerRunner/autoTracer$ python autoChain.py openstackConfig.ini
 ```
 
+Note: Currently only the ubuntu user can run the autoChain.py script. Annoyingly, to run the emulator, user must have
+permission to access /dev/kvm . Current installed quick and bruteforce fix: changed /dev/kvm group permissions to 'ubuntu'.
+
 Using Auto Tracer
 =================
 
