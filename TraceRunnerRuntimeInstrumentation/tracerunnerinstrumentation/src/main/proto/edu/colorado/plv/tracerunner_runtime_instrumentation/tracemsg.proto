@@ -84,7 +84,8 @@ message TraceMsgContainer {
         required string throwing_class_name = 1;
         required string throwing_method_name = 2;
         required string type = 3;
-        repeated StackTrace stack_trace = 4;
+        optional string exception_message = 4;
+        repeated StackTrace stack_trace = 5;
 
     }
     message StackTrace {
