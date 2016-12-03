@@ -1,0 +1,3034 @@
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 0
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity"
+    method_name: "void <init>()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+    callback_caller_class: "java.lang.reflect.Constructor"
+    callback_caller_method: "newInstance"
+    method_returnType: "void"
+    receiver_first_framework_super: "android.support.v7.app.AppCompatActivity"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 1
+  thread_id: 1
+  callinEntry {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "void <init>()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 2
+  thread_id: 1
+  callinExit {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 3
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Activity"
+    method_name: "android.app.FragmentManager getFragmentManager()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 4
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Activity"
+    method_name: "android.app.FragmentManager getFragmentManager()"
+    return_value {
+      type: "android.app.FragmentManagerImpl"
+      object_id: "a7e5fbf"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 5
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 6
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+    param_list {
+      is_null: true
+    }
+    callback_caller_class: "android.app.Activity"
+    callback_caller_method: "performCreate"
+    method_parameter_types: "android.os.Bundle"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class_name: "android.support.v7.app.AppCompatActivity"
+      is_interface: false
+    }
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class_name: "android.support.v4.app.FragmentActivity"
+      is_interface: false
+    }
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class_name: "android.support.v4.app.BaseFragmentActivityGingerbread"
+      is_interface: false
+    }
+    framework_overrides {
+      method: "void onCreate(android.os.Bundle)"
+      class_name: "android.app.Activity"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.support.v7.app.AppCompatActivity"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 7
+  thread_id: 1
+  callinEntry {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+    param_list {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 8
+  thread_id: 1
+  callinExit {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 9
+  thread_id: 1
+  callinEntry {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "void setContentView(int)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "6776590"
+      value: "2130968602"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 10
+  thread_id: 1
+  callinExit {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "void setContentView(int)"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 11
+  thread_id: 1
+  callinEntry {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "android.view.View findViewById(int)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "23964908"
+      value: "2131427413"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 12
+  thread_id: 1
+  callinExit {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "android.view.View findViewById(int)"
+    return_value {
+      type: "android.support.v7.widget.AppCompatButton"
+      object_id: "1b7edac6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 13
+  thread_id: 1
+  callinEntry {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "android.view.View findViewById(int)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity"
+      object_id: "273eac1d"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "130c3ddd"
+      value: "2131427415"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 14
+  thread_id: 1
+  callinExit {
+    class_name: "android.support.v7.app.AppCompatActivity"
+    method_name: "android.view.View findViewById(int)"
+    return_value {
+      type: "android.support.v7.widget.AppCompatButton"
+      object_id: "20f26823"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 15
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.Object"
+    method_name: "void <init>()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity$1"
+      object_id: "1613dad9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 16
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.Object"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 17
+  thread_id: 1
+  callinEntry {
+    class_name: "android.view.View"
+    method_name: "void setOnClickListener(android.view.View$OnClickListener)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatButton"
+      object_id: "1b7edac6"
+    }
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity$1"
+      object_id: "1613dad9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 18
+  thread_id: 1
+  callinExit {
+    class_name: "android.view.View"
+    method_name: "void setOnClickListener(android.view.View$OnClickListener)"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 19
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.Object"
+    method_name: "void <init>()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity$2"
+      object_id: "65e4b95"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 20
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.Object"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 21
+  thread_id: 1
+  callinEntry {
+    class_name: "android.view.View"
+    method_name: "void setOnClickListener(android.view.View$OnClickListener)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatButton"
+      object_id: "20f26823"
+    }
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity$2"
+      object_id: "65e4b95"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 22
+  thread_id: 1
+  callinExit {
+    class_name: "android.view.View"
+    method_name: "void setOnClickListener(android.view.View$OnClickListener)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 23
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity"
+    method_name: "void onCreate(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 24
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity$1"
+    method_name: "void onClick(android.view.View)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity$1"
+      object_id: "1613dad9"
+    }
+    param_list {
+      type: "android.support.v7.widget.AppCompatButton"
+      object_id: "1b7edac6"
+    }
+    callback_caller_class: "android.view.View"
+    callback_caller_method: "performClick"
+    method_parameter_types: "android.view.View"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onClick(android.view.View)"
+      class_name: "android.view.View$OnClickListener"
+      is_interface: true
+    }
+    receiver_first_framework_super: "java.lang.Object"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 25
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.FragmentManager"
+    method_name: "android.app.FragmentTransaction beginTransaction()"
+    param_list {
+      type: "android.app.FragmentManagerImpl"
+      object_id: "a7e5fbf"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 26
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.FragmentManager"
+    method_name: "android.app.FragmentTransaction beginTransaction()"
+    return_value {
+      type: "android.app.BackStackRecord"
+      object_id: "3d06fe8b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 27
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "void <init>()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 28
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Fragment"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 29
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "android.app.FragmentTransaction replace(int,android.app.Fragment)"
+    param_list {
+      type: "android.app.BackStackRecord"
+      object_id: "3d06fe8b"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "3e575614"
+      value: "2131427412"
+    }
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 30
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "android.app.FragmentTransaction replace(int,android.app.Fragment)"
+    return_value {
+      type: "android.app.BackStackRecord"
+      object_id: "3d06fe8b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 31
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "int commit()"
+    param_list {
+      type: "android.app.BackStackRecord"
+      object_id: "3d06fe8b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 32
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "int commit()"
+    return_value {
+      type: "java.lang.Integer"
+      object_id: "882a1fe"
+      value: "-1"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 33
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity$1"
+    method_name: "void onClick(android.view.View)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 34
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+    method_name: "android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+    param_list {
+      type: "com.android.internal.policy.impl.PhoneLayoutInflater"
+      object_id: "335d3875"
+    }
+    param_list {
+      type: "android.widget.FrameLayout"
+      object_id: "1d18a07b"
+    }
+    param_list {
+      is_null: true
+    }
+    callback_caller_class: "android.app.Fragment"
+    callback_caller_method: "performCreateView"
+    method_parameter_types: "android.view.LayoutInflater"
+    method_parameter_types: "android.view.ViewGroup"
+    method_parameter_types: "android.os.Bundle"
+    method_returnType: "android.view.View"
+    framework_overrides {
+      method: "android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)"
+      class_name: "android.app.Fragment"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.app.Fragment"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 35
+  thread_id: 1
+  callinEntry {
+    class_name: "android.view.LayoutInflater"
+    method_name: "android.view.View inflate(int,android.view.ViewGroup,boolean)"
+    param_list {
+      type: "com.android.internal.policy.impl.PhoneLayoutInflater"
+      object_id: "335d3875"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "2b56f2d6"
+      value: "2130968603"
+    }
+    param_list {
+      type: "android.widget.FrameLayout"
+      object_id: "1d18a07b"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "3851012d"
+      value: "0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 36
+  thread_id: 1
+  callinExit {
+    class_name: "android.view.LayoutInflater"
+    method_name: "android.view.View inflate(int,android.view.ViewGroup,boolean)"
+    return_value {
+      type: "android.widget.LinearLayout"
+      object_id: "82008b0"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 37
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+    method_name: "android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)"
+    return_value {
+      type: "android.widget.LinearLayout"
+      object_id: "82008b0"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 38
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+    param_list {
+      is_null: true
+    }
+    callback_caller_class: "android.app.Fragment"
+    callback_caller_method: "performActivityCreated"
+    method_parameter_types: "android.os.Bundle"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onActivityCreated(android.os.Bundle)"
+      class_name: "android.app.Fragment"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.app.Fragment"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 39
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+    param_list {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 40
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Fragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 41
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "android.view.View getView()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 42
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Fragment"
+    method_name: "android.view.View getView()"
+    return_value {
+      type: "android.widget.LinearLayout"
+      object_id: "82008b0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 43
+  thread_id: 1
+  callinEntry {
+    class_name: "android.view.View"
+    method_name: "android.view.View findViewById(int)"
+    param_list {
+      type: "android.widget.LinearLayout"
+      object_id: "82008b0"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "10c03dc8"
+      value: "2131427416"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 44
+  thread_id: 1
+  callinExit {
+    class_name: "android.view.View"
+    method_name: "android.view.View findViewById(int)"
+    return_value {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 45
+  thread_id: 1
+  callinEntry {
+    class_name: "android.os.CountDownTimer"
+    method_name: "void <init>(long,long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "11fa2c12"
+      value: "10000"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "395efde0"
+      value: "1000"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 46
+  thread_id: 1
+  callinExit {
+    class_name: "android.os.CountDownTimer"
+    method_name: "void <init>(long,long)"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 47
+  thread_id: 1
+  callinEntry {
+    class_name: "android.os.CountDownTimer"
+    method_name: "android.os.CountDownTimer start()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 48
+  thread_id: 1
+  callinExit {
+    class_name: "android.os.CountDownTimer"
+    method_name: "android.os.CountDownTimer start()"
+    return_value {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 49
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 50
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "3a941555"
+      value: "9994"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 51
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1937f85b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 52
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 53
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1937f85b"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 54
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "1937f85b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 55
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1937f85b"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "a3b17d3"
+      value: "9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 56
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "1937f85b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 57
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1937f85b"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 58
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "e155e2f"
+      value: "seconds remaining: 9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 59
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "e155e2f"
+      value: "seconds remaining: 9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 60
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 61
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 62
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity$2"
+    method_name: "void onClick(android.view.View)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.MainActivity$2"
+      object_id: "65e4b95"
+    }
+    param_list {
+      type: "android.support.v7.widget.AppCompatButton"
+      object_id: "20f26823"
+    }
+    callback_caller_class: "android.view.View"
+    callback_caller_method: "performClick"
+    method_parameter_types: "android.view.View"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onClick(android.view.View)"
+      class_name: "android.view.View$OnClickListener"
+      is_interface: true
+    }
+    receiver_first_framework_super: "java.lang.Object"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 63
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.FragmentManager"
+    method_name: "android.app.FragmentTransaction beginTransaction()"
+    param_list {
+      type: "android.app.FragmentManagerImpl"
+      object_id: "a7e5fbf"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 64
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.FragmentManager"
+    method_name: "android.app.FragmentTransaction beginTransaction()"
+    return_value {
+      type: "android.app.BackStackRecord"
+      object_id: "275c76e6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 65
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "void <init>()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+      object_id: "21db36d4"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 66
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Fragment"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 67
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "android.app.FragmentTransaction replace(int,android.app.Fragment)"
+    param_list {
+      type: "android.app.BackStackRecord"
+      object_id: "275c76e6"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "18c99bc3"
+      value: "2131427412"
+    }
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+      object_id: "21db36d4"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 68
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "android.app.FragmentTransaction replace(int,android.app.Fragment)"
+    return_value {
+      type: "android.app.BackStackRecord"
+      object_id: "275c76e6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 69
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "int commit()"
+    param_list {
+      type: "android.app.BackStackRecord"
+      object_id: "275c76e6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 70
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.FragmentTransaction"
+    method_name: "int commit()"
+    return_value {
+      type: "java.lang.Integer"
+      object_id: "882a1fe"
+      value: "-1"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 71
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.MainActivity$2"
+    method_name: "void onClick(android.view.View)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 72
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+    method_name: "android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+      object_id: "21db36d4"
+    }
+    param_list {
+      type: "com.android.internal.policy.impl.PhoneLayoutInflater"
+      object_id: "287ca6ca"
+    }
+    param_list {
+      type: "android.widget.FrameLayout"
+      object_id: "1d18a07b"
+    }
+    param_list {
+      is_null: true
+    }
+    callback_caller_class: "android.app.Fragment"
+    callback_caller_method: "performCreateView"
+    method_parameter_types: "android.view.LayoutInflater"
+    method_parameter_types: "android.view.ViewGroup"
+    method_parameter_types: "android.os.Bundle"
+    method_returnType: "android.view.View"
+    framework_overrides {
+      method: "android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)"
+      class_name: "android.app.Fragment"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.app.Fragment"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 73
+  thread_id: 1
+  callinEntry {
+    class_name: "android.view.LayoutInflater"
+    method_name: "android.view.View inflate(int,android.view.ViewGroup,boolean)"
+    param_list {
+      type: "com.android.internal.policy.impl.PhoneLayoutInflater"
+      object_id: "287ca6ca"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "12266596"
+      value: "2130968603"
+    }
+    param_list {
+      type: "android.widget.FrameLayout"
+      object_id: "1d18a07b"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "3851012d"
+      value: "0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 74
+  thread_id: 1
+  callinExit {
+    class_name: "android.view.LayoutInflater"
+    method_name: "android.view.View inflate(int,android.view.ViewGroup,boolean)"
+    return_value {
+      type: "android.widget.LinearLayout"
+      object_id: "2cdb4522"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 75
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+    method_name: "android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle)"
+    return_value {
+      type: "android.widget.LinearLayout"
+      object_id: "2cdb4522"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 76
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+      object_id: "21db36d4"
+    }
+    param_list {
+      is_null: true
+    }
+    callback_caller_class: "android.app.Fragment"
+    callback_caller_method: "performActivityCreated"
+    method_parameter_types: "android.os.Bundle"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onActivityCreated(android.os.Bundle)"
+      class_name: "android.app.Fragment"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.app.Fragment"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 77
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+      object_id: "21db36d4"
+    }
+    param_list {
+      is_null: true
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 78
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Fragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 79
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "android.view.View getView()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+      object_id: "21db36d4"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 80
+  thread_id: 1
+  callinExit {
+    class_name: "android.app.Fragment"
+    method_name: "android.view.View getView()"
+    return_value {
+      type: "android.widget.LinearLayout"
+      object_id: "2cdb4522"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 81
+  thread_id: 1
+  callinEntry {
+    class_name: "android.view.View"
+    method_name: "android.view.View findViewById(int)"
+    param_list {
+      type: "android.widget.LinearLayout"
+      object_id: "2cdb4522"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "2f4567a"
+      value: "2131427416"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 82
+  thread_id: 1
+  callinExit {
+    class_name: "android.view.View"
+    method_name: "android.view.View findViewById(int)"
+    return_value {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "334cf288"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 83
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "334cf288"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1aef8207"
+      value: "Fragment Replaced"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 84
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 85
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.EmptyFragment"
+    method_name: "void onActivityCreated(android.os.Bundle)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 86
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "13433ad2"
+      value: "8993"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 87
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "8b58aa0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 88
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 89
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "8b58aa0"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 90
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "8b58aa0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 91
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "8b58aa0"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "2e4f522a"
+      value: "8"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 92
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "8b58aa0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 93
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "8b58aa0"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 94
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "3c6866f6"
+      value: "seconds remaining: 8"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 95
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "3c6866f6"
+      value: "seconds remaining: 8"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 96
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 97
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 98
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "22364f93"
+      value: "7991"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 99
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "90727c9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 100
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 101
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "90727c9"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 102
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "90727c9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 103
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "90727c9"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "14561e0b"
+      value: "7"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 104
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "90727c9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 105
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "90727c9"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 106
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "17468fe7"
+      value: "seconds remaining: 7"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 107
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "17468fe7"
+      value: "seconds remaining: 7"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 108
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 109
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 110
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "3f3ad900"
+      value: "6990"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 111
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "3b89177e"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 112
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 113
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "3b89177e"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 114
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "3b89177e"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 115
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "3b89177e"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "bbac818"
+      value: "6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 116
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "3b89177e"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 117
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "3b89177e"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 118
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "7a04dc4"
+      value: "seconds remaining: 6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 119
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "7a04dc4"
+      value: "seconds remaining: 6"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 120
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 121
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 122
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "9003ea9"
+      value: "5989"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 123
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "239973cf"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 124
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 125
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "239973cf"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 126
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "239973cf"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 127
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "239973cf"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "2ba019e1"
+      value: "5"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 128
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "239973cf"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 129
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "239973cf"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 130
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "3223731d"
+      value: "seconds remaining: 5"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 131
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "3223731d"
+      value: "seconds remaining: 5"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 132
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 133
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 134
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "3cba2cde"
+      value: "4988"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 135
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1bb2098c"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 136
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 137
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1bb2098c"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 138
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "1bb2098c"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 139
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1bb2098c"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "bd8f9b6"
+      value: "4"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 140
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "1bb2098c"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 141
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1bb2098c"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 142
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "11f2fb42"
+      value: "seconds remaining: 4"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 143
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "11f2fb42"
+      value: "seconds remaining: 4"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 144
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 145
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 146
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "5bd05af"
+      value: "3987"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 147
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1a8cb145"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 148
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 149
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1a8cb145"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 150
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "1a8cb145"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 151
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1a8cb145"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "1b81fba7"
+      value: "3"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 152
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "1a8cb145"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 153
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "1a8cb145"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 154
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "dc8ab43"
+      value: "seconds remaining: 3"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 155
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "dc8ab43"
+      value: "seconds remaining: 3"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 156
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 157
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 158
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "3cc93dec"
+      value: "2985"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 159
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "18fe744a"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 160
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 161
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "18fe744a"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 162
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "18fe744a"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 163
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "18fe744a"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "38bb5e84"
+      value: "2"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 164
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "18fe744a"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 165
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "18fe744a"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 166
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "3dd1def0"
+      value: "seconds remaining: 2"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 167
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "3dd1def0"
+      value: "seconds remaining: 2"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 168
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 169
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 170
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "14503625"
+      value: "1984"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_parameter_types: "long"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onTick(long)"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 171
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "36be8dab"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 172
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "void <init>()"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 173
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "36be8dab"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "1a689436"
+      value: "seconds remaining: "
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 174
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(java.lang.String)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "36be8dab"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 175
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "36be8dab"
+    }
+    param_list {
+      type: "java.lang.Long"
+      object_id: "339004dd"
+      value: "1"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 176
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.StringBuilder append(long)"
+    return_value {
+      type: "java.lang.StringBuilder"
+      object_id: "36be8dab"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 177
+  thread_id: 1
+  callinEntry {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    param_list {
+      type: "java.lang.StringBuilder"
+      object_id: "36be8dab"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 178
+  thread_id: 1
+  callinExit {
+    class_name: "java.lang.StringBuilder"
+    method_name: "java.lang.String toString()"
+    return_value {
+      type: "java.lang.String"
+      object_id: "88d11d9"
+      value: "seconds remaining: 1"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 179
+  thread_id: 1
+  callinEntry {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+    param_list {
+      type: "android.support.v7.widget.AppCompatTextView"
+      object_id: "6fbd86"
+    }
+    param_list {
+      type: "java.lang.String"
+      object_id: "88d11d9"
+      value: "seconds remaining: 1"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXIT
+  message_id: 180
+  thread_id: 1
+  callinExit {
+    class_name: "android.widget.TextView"
+    method_name: "void setText(java.lang.CharSequence)"
+  }
+}
+
+msg {
+  type: CALLBACK_EXIT
+  message_id: 181
+  thread_id: 1
+  callbackExit {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onTick(long)"
+  }
+}
+
+msg {
+  type: CALLBACK_ENTRY
+  message_id: 182
+  thread_id: 1
+  callbackEntry {
+    class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    method_name: "void onFinish()"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+      object_id: "347f6e74"
+    }
+    callback_caller_class: "android.os.CountDownTimer$1"
+    callback_caller_method: "handleMessage"
+    method_returnType: "void"
+    framework_overrides {
+      method: "void onFinish()"
+      class_name: "android.os.CountDownTimer"
+      is_interface: false
+    }
+    receiver_first_framework_super: "android.os.CountDownTimer"
+  }
+}
+
+msg {
+  type: CALLIN_ENTRY
+  message_id: 183
+  thread_id: 1
+  callinEntry {
+    class_name: "android.app.Fragment"
+    method_name: "java.lang.String getString(int)"
+    param_list {
+      type: "com.peilunzhang.kistenstapelndistill.CountdownFragment"
+      object_id: "3ad01b81"
+    }
+    param_list {
+      type: "java.lang.Integer"
+      object_id: "35e2379b"
+      value: "2131099684"
+    }
+  }
+}
+
+msg {
+  type: CALLIN_EXEPION
+  message_id: 184
+  thread_id: 1
+  callinException {
+    throwing_class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    throwing_method_name: "onFinish"
+    type: "java.lang.IllegalStateException"
+    exception_message: "Fragment CountdownFragment{3ad01b81} not attached to Activity"
+    stack_trace {
+      method: "getResources"
+      class_name: "android.app.Fragment"
+    }
+    stack_trace {
+      method: "getString"
+      class_name: "android.app.Fragment"
+    }
+    stack_trace {
+      method: "onFinish"
+      class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    }
+    stack_trace {
+      method: "handleMessage"
+      class_name: "android.os.CountDownTimer$1"
+    }
+    stack_trace {
+      method: "dispatchMessage"
+      class_name: "android.os.Handler"
+    }
+    stack_trace {
+      method: "loop"
+      class_name: "android.os.Looper"
+    }
+    stack_trace {
+      method: "main"
+      class_name: "android.app.ActivityThread"
+    }
+    stack_trace {
+      method: "invoke"
+      class_name: "java.lang.reflect.Method"
+    }
+    stack_trace {
+      method: "invoke"
+      class_name: "java.lang.reflect.Method"
+    }
+    stack_trace {
+      method: "run"
+      class_name: "com.android.internal.os.ZygoteInit$MethodAndArgsCaller"
+    }
+    stack_trace {
+      method: "main"
+      class_name: "com.android.internal.os.ZygoteInit"
+    }
+  }
+}
+
+msg {
+  type: CALLBACK_EXCEPTION
+  message_id: 185
+  thread_id: 1
+  callbackException {
+    throwing_class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    throwing_method_name: "onFinish"
+    type: "java.lang.IllegalStateException"
+    exception_message: "Fragment CountdownFragment{3ad01b81} not attached to Activity"
+    stack_trace {
+      method: "getResources"
+      class_name: "android.app.Fragment"
+    }
+    stack_trace {
+      method: "getString"
+      class_name: "android.app.Fragment"
+    }
+    stack_trace {
+      method: "onFinish"
+      class_name: "com.peilunzhang.kistenstapelndistill.CountdownFragment$1"
+    }
+    stack_trace {
+      method: "handleMessage"
+      class_name: "android.os.CountDownTimer$1"
+    }
+    stack_trace {
+      method: "dispatchMessage"
+      class_name: "android.os.Handler"
+    }
+    stack_trace {
+      method: "loop"
+      class_name: "android.os.Looper"
+    }
+    stack_trace {
+      method: "main"
+      class_name: "android.app.ActivityThread"
+    }
+    stack_trace {
+      method: "invoke"
+      class_name: "java.lang.reflect.Method"
+    }
+    stack_trace {
+      method: "invoke"
+      class_name: "java.lang.reflect.Method"
+    }
+    stack_trace {
+      method: "run"
+      class_name: "com.android.internal.os.ZygoteInit$MethodAndArgsCaller"
+    }
+    stack_trace {
+      method: "main"
+      class_name: "com.android.internal.os.ZygoteInit"
+    }
+  }
+}
+

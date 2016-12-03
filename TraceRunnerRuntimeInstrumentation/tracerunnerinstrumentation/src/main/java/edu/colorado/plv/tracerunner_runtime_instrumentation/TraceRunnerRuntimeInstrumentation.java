@@ -66,6 +66,40 @@ public class TraceRunnerRuntimeInstrumentation {
             executorService.execute(new LogDat(container));
         }
     }
+    public static void logCallbackException(Throwable t, String signature, String methodName){
+        int id = count.getAndIncrement();
+        String message = t.getMessage();
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        String className = stackTrace[0].getClassName();
+        TraceMsgContainer.CallbackExceptionMsg.Builder builder
+                = TraceMsgContainer.CallbackExceptionMsg.newBuilder();
+        builder.setType(t.getClass().getName());
+        builder.setThrowingClassName(signature);
+        builder.setThrowingMethodName(methodName);
+        if (message != null) {
+            builder.setExceptionMessage(message);
+        }
+
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            String stMethodName = stackTraceElement.getMethodName();
+            String stClassName = stackTraceElement.getClassName();
+            TraceMsgContainer.StackTrace.Builder protoStackTrace
+                    = TraceMsgContainer.StackTrace.newBuilder();
+            protoStackTrace.setMethod(stMethodName);
+            protoStackTrace.setClassName(stClassName);
+            builder.addStackTrace(protoStackTrace);
+        }
+
+        TraceMsg msg = TraceMsg.newBuilder()
+                .setType(TraceMsg.MsgType.CALLBACK_EXCEPTION)
+                .setMessageId(id)
+                .setThreadId(Thread.currentThread().getId())
+                .setCallbackException(builder)
+                .build();
+        TraceMsgContainer container = TraceMsgContainer.newBuilder().setMsg(msg).build();
+        executorService.execute(new LogDat(container));
+
+    }
     public static void logCallbackReturn(String signature, String methodName, Object returnVal){
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         StackTraceElement callbackCaller = stackTrace[4];

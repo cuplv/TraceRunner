@@ -19,6 +19,8 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
 
     val logException: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
       .getMethod("void logException(java.lang.Throwable,java.lang.String,java.lang.String)")
+    val logCallbackException: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
+      .getMethod("void logCallbackException(java.lang.Throwable,java.lang.String,java.lang.String)")
     val declaration: String = b.getMethod.getDeclaration
     val method: SootMethod = b.getMethod()
 
@@ -35,7 +37,7 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
         val handlerUnit: Unit = a.getHandlerUnit
         handlerUnit match{
           case h: JIdentityStmt => {
-            logExceptionUnits(b, logException, units, h)
+            logExceptionUnits(b, logException, units, h, false, logCallbackException)
           }
           case h =>{
             ??? //JVM and dalvik vm throw bytecode verification exception if this happens
@@ -68,24 +70,32 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
       b.getLocals.addLast(exceptionLocal)
 //      units.insertAfter(exnUnit,nop1)
       units.insertAfter(Jimple.v().newReturnVoidStmt(), exnUnit)
-      val logStmt: Unit = logExceptionUnits(b, logException, units, exnUnit)
+      val logStmt: Unit = logExceptionUnits(b, logException, units, exnUnit, true, logCallbackException)
       units.insertAfter(Jimple.v().newThrowStmt(exceptionLocal),logStmt)
       units.insertAfter(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(shutdownMethod.makeRef())), logStmt)
 
     }
   }
 
-  def logExceptionUnits(b: Body, logException: SootMethod, units: PatchingChain[Unit], h: IdentityStmt) = {
+  def logExceptionUnits(b: Body, logException: SootMethod, units: PatchingChain[Unit], h: IdentityStmt, isTerminal: Boolean, logCallbackException: SootMethod) = {
     val lval = Jimple.v().newLocal(Utils.nextName("lval"), h.getLeftOp().getType)
     val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
     val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
-    val logCall = Jimple.v().newStaticInvokeExpr(logException.makeRef(), List[Local](lval, lsignature, methodname))
+    val argsLog: List[Local] = List[Local](lval, lsignature, methodname)
+    val logCall = Jimple.v().newStaticInvokeExpr(logException.makeRef(), argsLog)
     val logStmt: InvokeStmt = Jimple.v().newInvokeStmt(logCall)
+    val emit: Unit = if(isTerminal) {
+      val logTerm = Jimple.v().newStaticInvokeExpr(logCallbackException.makeRef(), argsLog)
+      val logTermStmt: InvokeStmt = Jimple.v().newInvokeStmt(logTerm)
+      units.insertAfter(logTermStmt,h)
+      logTermStmt
+    }else{logStmt}
     units.insertAfter(logStmt, h)
     units.insertAfter(Jimple.v().newAssignStmt(methodname, StringConstant.v(b.getMethod.getName)), h)
     units.insertAfter(Jimple.v().newAssignStmt(lsignature, StringConstant.v(b.getMethod.getDeclaringClass.getName)), h)
     units.insertAfter(Jimple.v().newAssignStmt(lval, h.getLeftOp), h)
-    logStmt
+
+    emit
 
   }
 }
