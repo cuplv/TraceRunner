@@ -33,6 +33,11 @@ object Utils {
       }
     )
   }
+  def assertNotPhantom(c: SootClass) ={
+    if(c.isPhantom){
+      throw new RuntimeException("please check classpath, phantom java runtime detected")
+    }
+  }
   def packageGlobToSignatureMatchingRegex(glob: String): String = {
     globToRegex(glob)
   }
@@ -41,10 +46,12 @@ object Utils {
     "traceRunnerTempVar_" + label + "_" + nameIndex.getAndIncrement()
   }
   def autoBox(v: Value): Value = {
+    val integerClazz: SootClass = Scene.v()
+      .getSootClass("java.lang.Integer")
+      assertNotPhantom(integerClazz)
     v.getType() match {
       case i: IntType => {
-        val boxmethod = Scene.v()
-          .getSootClass("java.lang.Integer")
+        val boxmethod = integerClazz
           .getMethod("java.lang.Integer valueOf(int)")
           Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
       }
