@@ -35,6 +35,8 @@ def startEmulator(deviceName, emulatorSDPath, devicePort=None, noWindow=True):
     subprocess.call(['adb', 'wait-for-device'])
 
     #wait for sdcard to mount
+    
+    '''
     while(True):
        res = subprocess.Popen(['bash', '-c', 'adb shell mount |grep sdcard |wc -l'], stdout=subprocess.PIPE)
        (out,something) = res.communicate()
@@ -43,6 +45,7 @@ def startEmulator(deviceName, emulatorSDPath, devicePort=None, noWindow=True):
        if outi > 1:
           break
        time.sleep(10)
+    '''
 
     #wait for boot animation to go away
     while(True):

@@ -29,7 +29,7 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     inputPath      = get(conf, 'tracerOptions', 'input', default='/traceRunner/input')
     instrumentPath = get(conf, 'tracerOptions', 'instrument', default='/traceRunner/instrument')
     outputPath     = get(conf, 'tracerOptions', 'output', default='/traceRunner/output')
-    androidJarPath = get(conf, 'tracerOptions', 'androidJars', default='/usr/local/android-sdk/platforms')
+    androidJarPath = get(conf, 'tracerOptions', 'androidjars', default='/usr/local/android-sdk/platforms')
 
     configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath }
 

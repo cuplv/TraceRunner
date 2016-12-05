@@ -16,11 +16,11 @@ def createEmulator(avdName, abiType=ARM):
 
     if abiType == X86:
         abiType   = "google_apis/x86"
-        apiLevel  = '22' 
+        apiLevel  = 'android-23' 
 	avdConfig = "avdConfig/x86-6.0/config.ini"
     else:
         abiType   = "google_apis/armeabi-v7a"
-        apiLevel  = '21'
+        apiLevel  = 'android-22'
 	avdConfig = "avdConfig/arm-5.1.1/config.ini"
 
     #create new android vm
@@ -28,7 +28,7 @@ def createEmulator(avdName, abiType=ARM):
     print "Creating avd " + avdName + " @ API " + apiLevel + " and ABI " + abiType
     subprocess.call(['android','create','avd','--force','-n',avdName, '-t', apiLevel, '--abi', abiType])
 
-    #increase android vm ram
+    # increase android vm ram
     print "Replacing default config.ini with %s" % avdConfig
     shutil.copyfile(avdConfig, sdkHomePath + '/.android/avd/' + avdName + '.avd/config.ini')
 
