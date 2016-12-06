@@ -146,13 +146,14 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   }
   def getOverrideableMethods(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
     clazz.getMethods.flatMap{(a: SootMethod) =>
-      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !isExcluded(exclude,a)){
+      val excluded: Boolean = isExcluded(exclude, a)
+      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded){
         Some(a)
       }else None
     }.toSet
   }
   def isExcluded(exclude: Set[SootMethod], method: SootMethod): Boolean ={
-    !exclude.exists(a => {
+    val ret = !exclude.exists(a => {
       if(a.getName == method.getName){
         if((a.getParameterTypes zip method.getParameterTypes).exists(t => t._1 != t._2)){
           false
@@ -163,5 +164,6 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
         false
       }
     })
+    if(exclude.isEmpty) false else ret
   }
 }

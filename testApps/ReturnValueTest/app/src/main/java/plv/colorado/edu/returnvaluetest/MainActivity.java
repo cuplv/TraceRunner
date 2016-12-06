@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        dismissDialog(3);
-        onMenuItemSelected(0,null);
+//        dismissDialog(3);
+//        onMenuItemSelected(0,null);
 //        throw new RuntimeException("meh");
 //        Log.i("", "" + foo());
 //        Callable<String> c = new Callable<String>() {
