@@ -23,8 +23,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
 //    name == "onPause"
 //    false
 //    !name.contains("<init>") &&
-//     name(0) == 111 //111
-
+//     name(0) < 112 // lower 110 no fail 130 fai
 //    name.startsWith("on") && name(2) == 77 //<=77 fail : <=76 works 77 M
 //    name == ""
     true
@@ -141,21 +140,23 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   final def getOverrideableMethodsChain(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
     if(clazz.getName != "java.lang.Object"){
       val curOverrideableMethods: Set[SootMethod] = getOverrideableMethods(clazz, exclude)
-      curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, curOverrideableMethods.union(exclude)))
+      curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, clazz.getMethods.toSet.union(exclude)))
     }else Set[SootMethod]()
   }
   def getOverrideableMethods(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
     clazz.getMethods.flatMap{(a: SootMethod) =>
       val excluded: Boolean = isExcluded(exclude, a)
-      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded){
+      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded ){
         Some(a)
       }else None
     }.toSet
   }
   def isExcluded(exclude: Set[SootMethod], method: SootMethod): Boolean ={
-    val ret = !exclude.exists(a => {
-      if(a.getName == method.getName){
-        if((a.getParameterTypes zip method.getParameterTypes).exists(t => t._1 != t._2)){
+    val ret = exclude.exists(a => {
+      val name: String = method.getName
+      val name1: String = a.getName
+      if(name1 == name){
+        if(a.getParameterTypes.size != 0 &&(a.getParameterTypes zip method.getParameterTypes).exists(t => t._1 != t._2)){
           false
         }else{
           true
