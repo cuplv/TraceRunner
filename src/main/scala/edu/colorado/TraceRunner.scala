@@ -96,8 +96,8 @@ object TraceRunner {
 
         /**add instrumentation to classpath**/
         val path: String = Scene.v().getSootClassPath
-
-        Scene.v().setSootClassPath(path + ":" + config.instDir + ":/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar")
+//":/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar")
+        Scene.v().setSootClassPath(path + ":" + config.instDir +":" + sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
 
         val classes: scala.collection.mutable.Buffer[String] = JUtils.getClasses(config.instDir).asScala
         classes.foreach(a => Scene.v().addBasicClass(a))
