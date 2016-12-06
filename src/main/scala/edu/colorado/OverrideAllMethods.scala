@@ -23,10 +23,12 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
 //    name == "onPause"
 //    false
 //    !name.contains("<init>") &&
-     name(0) < 110
-//    name.startsWith("dispatch") && name(8) == 71
+//     name(0) == 111 //111
+
+//    name.startsWith("on") && name(2) == 77 //<=77 fail : <=76 works 77 M
 //    name == ""
-//    true
+    true
+//    name.startsWith("onMenuItemSelected") //menuitemselected
   }
 
 
@@ -37,7 +39,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       if(!Utils.isFrameworkClass(applicationClass.getName)) {
         val superclass: SootClass = applicationClass.getSuperclass
 
-        val methodsToOverride = getOverrideableMethodsChain(superclass).foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => { //TODO: map from method name/type to return
+        val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]()).foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
           val parameterTypes: List[Type] = a.getParameterTypes.toList
           val mkey: (String, List[Type], Boolean, Int) = (a.getName, parameterTypes,a.isAbstract, a.getModifiers)
           if(acc.contains(mkey)) {
@@ -135,16 +137,31 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       Scene.v().makeMethodRef(clazz, name, args,returnType,false)
     }
   }
-  final def getOverrideableMethodsChain(clazz: SootClass): Set[SootMethod] = {
+
+  final def getOverrideableMethodsChain(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
     if(clazz.getName != "java.lang.Object"){
-      getOverrideableMethods(clazz).union(getOverrideableMethodsChain(clazz.getSuperclass))
+      val curOverrideableMethods: Set[SootMethod] = getOverrideableMethods(clazz, exclude)
+      curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, curOverrideableMethods.union(exclude)))
     }else Set[SootMethod]()
   }
-  def getOverrideableMethods(clazz: SootClass): Set[SootMethod] = {
+  def getOverrideableMethods(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
     clazz.getMethods.flatMap{(a: SootMethod) =>
-      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract){
+      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !isExcluded(exclude,a)){
         Some(a)
       }else None
     }.toSet
+  }
+  def isExcluded(exclude: Set[SootMethod], method: SootMethod): Boolean ={
+    !exclude.exists(a => {
+      if(a.getName == method.getName){
+        if((a.getParameterTypes zip method.getParameterTypes).exists(t => t._1 != t._2)){
+          false
+        }else{
+          true
+        }
+      }else{
+        false
+      }
+    })
   }
 }

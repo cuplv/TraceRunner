@@ -20,10 +20,13 @@ public class MainActivity extends AppCompatActivity{
     protected void onPause(){
         super.onPause();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        throw new RuntimeException("meh");
+        dismissDialog(3);
+        onMenuItemSelected(0,null);
+//        throw new RuntimeException("meh");
 //        Log.i("", "" + foo());
 //        Callable<String> c = new Callable<String>() {
 //            @Override
