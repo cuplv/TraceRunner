@@ -160,5 +160,13 @@ public class InstrumentationTest {
         assertEquals("java.util.Formattable", m2.getDeclaringClass().getName());
         assertEquals("void formatTo(java.util.Formatter,int,int,int)", FrameworkResolver.sootSignatureFromJava(m2));
     }
+    @Test
+    public void exceptionLogTest() throws Exception{
+        try{
+            throw new RuntimeException("e");
+        }catch(Throwable e) {
+            TraceRunnerRuntimeInstrumentation.logException(e, "foo","bar");
+        }
+    }
 
 }
