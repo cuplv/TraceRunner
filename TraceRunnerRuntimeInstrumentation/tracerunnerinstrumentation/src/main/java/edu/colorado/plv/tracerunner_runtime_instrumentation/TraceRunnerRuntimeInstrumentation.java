@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import android.os.Looper;
 
 /**
  * Created by s on 10/3/16.
@@ -31,6 +32,7 @@ public class TraceRunnerRuntimeInstrumentation {
 
     public static void logException(Throwable t, String signature, String methodName){
         int id = count.getAndIncrement();
+        boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
         String message = t.getMessage();
         StackTraceElement[] stackTrace = t.getStackTrace();
 
@@ -60,6 +62,7 @@ public class TraceRunnerRuntimeInstrumentation {
                     .setType(TraceMsg.MsgType.CALLIN_EXEPION)
                     .setMessageId(id)
                     .setThreadId(Thread.currentThread().getId())
+                    .setIsActivityThread(isActivityThread)
                     .setCallinException(builder)
                     .build();
             TraceMsgContainer container = TraceMsgContainer.newBuilder().setMsg(msg).build();
@@ -98,10 +101,11 @@ public class TraceRunnerRuntimeInstrumentation {
                 .build();
         TraceMsgContainer container = TraceMsgContainer.newBuilder().setMsg(msg).build();
         executorService.execute(new LogDat(container));
-
     }
     public static void logCallbackReturn(String signature, String methodName, Object returnVal){
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
+
         StackTraceElement callbackCaller = stackTrace[4];
         String callerClassName = callbackCaller.getClassName();
         if(FrameworkResolver.get().isFramework(callerClassName)) {
@@ -119,6 +123,7 @@ public class TraceRunnerRuntimeInstrumentation {
                     .setMessageId(id)
                     .setThreadId(threadID)
                     .setCallbackExit(builder)
+                    .setIsActivityThread(isActivityThread)
                     .build();
             TraceMsgContainer container = TraceMsgContainer.newBuilder()
                     .setMsg(msg).build();
@@ -130,6 +135,8 @@ public class TraceRunnerRuntimeInstrumentation {
 
         //Get caller info
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
+
         StackTraceElement callbackCaller = stackTrace[4];
         String callerClassName = callbackCaller.getClassName();
         if(FrameworkResolver.get().isFramework(callerClassName)) {
@@ -201,6 +208,7 @@ public class TraceRunnerRuntimeInstrumentation {
                     .setMessageId(id)
                     .setThreadId(threadID)
                     .setCallbackEntry(callbackEntryMsgBuilder)
+                    .setIsActivityThread(isActivityThread)
                     .build();
             TraceMsgContainer container = TraceMsgContainer.newBuilder()
                     .setMsg(msg).build();
@@ -211,6 +219,8 @@ public class TraceRunnerRuntimeInstrumentation {
     public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
         if(FrameworkResolver.get().isFramework(signature)) {
             int id = count.getAndIncrement();
+            boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
+
             long threadID = Thread.currentThread().getId();
 
             TraceMsgContainer.CallinExitMsg.Builder callinExitMsgBuilder
@@ -226,6 +236,7 @@ public class TraceRunnerRuntimeInstrumentation {
                     .setMessageId(id)
                     .setThreadId(threadID)
                     .setCallinExit(callinExitMsgBuilder)
+                    .setIsActivityThread(isActivityThread)
                     .build();
             TraceMsgContainer container = TraceMsgContainer.newBuilder()
                     .setMsg(msg).build();
@@ -235,6 +246,8 @@ public class TraceRunnerRuntimeInstrumentation {
     public static void logCallin(String signature, String methodName, //TODO: add location
                                  Object[] arguments, Object caller) {
         if(FrameworkResolver.get().isFramework(signature)) {
+            boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
+
             //called on Activity Thread
             //TODO: add callers
             int id = count.getAndIncrement();
@@ -254,6 +267,7 @@ public class TraceRunnerRuntimeInstrumentation {
                     .setType(TraceMsg.MsgType.CALLIN_ENTRY)
                     .setMessageId(id)
                     .setThreadId(threadID)
+                    .setIsActivityThread(isActivityThread)
                     .setCallinEntry(callinMsgBuilder.build()).build();
 
             TraceMsgContainer container = TraceMsgContainer.newBuilder()

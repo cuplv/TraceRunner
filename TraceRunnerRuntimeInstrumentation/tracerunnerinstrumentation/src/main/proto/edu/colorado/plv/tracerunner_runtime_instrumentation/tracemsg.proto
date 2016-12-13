@@ -27,6 +27,7 @@ message TraceMsgContainer {
             CallbackExitMsg callbackExit = 9;
             CallbackExceptionMsg callbackException= 10;
         }
+        required bool is_activity_thread = 11;
     }
     /* Defines the information about the instrumented app. */
     message AppMsg {
