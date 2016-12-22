@@ -1,0 +1,37 @@
+digraph race0_218_4294967295 {
+  node[fontsize=7.5];
+  N67563 [label="Event Action #67563, (HANDLER_DELAYED 1860 1860 16)), tid(1860)\nEnqueue #67282, (HANDLER_DELAYED 1860 1860 16), event(67280), type(HANDLER), tid(1860)), sync, delay(0), Listener(, 50872, 52208)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler_android.support.v7.app.ActionBarActivityDelegateBase$1@b2028a60), what(-1)\nEnqueue sequence(HANDLER sync, HANDLER_AT_TIME async), source(DISPLAY)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 50858 Landroid/support/v7/app/ActionBarActivityDelegateHC;.mPanels", URL="race?focus=67563&id=218", shape="box"];
+  N76171 [label="Event Action #76171, (HANDLER_DELAYED 1860 1860 245)), tid(1860)\nEnqueue #76132, (HANDLER_DELAYED 1860 1860 245), event(76124), type(HANDLER), tid(1860)), sync, delay(0), Listener(, -1, 54071)\ndispatcher(android.os.CountDownTimer$1), what(1)\nEnqueue sequence(HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 54061 Landroid/widget/TextView;.mBufferType", URL="race?focus=76171&id=218", shape="box"];
+  N80077 [label="Event Action #80077, (INPUT 1860 1860 116)), tid(1860)\nEnqueue sequence(), source(INPUT)\nF Ljava/lang/ref/Reference;.get(()Ljava/lang/Object;)\nwrite S Landroid/view/MotionEvent;.gRecyclerTop", URL="race?focus=80077&id=218", shape="box"];
+  N80090 [label="Event Action #80090, (HANDLER_DELAYED 1860 1860 268)), tid(1860)\nEnqueue #78444, (HANDLER_DELAYED 1860 1860 268), event(78441), type(HANDLER_DELAYED), tid(1860)), sync, delay(998), Listener(, -1, 54071)\ndispatcher(android.os.CountDownTimer$1), what(1)\nEnqueue sequence(HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 54061 Landroid/widget/TextView;.mBufferType\ntrigger_op1\nop1", URL="race?focus=80090&id=218", fillcolor="lightgrey", style="filled", shape="box"];
+  N80172 [label="Event Action #80172, (HANDLER_DELAYED 1860 1860 320)), tid(1860)\nEnqueue #80088, (HANDLER_DELAYED 1860 1860 320), event(80077), type(HANDLER), tid(1860)), sync, delay(0), Listener(, 53895, 52208)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler_android.view.View$UnsetPressedState@b2064658), what(-1)\nEnqueue sequence(HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 52044 Landroid/widget/Button;.mPrivateFlags", URL="race?focus=80172&id=218", shape="box"];
+  N80178 [label="Event Action #80178, (HANDLER_DELAYED 1860 1860 326)), tid(1860)\nEnqueue #80170, (HANDLER_DELAYED 1860 1860 326), event(80108), type(HANDLER), tid(1860)), sync, delay(0), Listener(, 50735, 50741)\ndispatcher(android.os.Handler_android.app.FragmentManagerImpl$1@b2024480), what(-1)\nEnqueue sequence(HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 53507 Ljava/util/ArrayList;.size\ntrigger_op2\nop2", URL="race?focus=80178&id=218", fillcolor="lightgrey", style="filled", shape="box"];
+  N82115 [label="Event Action #82115, (HANDLER_DELAYED 1860 1860 322)), tid(1860)\nEnqueue #80091, (HANDLER_DELAYED 1860 1860 322), event(80090), type(HANDLER_DELAYED), tid(1860)), sync, delay(994), Listener(, -1, 54071)\ndispatcher(android.os.CountDownTimer$1), what(1)\nEnqueue sequence(HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 54061 Landroid/widget/TextView;.mBufferType", URL="race?focus=82115&id=218", shape="box"];
+  N84525 [label="Event Action #84525, (HANDLER_DELAYED 1860 1860 494)), tid(1860)\nEnqueue #82663, (HANDLER_DELAYED 1860 1860 494), event(82662), type(HANDLER_DELAYED), tid(1860)), sync, delay(1000), Listener(, -1, 55015)\ndispatcher(android.os.CountDownTimer$1), what(1)\nEnqueue sequence(HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 55005 Landroid/widget/TextView;.mBufferType", URL="race?focus=84525&id=218", shape="box"];
+  N85544 [label="Event Action #85544, (HANDLER_DELAYED 1860 1860 538)), tid(1860)\nEnqueue #83465, (HANDLER_DELAYED 1860 1860 538), event(83460), type(HANDLER_DELAYED), tid(1860)), sync, delay(999), Listener(, -1, 55302)\ndispatcher(android.os.CountDownTimer$1), what(1)\nEnqueue sequence(HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 55292 Landroid/widget/TextView;.mBufferType", URL="race?focus=85544&id=218", shape="box"];
+  N89485 [label="Event Action #89485, (HANDLER_DELAYED 1860 1860 711)), tid(1860)\nEnqueue #86772, (HANDLER_DELAYED 1860 1860 711), event(86771), type(HANDLER_DELAYED), tid(1860)), sync, delay(1000), Listener(, -1, 55015)\ndispatcher(android.os.CountDownTimer$1), what(1)\nEnqueue sequence(HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER_DELAYED sync, HANDLER sync, HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 55005 Landroid/widget/TextView;.mBufferType", URL="race?focus=89485&id=218", shape="box"];
+  N67563 -> N76171 [style="dotted"];
+  N67563 -> N80077 [style="dotted"];
+  N67563 -> N80090 [style="dotted"];
+  N67563 -> N80172 [style="dotted"];
+  N67563 -> N84525 [style="dotted"];
+  N67563 -> N85544 [style="bold"];
+  N67563 -> N89485 [style="dotted"];
+  N76171 -> N80090 [style="dotted"];
+  N76171 -> N80178 [style="bold"];
+  N76171 -> N89485 [style="dotted"];
+  N80077 -> N80172 [style="dotted"];
+  N80077 -> N80178 [style="bold"];
+  N80077 -> N84525 [style="dotted"];
+  N80077 -> N85544 [style="dotted"];
+  N80090 -> N80178 [label="UPDATE-READ", color="red", style="dashed", arrowhead="dot", fontcolor="red", URL="race?focus=-1&id=218race?focus=-1&id=218"];
+  N80090 -> N82115 [style="bold"];
+  N80090 -> N89485 [style="bold"];
+  N80172 -> N80178 [style="bold"];
+  N80172 -> N84525 [style="dotted"];
+  N80172 -> N85544 [style="dotted"];
+  N80178 -> N82115 [label="READ-UPDATE", color="green", style="dashed", arrowhead="dot", fontcolor="green", URL="race?focus=-1&id=423"];
+  N80178 -> N84525 [style="bold"];
+  N80178 -> N85544 [style="bold"];
+  N84525 -> N89485 [style="dotted"];
+}

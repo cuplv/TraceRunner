@@ -1,0 +1,29 @@
+digraph race0_4_4294967295 {
+  node[fontsize=7.5];
+  N73324 [label="Event Action #73324, (HANDLER_DELAYED 1838 1838 1)), tid(1838)\nEnqueue #73323, (HANDLER_DELAYED 1838 1838 1), event(-1), type(HANDLER), tid(1838)), async, delay(0), Listener(, -1, -1)\ndispatcher(main), what(0)\nEnqueue sequence(HANDLER async), source(THREAD thread(plv.colorado.edu.mediaplayerexample))\nF Landroid/os/Environment;.initForCurrentUser(()V)\nwrite S Landroid/os/Environment;.sCurrentUser", URL="race?focus=73324&id=4", shape="box"];
+  N73747 [label="Event Action #73747, (HANDLER_DELAYED 1838 1848 3)), tid(1838)\nEnqueue #73633, (HANDLER_DELAYED 1838 1848 3), event(73445), type(HANDLER), tid(1848)), sync, delay(0), Listener(, -1, 50354)\ndispatcher(android.app.ActivityThread$H), what(SET_CORE_SETTINGS)\nEnqueue sequence(HANDLER sync), source(IPC async,interface(android.app.IApplicationThread),code(BIND_APPLICATION))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite S Landroid/os/Trace;.sEnabledTags", URL="race?focus=73747&id=4", shape="box"];
+  N73837 [label="Event Action #73837, (HANDLER_DELAYED 1838 1848 7)), tid(1838)\nEnqueue #73745, (HANDLER_DELAYED 1838 1848 7), event(73744), type(HANDLER), tid(1848)), sync, delay(0), Listener(, -1, 50354)\ndispatcher(android.app.ActivityThread$H), what(LAUNCH_ACTIVITY)\nEnqueue sequence(HANDLER sync), source(IPC async,interface(android.app.IApplicationThread),code(SCHEDULE_LAUNCH_ACTIVITY))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 50544 Landroid/app/ActivityThread$ActivityClientRecord;.packageInfo", URL="race?focus=73837&id=4", shape="box"];
+  N74495 [label="Event Action #74495, (DISPLAY 1838 1838 0)), tid(1838)\nEnqueue #74240, (DISPLAY 1838 1838 0), event(73837), type(DISPLAY), tid(1838)), sync\nEnqueue sequence(), source(DISPLAY)\nF Landroid/view/DisplayEventReceiver;.dispatchVsync((JII)V)\nwrite 52231 Landroid/view/Choreographer$FrameDisplayEventReceiver;.mHavePendingVsync", URL="race?focus=74495&id=4", shape="box"];
+  N74499 [label="Event Action #74499, (HANDLER_DELAYED 1838 1838 11)), tid(1838)\nEnqueue #74239, (HANDLER_DELAYED 1838 1838 11), event(73837), type(HANDLER), tid(1838)), sync, delay(0), Listener(, 52245, 52165)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler_android.view.ViewRootImpl$4@b2026818), what(-1)\nEnqueue sequence(HANDLER sync, HANDLER sync), source(IPC async,interface(android.app.IApplicationThread),code(SCHEDULE_LAUNCH_ACTIVITY))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 52136 Landroid/view/ViewRootImpl;.mProfileRendering", URL="race?focus=74499&id=4", shape="box"];
+  N74638 [label="Event Action #74638, (HANDLER_DELAYED 1838 1849 14)), tid(1838)\nEnqueue #74391, (HANDLER_DELAYED 1838 1849 14), event(74390), type(HANDLER), tid(1849)), sync, delay(0), Listener(, -1, 50792)\ndispatcher(android.media.MediaPlayer$EventHandler), what(100)\nEnqueue sequence(HANDLER sync), source(IPC async,interface(android.media.IMediaPlayerClient),code(1))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 50789 Landroid/media/MediaPlayer;.mStayAwake\ntrigger_op1\nop1", URL="race?focus=74638&id=4", fillcolor="lightgrey", style="filled", shape="box"];
+  N74681 [label="Event Action #74681, (HANDLER_DELAYED 1838 1849 22)), tid(1838)\nEnqueue #74627, (HANDLER_DELAYED 1838 1849 22), event(74626), type(HANDLER), tid(1849)), sync, delay(0), Listener(, -1, 52165)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler), what(MSG_WINDOW_FOCUS_CHANGED)\nEnqueue sequence(HANDLER sync), source(IPC async,interface(android.view.IWindow),code(windowFocusChanged))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 52136 Landroid/view/ViewRootImpl;.mLastWasImTarget", URL="race?focus=74681&id=4", shape="box"];
+  N74855 [label="Event Action #74855, (IDLE_HANDLER 1838 1838 52283)), tid(1838)\nEnqueue #74487, (IDLE_HANDLER 1838 1838 52283), event(73837), type(IDLE_HANDLER), tid(1838)), sync", URL="race?focus=74855&id=4", shape="box"];
+  N75553 [label="Event Action #75553, (HANDLER_DELAYED 1838 1838 42)), tid(1838)\nEnqueue #75550, (HANDLER_DELAYED 1838 1838 42), event(75548), type(HANDLER), tid(1838)), sync, delay(0), Listener(, 52816, 52165)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler_android.view.View$PerformClick@b2036848), what(-1)\nEnqueue sequence(HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 52136 Landroid/view/ViewRootImpl;.mAudioManager\ntrigger_op2\nop2", URL="race?focus=75553&id=4", fillcolor="lightgrey", style="filled", shape="box"];
+  N75630 [label="Event Action #75630, (HANDLER_DELAYED 1838 1838 44)), tid(1838)\nEnqueue #75551, (HANDLER_DELAYED 1838 1838 44), event(75548), type(HANDLER), tid(1838)), sync, delay(0), Listener(, 52817, 52165)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler_android.view.View$UnsetPressedState@b2036860), what(-1)\nEnqueue sequence(HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 51907 Landroid/widget/Button;.mPrivateFlags", URL="race?focus=75630&id=4", shape="box"];
+  N73324 -> N73747 [style="bold"];
+  N73324 -> N74499 [style="bold"];
+  N73324 -> N74681 [style="bold"];
+  N73324 -> N74855 [style="bold"];
+  N73324 -> N75553 [style="bold"];
+  N73747 -> N73837 [style="dotted"];
+  N73837 -> N74495 [style="bold"];
+  N73837 -> N74499 [style="bold"];
+  N73837 -> N74855 [style="bold"];
+  N73837 -> N75553 [style="bold"];
+  N74495 -> N74681 [style="dotted"];
+  N74499 -> N74681 [style="dotted"];
+  N74499 -> N75553 [style="bold"];
+  N74638 -> N75553 [label="WRITE-WRITE", color="red", style="dashed", arrowhead="dot", fontcolor="red", URL="race?focus=-1&id=4race?focus=-1&id=4"];
+  N74681 -> N75553 [style="dotted"];
+  N75553 -> N75630 [style="bold"];
+}
