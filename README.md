@@ -139,3 +139,8 @@ This is decided based on a pre defined set of filters in resources/android_packa
 Logging callbacks
 -------------------------
 All non static methods are logged as potential callbacks.  After trace generation we will filter out the ones which were not callbacks by looking at the type of the thing calling them.  Static methods are not logged in this way as they can never be callbacks.  The effect of this is that in the trace their method calls will appear to be inlined with the callback which invoked them.
+
+
+Trace Version Tag
+===============================
+Tag of the format "traceversion0" which denotes that there have been no changes that will affect the appearance of traces until another trace version tag is added. 
