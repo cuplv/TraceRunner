@@ -4,6 +4,7 @@ import java.util
 
 import edu.colorad.cs.TraceRunner.Config
 import soot.jimple.{Jimple, SpecialInvokeExpr}
+import soot.tagkit.Tag
 import soot.util.NumberedString
 import soot.{Body, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
 
@@ -16,6 +17,16 @@ import scala.collection.mutable
 /**
   * Created by s on 11/3/16.
   */
+object OverrideAllMethods{
+  private val autoOverrideSet = mutable.Set[String]()
+  def isAutoOverride(m: SootMethod): Boolean ={
+    val key = m.getSignature
+    autoOverrideSet.contains(key)
+  }
+  private def addToOverrideSet(m: SootMethod) ={
+    autoOverrideSet.add(m.getSignature)
+  }
+}
 class OverrideAllMethods(config: Config) extends SceneTransformer {
   def dbgPred(name: String): Boolean = {
 //    name.size > 3 && name(0) == 'a' && name(1)=='d' && name(2) == 'd'
@@ -69,6 +80,8 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
           if((!applicationClass.declaresMethod(methodName,methodParams)) && dbgPred(methodName)) {
             ////          val method: SootMethod = applicationClass.declaresMethod(methodTup._1,methodTup._3)
             val newMethod: SootMethod = new SootMethod(methodName, methodParams, returnType) //TODO: accessor permissions?
+            OverrideAllMethods.autoOverrideSet.add(newMethod)
+
 
             //Create new body for method
             val activeBody: Body = Jimple.v().newBody(newMethod)

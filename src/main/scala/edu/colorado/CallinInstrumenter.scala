@@ -48,6 +48,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
       }
     })
     val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
+//    val method_is_real = !method.isPhantom
     if(method_in_app && name != "<clinit>") { //Is this an application method we should instrument?
       val units: PatchingChain[soot.Unit] = b.getUnits;
       for (i: soot.Unit <- units.snapshotIterator()) {
