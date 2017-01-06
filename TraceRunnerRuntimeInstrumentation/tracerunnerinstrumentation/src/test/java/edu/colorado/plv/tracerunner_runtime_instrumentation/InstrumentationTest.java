@@ -2,6 +2,7 @@ package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.Formattable;
@@ -101,6 +102,22 @@ public class InstrumentationTest {
         Method m = overrides.iterator().next();
         assertEquals("java.util.Comparator", m.getDeclaringClass().getName());
 
+    }
+    @Test
+    public void initOverrideTest() throws Exception{
+        FrameworkResolver f = new FrameworkResolver();
+        class MyException extends Exception{
+            MyException(){
+                System.out.println("hi there");
+            }
+        }
+        MyException myException = new MyException();
+        Class<?> superclass = myException.getClass().getSuperclass();
+        Method[] methods = myException.getClass().getMethods();
+        Constructor<?>[] constructors = myException.getClass().getConstructors();
+        List<Method> overrides = f.getFrameworkOverrideMemo(myException.getClass(), "<init>", new String[0]);
+        Method m = overrides.iterator().next();
+        assertEquals("java.lang.Exception", m.getDeclaringClass().getName());
     }
     @Test
     public void nonFrameworkOverride() throws Exception{
