@@ -72,6 +72,7 @@ public class TraceRunnerRuntimeInstrumentation {
     public static void logCallbackException(Throwable t, String signature, String methodName){
         int id = count.getAndIncrement();
         String message = t.getMessage();
+        boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
         StackTraceElement[] stackTrace = t.getStackTrace();
         String className = stackTrace[0].getClassName();
         TraceMsgContainer.CallbackExceptionMsg.Builder builder
@@ -98,6 +99,7 @@ public class TraceRunnerRuntimeInstrumentation {
                 .setMessageId(id)
                 .setThreadId(Thread.currentThread().getId())
                 .setCallbackException(builder)
+                .setIsActivityThread(isActivityThread)
                 .build();
         TraceMsgContainer container = TraceMsgContainer.newBuilder().setMsg(msg).build();
         executorService.execute(new LogDat(container));
