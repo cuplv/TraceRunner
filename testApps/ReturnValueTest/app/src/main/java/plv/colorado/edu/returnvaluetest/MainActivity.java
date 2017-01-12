@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 //public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 public class MainActivity extends AppCompatActivity{
@@ -24,14 +26,10 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        Integer i = new Integer(42);
-        foo(i);
+//        ThreadPool p = Executors.newFixedThreadPool(1);
 	
     }
-    static void foo(int i){
-        
-    }
+
 
 
 }
