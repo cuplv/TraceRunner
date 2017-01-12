@@ -131,7 +131,13 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   def getSuperMethod(clazz: SootClass, name: String, args: List[Type], returnType: Type): SootMethodRef = {
     clazz.getMethods()
     if(clazz.declaresMethod(name,args)){
-      clazz.getMethod(name, args).makeRef()
+      try {
+        clazz.getMethod(name, args).makeRef()
+      }catch{
+        case t => {
+          clazz.getMethodUnsafe(name,seqAsJavaList(args),returnType).makeRef()
+        }
+      }
     }else {
       Scene.v().makeMethodRef(clazz, name, args,returnType,false)
     }
