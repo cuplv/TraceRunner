@@ -286,25 +286,25 @@ public class TraceRunnerRuntimeInstrumentation {
      *
      */
     public static void  shutdownAndAwaitTermination() {
-        // Disable new tasks from being submitted
-        TraceRunnerRuntimeInstrumentation.executorService.shutdown();
-
-        try {
-            // Wait a while for existing tasks to terminate
-            if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
-                    TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS)) {
-                // cancel currently executing tasks
-                TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
-                // Wait a while for tasks to respond to being cancelled
-                if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
-                        TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS))
-                    System.err.println("Pool did not terminate");
-            }
-        } catch (InterruptedException ie) {
-            TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
-            // Don't think we have to raise a runtime exception here
-            System.err.println("Pool did not terminate");
-        }
+//        // Disable new tasks from being submitted
+//        TraceRunnerRuntimeInstrumentation.executorService.shutdown();
+//
+//        try {
+//            // Wait a while for existing tasks to terminate
+//            if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
+//                    TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS)) {
+//                // cancel currently executing tasks
+//                TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
+//                // Wait a while for tasks to respond to being cancelled
+//                if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
+//                        TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS))
+//                    System.err.println("Pool did not terminate");
+//            }
+//        } catch (InterruptedException ie) {
+//            TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
+//            // Don't think we have to raise a runtime exception here
+//            System.err.println("Pool did not terminate");
+//        }
     }
 
 //    public static void logCallback(String signature, String methodName, Object[] arguments){
