@@ -18,16 +18,8 @@ import scala.collection.mutable
   */
 class OverrideAllMethods(config: Config) extends SceneTransformer {
   def dbgPred(name: String): Boolean = {
-//    name.size > 3 && name(0) == 'a' && name(1)=='d' && name(2) == 'd'
-//    name == "addContentView"
-//    name == "onPause"
-//    false
-//    !name.contains("<init>") &&
-//     name(0) < 112 // lower 110 no fail 130 fai
-//    name.startsWith("on") && name(2) == 77 //<=77 fail : <=76 works 77 M
-//    name == ""
+
     true
-//    name.startsWith("onMenuItemSelected") //menuitemselected
   }
 
 

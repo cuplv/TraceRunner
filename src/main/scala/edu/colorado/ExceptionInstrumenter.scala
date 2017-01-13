@@ -27,7 +27,8 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
     val name: String = b.getMethod.getName
     val signature: String = b.getMethod.getDeclaringClass.getName
     val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
-    if(method_in_app && name != "<clinit>" && !method.isStatic && name != "<init>") {
+    //TODO: no exception instrumentation on synchronized methods see issue #
+    if(method_in_app && name != "<clinit>" && !method.isStatic && name != "<init>" && !method.isSynchronized) {
 
       // put an exception log in every existing catch block
       val units: PatchingChain[Unit] = b.getUnits
