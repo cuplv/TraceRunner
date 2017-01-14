@@ -138,7 +138,9 @@ This is decided based on a pre defined set of filters in resources/android_packa
 
 Logging callbacks
 -------------------------
-All non static methods are logged as potential callbacks.  After trace generation we will filter out the ones which were not callbacks by looking at the type of the thing calling them.  Static methods are not logged in this way as they can never be callbacks.  The effect of this is that in the trace their method calls will appear to be inlined with the callback which invoked them.
+All non static methods are logged as potential callbacks.  After trace generation we will filter out the ones which were not callbacks by looking at the type of the thing calling them.  Most static methods are not logged in this way as they can never be callbacks.  The one exception is \<clinit\> which can be a callback.  The effect of this is that in the trace their method calls will appear to be inlined with the callback which invoked them.
+
+\<clinit\> is not always invoked by the framework.  It appears to be called just before the first initialization by whatever the top stack frame is.  If there are callins in the \<clinit\> and it is not logged as a callback the methods will show up in the parent transition.
 
 
 Trace Version Tag
