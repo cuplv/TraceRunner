@@ -20,9 +20,10 @@ public class MainActivity extends AppCompatActivity{
     static UriMatcher getit(){
         return new UriMatcher(3);
     }
-    MainActivity(){
-        Log.i("init", "this is the <init> method");
-    }
+//    MainActivity(){
+//        Log.i("","");
+//    }
+
 
     @Override
     protected void onPause(){
@@ -31,7 +32,9 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
 //        ThreadPool p = Executors.newFixedThreadPool(1);
+        SomeClass s = new SomeClass();
 	
     }
 
