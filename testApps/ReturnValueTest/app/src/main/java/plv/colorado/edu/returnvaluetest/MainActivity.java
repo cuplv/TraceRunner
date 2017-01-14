@@ -2,6 +2,7 @@ package plv.colorado.edu.returnvaluetest;
 
 import android.animation.ObjectAnimator;
 import android.app.FragmentManager;
+import android.content.UriMatcher;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,10 @@ import java.util.concurrent.Executors;
 
 //public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 public class MainActivity extends AppCompatActivity{
+    static UriMatcher meh = getit();
+    static UriMatcher getit(){
+        return new UriMatcher(3);
+    }
     MainActivity(){
         Log.i("init", "this is the <init> method");
     }

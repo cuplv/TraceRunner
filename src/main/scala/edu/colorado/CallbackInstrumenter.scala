@@ -14,6 +14,7 @@ import scala.util.matching.Regex
   * Created by s on 10/24/16.
   */
 class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collection.mutable.Buffer[String]) extends BodyTransformer {
+  val logCallbackEntrySig: String = "void logCallbackEntry(java.lang.String,java.lang.String,java.lang.String[],java.lang.String,java.lang.Object[],java.lang.String)"
   val applicationPackages = config.applicationPackages.map((a:String) =>{
     Utils.packageGlobToSignatureMatchingRegex(a).r
   })
@@ -110,7 +111,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           }
         })
       }
-      val logCallbackEntrySig: String = "void logCallbackEntry(java.lang.String,java.lang.String,java.lang.String[],java.lang.String,java.lang.Object[],java.lang.String)"
+
       val lastArgU = lastArg match {
         case Some(l) => {
 
@@ -197,12 +198,6 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
               //TODO: initialize array of argument types
               units.insertAfter(Jimple.v().newAssignStmt(argTypes, Jimple.v().newNewArrayExpr(RefType.v("java.lang.String"), IntConstant.v(method.getParameterCount))),thisRef)
 
-
-
-
-
-
-
               units.insertAfter(thisAssign, thisRef)
               units.insertAfter(
                 Jimple.v().newAssignStmt(inputArgs, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"),
@@ -226,9 +221,30 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
         }
       }
 
+    }else if(name == "<clinit>"){
+//      val units: PatchingChain[soot.Unit] = b.getUnits
+//      assert(method.getParameterCount == 0) //static initializer should not have arguments
+//      val logCallback: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
+//        .getMethod(logCallbackEntrySig)
+//
+//
+//      val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
+//      val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+//      val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+//      val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
+//      val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
+//      val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+//      val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature,
+//        methodname,argTypes, returnType, inputArgs, simpleName)))
+//      units.addFirst(expr)
+//      units.addFirst(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)))
+//      units.addFirst(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)))
+//      units.addFirst(Jimple.v.newAssignStmt(argTypes,Jimple.v.newNewArrayExpr(RefType.v("java.lang.String"), IntConstant.v(0))))
+//      units.addFirst(Jimple.v().newAssignStmt(returnType,StringConstant.v(method.getReturnType.toString)))
+//      units.addFirst(Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(0)),
+//        NullConstant.v()))
+//      units.addFirst(Jimple.v.newAssignStmt(inputArgs, Jimple.v.newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(1))))
+//      units.addFirst(Jimple.v.newAssignStmt(simpleName, StringConstant.v(method.getName())))
     }
-
-
-
   }
 }
