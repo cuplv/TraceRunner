@@ -8,6 +8,7 @@ from utils.fsUtils import createPathIfEmpty, recreatePath
 from startEmulator import startEmulator, killEmulator
 from autoLaunch import autoLaunch
 from autoInstrument import autoInstrument
+from autoMonkey import autoMonkey
 
 def get(conf, section, option, default=None):
      if conf.has_option(section, option):
@@ -30,8 +31,11 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     instrumentPath = get(conf, 'tracerOptions', 'instrument', default='/traceRunner/instrument')
     outputPath     = get(conf, 'tracerOptions', 'output', default='/traceRunner/output')
     androidJarPath = get(conf, 'tracerOptions', 'androidjars', default='/usr/local/android-sdk/platforms')
+    usetracers     = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'usetracers', default='monkey,robot').split(','))
+    monkeyevents   = get(conf, 'tracerOptions', 'monkeyevents', default='40')
+    monkeytries    = get(conf, 'tracerOptions', 'monkeytries', default='10')
 
-    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath }
+    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytries':monkeytries }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -57,8 +61,12 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
            appAPK  = get(conf, section, 'app', default='app-debug.apk') 
            tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
            traces = map(lambda s: s.strip(), conf.get(section, 'traces').split(','))
-
-           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'traces':traces } 
+           appUsetracers = get(conf, section, 'usetracers', default=None)
+           if appUsetracers == None:
+              appUsetracers = usetracers
+           else:
+              appUsetracers = map(lambda s: s.strip(), appUsetracers.split(','))
+           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'traces':traces, 'usetracers':appUsetracers } 
     configs['apps'] = apps
 
     return configs
@@ -100,8 +108,16 @@ if __name__ == "__main__":
        tracerInstrPath = configs['instrument'] + "/" + appName + "/" + appData['tracer']
        output = configs['output'] + "/" + appName
        createPathIfEmpty( output )
-       autoLaunch(appInstrPath, tracerInstrPath, traces, output)
-  
+       usetracers = appData['usetracers']
+       if 'robot' in usetracers:
+           print "Running Robotium Tracer..."
+           autoLaunch(appInstrPath, tracerInstrPath, traces, output)
+       if 'monkey' in usetracers:  
+           print "Running Monkey Tracer..."
+           monkeyOutput = output + "/" + "monkeyTraces"
+           createPathIfEmpty( monkeyOutput )
+           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytries'], configs['monkeyevents'])
+
    # Kill emulator if it was started here
    if configs['startEmulator']:
        killEmulator(configs['port'])
