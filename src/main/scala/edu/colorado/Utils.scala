@@ -87,7 +87,7 @@ object Utils {
       }
       case _ => {
         ???
-      } //Note no boolean type as these are ints
+      }
     }
 
   }
