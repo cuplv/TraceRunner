@@ -53,11 +53,15 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents):
 
    print "Running Android Monkey on Instrumented App..."
    # adb shell monkey -p your.package.name -v 500
-   events = numOfMonkeyEvents
+   events = str(numOfMonkeyEvents)
    adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',events]
    trace_proc = Popen(adb_monkey, stdout=PIPE)
    outcome,error = trace_proc.communicate()
    print "Trace Completed: %s, %s" % (outcome,error)
+
+   wait = 2
+   print "Waiting %s seconds before stopping app..." % wait
+   time.sleep(wait)
 
    print "Stopping the Instrumented App"
    stop_proc = Popen(['adb','shell','am','force-stop',appPackageName], stdout=PIPE)
@@ -84,11 +88,12 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
    outcome,_ = adb_proc.communicate()
    print "Install Completed: %s" % outcome
 
-   for index in range(0,numOfTraces):
+   for index in range(0,int(numOfTraces)):
       runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents)
-      if index < numOfTraces - 1:
-         print "Waiting to restart monkey ..."
-         time.sleep(3)
+      if index < int(numOfTraces) - 1:
+         wait = 3
+         print "Waiting %s seconds before restart monkey ..." % wait
+         time.sleep(wait)
 
    print "All Done!"
 
