@@ -85,7 +85,25 @@ object Utils {
       case i: NullType => {
         NullConstant.v()
       }
-      case _ => {
+      case i: CharType =>{
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Character")
+          .getMethod("java.lang.Character valueOf(char)")
+        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v))
+      }
+      case i: ShortType => {
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Short")
+          .getMethod("java.lang.Short valueOf(short)")
+        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v))
+      }
+      case i: ByteType => {
+        val boxmethod = Scene.v()
+          .getSootClass("java.lang.Byte")
+          .getMethod("java.lang.Byte valueOf(byte)")
+        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v))
+      }
+      case i => {
         ???
       } //Note no boolean type as these are ints
     }

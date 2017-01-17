@@ -18,16 +18,8 @@ import scala.collection.mutable
   */
 class OverrideAllMethods(config: Config) extends SceneTransformer {
   def dbgPred(name: String): Boolean = {
-//    name.size > 3 && name(0) == 'a' && name(1)=='d' && name(2) == 'd'
-//    name == "addContentView"
-//    name == "onPause"
-//    false
-//    !name.contains("<init>") &&
-//     name(0) < 112 // lower 110 no fail 130 fai
-//    name.startsWith("on") && name(2) == 77 //<=77 fail : <=76 works 77 M
-//    name == ""
+
     true
-//    name.startsWith("onMenuItemSelected") //menuitemselected
   }
 
 
@@ -131,7 +123,13 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   def getSuperMethod(clazz: SootClass, name: String, args: List[Type], returnType: Type): SootMethodRef = {
     clazz.getMethods()
     if(clazz.declaresMethod(name,args)){
-      clazz.getMethod(name, args).makeRef()
+      try {
+        clazz.getMethod(name, args).makeRef()
+      }catch{
+        case t => {
+          clazz.getMethodUnsafe(name,seqAsJavaList(args),returnType).makeRef()
+        }
+      }
     }else {
       Scene.v().makeMethodRef(clazz, name, args,returnType,false)
     }
