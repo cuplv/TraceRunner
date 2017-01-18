@@ -163,6 +163,7 @@ Known exceptions
     * Also try
         * restart adb by running adb kill-server
         * clean and rebuild app (gradle doesn't always monitor the AndroidManifest.xml file for changes properly)
+        
 Other debugging steps
 ---------------------
 * clean and rebuild app (there was a developer tools update in Jan 2017 which causes issues until you clean and rebuild)
