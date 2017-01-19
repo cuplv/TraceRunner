@@ -2,6 +2,8 @@
 import os
 import sys
 import time
+import random as r
+
 from subprocess import Popen, PIPE
 
 from utils.getAPKInfo import getAPKInfo
@@ -25,15 +27,15 @@ from utils.getAPKInfo import getAPKInfo
 2: 15.0% traceback 3: 25.0% syskeys 4: 15.0% nav 5: 2.0% majornav 6: 2.0% appswitch 7: 1.0% flip 8: 15.0% anyevent
 '''
 
-MONKEY_EVENT_DIST = { 'throttle'      : None
-                    , 'pct-touch'     : '35' 
+MONKEY_EVENT_DIST = { 'throttle'      : '500'
+                    , 'pct-touch'     : '40' 
                     , 'pct-motion'    : '15'
-                    , 'pct-trackball' : '4'
-                    , 'pct-nav'       : '2'
-                    , 'pct-majornav'  : '2'
-                    , 'pct-syskeys'   : '2'
+                    , 'pct-trackball' : '10'
+                    , 'pct-nav'       : '0'
+                    , 'pct-majornav'  : '0'
+                    , 'pct-syskeys'   : '0'
                     , 'pct-appswitch' : '30'
-                    , 'pct-anyevent'  : '10' }
+                    , 'pct-anyevent'  : '5' }
 
 def getMonkeyEvents():
    events = []
@@ -42,7 +44,13 @@ def getMonkeyEvents():
          events += ["--%s" % key,val]
    return events
 
-def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents):
+def monkeySprint(appPackageName, numOfMonkeyEvents):
+   adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',str(numOfMonkeyEvents)]
+   trace_proc = Popen(adb_monkey, stdout=PIPE, stderr=PIPE)
+   outcome,error = trace_proc.communicate()
+   print "%s Monkey Steps Completed: %s, %s" % (numOfMonkeyEvents,outcome,error)
+
+def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries):
 
    print "Starting ADB+NetCat Bridge @ 5050..."
    adb_proc = Popen(['adb','reverse','tcp:5050', 'tcp:5050'], stdout=PIPE)
@@ -53,11 +61,20 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents):
 
    print "Running Android Monkey on Instrumented App..."
    # adb shell monkey -p your.package.name -v 500
-   events = str(numOfMonkeyEvents)
-   adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',events]
-   trace_proc = Popen(adb_monkey, stdout=PIPE)
-   outcome,error = trace_proc.communicate()
-   print "Trace Completed: %s, %s" % (outcome,error)
+
+   ranNumOfMonkeyTries = numOfMonkeyTries + r.randint(-2,2)
+   print "%s Monkeys will jump on your Android" % ranNumOfMonkeyTries
+   for i in range(0, ranNumOfMonkeyTries):
+        monkeySprint(appPackageName, numOfMonkeyEvents + r.randint(-20,20))
+        if i < ranNumOfMonkeyTries - 1:
+           wait = 2 + r.randint(0,10)
+           print "Waiting %s seconds before restarting the monkey..." % wait
+           time.sleep(wait)
+   # events = str(numOfMonkeyEvents)
+   # adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',events]
+   # trace_proc = Popen(adb_monkey, stdout=PIPE)
+   # outcome,error = trace_proc.communicate()
+   # print "Trace Completed: %s, %s" % (outcome,error)
 
    wait = 2
    print "Waiting %s seconds before stopping app..." % wait
@@ -73,7 +90,7 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents):
    with open("%s/%s.out" % (outputProtoPath,"trace%s" % index), "w") as f:
       f.write(trace)
 
-def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents):
+def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries):
 
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    print "Instrumented App Package Name: %s" % appPackageName
@@ -89,24 +106,25 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
    print "Install Completed: %s" % outcome
 
    for index in range(0,int(numOfTraces)):
-      runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents)
+      runAutoMonkey(appPackageName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
       if index < int(numOfTraces) - 1:
          wait = 3
-         print "Waiting %s seconds before restart monkey ..." % wait
+         print "Waiting %s seconds before next trace ..." % wait
          time.sleep(wait)
 
    print "All Done!"
 
 if __name__ == "__main__":
-   if len(sys.argv) != 5:
-      print "usage: python autoMonkey.py <Path to (Resigned) Instrumented APK> <Path to Output Folder> <Num of Traces> <Num of Monkey Events>"
+   if len(sys.argv) != 6:
+      print "usage: python autoMonkey.py <Path to (Resigned) Instrumented APK> <Path to Output Folder> <Num of Traces> <Num of Monkey Events> <Num of Monkey Tries>"
       sys.exit(1)
 
    instrumentedAPKPath = sys.argv[1]
    outputProtoPath     = sys.argv[2]
    numOfTraces         = int(sys.argv[3])
    numOfMonkeyEvents   = sys.argv[4]
+   numOfMonkeyTries    = sys.argv[5]
 
-   autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents)
+   autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries)
 
 

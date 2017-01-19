@@ -1,10 +1,11 @@
 
 import os
 import sys
+import shutil
 
 from ConfigParser import ConfigParser
 
-from utils.fsUtils import createPathIfEmpty, recreatePath
+from utils.fsUtils import createPathIfEmpty, recreatePath, getFilesInPath
 from startEmulator import startEmulator, killEmulator
 from autoLaunch import autoLaunch
 from autoInstrument import autoInstrument
@@ -33,9 +34,10 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     androidJarPath = get(conf, 'tracerOptions', 'androidjars', default='/usr/local/android-sdk/platforms')
     usetracers     = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'usetracers', default='monkey,robot').split(','))
     monkeyevents   = get(conf, 'tracerOptions', 'monkeyevents', default='40')
-    monkeytries    = get(conf, 'tracerOptions', 'monkeytries', default='10')
+    monkeytraces   = get(conf, 'tracerOptions', 'monkeytraces', default='10')
+    monkeytries    = get(conf, 'tracerOptions', 'monkeytries', default='5')
 
-    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytries':monkeytries }
+    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -60,7 +62,7 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
            appName = section[4:]
            appAPK  = get(conf, section, 'app', default='app-debug.apk') 
            tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
-           traces = map(lambda s: s.strip(), conf.get(section, 'traces').split(','))
+           traces = map(lambda s: s.strip(), get(conf, section, 'traces', default='').split(','))
            appUsetracers = get(conf, section, 'usetracers', default=None)
            if appUsetracers == None:
               appUsetracers = usetracers
@@ -116,7 +118,12 @@ if __name__ == "__main__":
            print "Running Monkey Tracer..."
            monkeyOutput = output + "/" + "monkeyTraces"
            createPathIfEmpty( monkeyOutput )
-           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytries'], configs['monkeyevents'])
+           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries'])
+       if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
+           manualTraceOutput = output + "/manualTraces"
+           createPathIfEmpty( manualTraceOutput )
+           for trace in getFilesInPath(configs['input'] + "/" + appName + "/manualTraces"):
+               shutil.copyfile(trace, manualTraceOutput + "/" + os.path.basename(trace))
 
    # Kill emulator if it was started here
    if configs['startEmulator']:

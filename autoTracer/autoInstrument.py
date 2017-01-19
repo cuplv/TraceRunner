@@ -21,18 +21,20 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath):
    outcome,errors = instProc.communicate()
    print "Instrumentation and Resigning completed: %s" % outcome
    
-   print "Copying Robotium Tester APK to %s" % roboOutPath
-   copyfile(roboAPKPath, roboOutPath)
-   print "Copy done!"
+   if os.path.exists( roboAPKPath ):
+      print "Copying Robotium Tester APK to %s" % roboOutPath
+      copyfile(roboAPKPath, roboOutPath)
+      print "Copy done!"
 
-   print "Resigning Robotium Tester APK: %s" % roboOutPath
-   roboProc = Popen(['bash', 'resign.sh', roboOutPath], stdout=PIPE)   
-   outcome,errors = roboProc.communicate()
-   print "Resigning completed: %s" % outcome
+      print "Resigning Robotium Tester APK: %s" % roboOutPath
+      roboProc = Popen(['bash', 'resign.sh', roboOutPath], stdout=PIPE)   
+      outcome,errors = roboProc.communicate()
+      print "Resigning completed: %s" % outcome
 
    print "Outputs written:"
    print "   %s" % appOutPath
-   print "   %s" % roboOutPath
+   if os.path.exists( roboAPKPath ):
+      print "   %s" % roboOutPath
 
    print "Instrumentation and Resigning Done!"
 
