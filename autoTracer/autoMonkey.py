@@ -63,9 +63,14 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, num
    # adb shell monkey -p your.package.name -v 500
 
    ranNumOfMonkeyTries = numOfMonkeyTries + r.randint(-2,2)
+   if ranNumOfMonkeyTries < 1:
+      ranNumOfMonkeyTries = 1
    print "%s Monkeys will jump on your Android" % ranNumOfMonkeyTries
    for i in range(0, ranNumOfMonkeyTries):
-        monkeySprint(appPackageName, numOfMonkeyEvents + r.randint(-20,20))
+        ranNumOfMonkeyEvents = numOfMonkeyEvents + r.randint(-20,20)
+        if ranNumOfMonkeyEvents < 1:
+           ranNumOfMonkeyEvents = 10
+        monkeySprint(appPackageName, ranNumOfMonkeyEvents)
         if i < ranNumOfMonkeyTries - 1:
            wait = 2 + r.randint(0,10)
            print "Waiting %s seconds before restarting the monkey..." % wait
