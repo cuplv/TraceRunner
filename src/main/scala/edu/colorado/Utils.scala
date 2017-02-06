@@ -105,7 +105,7 @@ object Utils {
       }
       case i => {
         ???
-      } //Note no boolean type as these are ints
+      }
     }
 
   }

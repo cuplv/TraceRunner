@@ -138,9 +138,32 @@ This is decided based on a pre defined set of filters in resources/android_packa
 
 Logging callbacks
 -------------------------
-All non static methods are logged as potential callbacks.  After trace generation we will filter out the ones which were not callbacks by looking at the type of the thing calling them.  Static methods are not logged in this way as they can never be callbacks.  The effect of this is that in the trace their method calls will appear to be inlined with the callback which invoked them.
+All non static methods are logged as potential callbacks.  After trace generation we will filter out the ones which were not callbacks by looking at the type of the thing calling them.  Most static methods are not logged in this way as they can never be callbacks.  The one exception is \<clinit\> which can be a callback.  The effect of this is that in the trace their method calls will appear to be inlined with the callback which invoked them.
+
+\<clinit\> is not always invoked by the framework.  It appears to be called just before the first initialization by whatever the top stack frame is.  If there are callins in the \<clinit\> and it is not logged as a callback the methods will show up in the parent transition.
 
 
 Trace Version Tag
 ===============================
 Tag of the format "traceversion0" which denotes that there have been no changes that will affect the appearance of traces until another trace version tag is added. 
+
+Debugging
+=========
+Viewing exceptions
+------------------
+The command "adb logcat" prints the log file that uncaught exceptions are logged to.  Sometimes it can help to clear the log, run it, and then look at the log again to know that the exception came from your most recent run.  Do this with "adb logcat -c"
+
+Known exceptions
+----------------
+* IOException: occurs when data cannot be sent from the app to the receiver
+    * check the following
+        * bridge started successfully (adb reverse tcp:5050 tcp:5050)
+        * Application has the internet permission (see above)
+        * nc -l -p 5050 is running only once (check with "ps aux |grep 5050")
+    * Also try
+        * restart adb by running adb kill-server
+        * clean and rebuild app (gradle doesn't always monitor the AndroidManifest.xml file for changes properly)
+        
+Other debugging steps
+---------------------
+* clean and rebuild app (there was a developer tools update in Jan 2017 which causes issues until you clean and rebuild)
