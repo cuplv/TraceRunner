@@ -5,7 +5,7 @@ import java.util
 import edu.colorad.cs.TraceRunner.Config
 import soot.jimple.{Jimple, SpecialInvokeExpr}
 import soot.util.NumberedString
-import soot.{Body, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
+import soot.{Body, Hierarchy, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
 
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
@@ -30,23 +30,14 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       if(!Utils.isFrameworkClass(applicationClass.getName)) {
         val superclass: SootClass = applicationClass.getSuperclass
 
-        val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]()).foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
+        val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]())
+          .foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
           val parameterTypes: List[Type] = a.getParameterTypes.toList
           val mkey: (String, List[Type], Boolean, Int) = (a.getName, parameterTypes,a.isAbstract, a.getModifiers)
           if(acc.contains(mkey)) {
             val returnTypeInMap: Type = acc(mkey)
-            if (a.getReturnType == returnTypeInMap) {
-              acc
-            } else {
-              //Case where return types do not match
-              //TODO: Implement this. Probably can happen with generics, how else can this happen?
-              //Ideas: take less precise type and override that
-              //If type doesn't intersect then what?
-              val returnTypeName: String = returnTypeInMap.getEscapedName
-              Scene.v().getSootClass(returnTypeName)
-
-              ???
-            }
+            val activeHierarchy: Hierarchy = Scene.v().getActiveHierarchy
+            acc //iteration is from most precise type that is overridden so if key is contained then this will override correctly
           }else{
             acc + (mkey -> a.getReturnType)
           }
