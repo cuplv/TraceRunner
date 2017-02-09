@@ -19,6 +19,14 @@ import scala.collection.mutable
 class OverrideAllMethods(config: Config) extends SceneTransformer {
   def dbgPred(name: String): Boolean = {
 
+//    >100
+    // <= 106
+    // <= 103
+//    name(0) > 101
+//    name(0) > 101
+//    name(0) == 104
+//    name(0) > 104
+//    true
     true
   }
 
@@ -31,6 +39,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
         val superclass: SootClass = applicationClass.getSuperclass
 
         val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]())
+          .filter((a: SootMethod) => Utils.isFrameworkClass(a.getDeclaringClass))
           .foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
           val parameterTypes: List[Type] = a.getParameterTypes.toList
           val mkey: (String, List[Type], Boolean, Int) = (a.getName, parameterTypes,a.isAbstract, a.getModifiers)
