@@ -13,6 +13,8 @@ import scala.util.matching.Regex
  * Created by s on 9/30/16.
  */
 object Utils {
+  def isFrameworkClass(getDeclaringClass: SootClass): Boolean = isFrameworkClass(getDeclaringClass.getName)
+
   val source = scala.io.Source.fromFile(TraceRunnerOptions.FRAMEWORK_FILTER_FILE)
   val filter_lines = (try source.mkString finally source.close()).split("\n")
   val framework_match_regex = filter_lines.map(globToRegex).map(a => a.r)
