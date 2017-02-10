@@ -7,12 +7,14 @@ import soot.options.Options
 import soot.{PackManager, PhaseOptions, Scene, SootClass, Transform}
 
 import scala.collection.JavaConverters._
+import scala.util.matching.Regex
 
 case class Config(apkPath: String = null,
                   androidJars: String = null,
                   outputDir: String = null,
                   applicationPackages: Array[String] = Array(),
                   instDir: String = null,
+                  excludeClasses: Set[Regex] = Set(),
                   jimpleOutput: Boolean = false,
                   useJava: Boolean = false,
                   classOutput: Boolean = false
@@ -50,6 +52,8 @@ object TraceRunner {
       opt[String]('p', "application-packages").action((x,c) =>
         c.copy(applicationPackages = x.split(":").filter(a => a != "")))
       opt[String]('i', "instrumentation-directory").action((x,c) => c.copy(instDir = x)).required()
+      opt[String]('x', "exclude-classes").action((x,c) =>
+        c.copy(excludeClasses = Utils.semicolonSeparatedGlobsToRegex(x)))
       opt[Unit]('m', "output_jimple").action((x,c) => c.copy(jimpleOutput = true))
       opt[Unit]('c', "output_class").action((x,c) => c.copy(classOutput = true))
       opt[Unit]('v', "use_java").action((x,c) => c.copy(useJava = true))

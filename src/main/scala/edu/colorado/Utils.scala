@@ -24,6 +24,16 @@ object Utils {
       case _ => false
     })
   }
+  def semicolonSeparatedGlobsToRegex(list: String): Set[Regex] ={
+    list.split(":").map(a => globToRegex(a).r).toSet
+  }
+  def sootClassMatches(clazz: SootClass, regexSet: Set[Regex]): Boolean ={
+    val name: String = clazz.getName
+    regexSet.exists(a => a.findFirstIn(name) match{
+      case Some(_) => true
+      case None => false
+    })
+  }
   def globToRegex(glob: String): String = {
     glob.flatMap((a: Char) =>
       a match {
