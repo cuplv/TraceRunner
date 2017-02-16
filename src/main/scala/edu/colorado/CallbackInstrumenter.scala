@@ -95,7 +95,6 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
             val rvalue: Value = stmt.getRightOpBox.getValue
             rvalue match {
               case r: ParameterRef => {
-                println(stmt)
                 stmt.getLeftOp match {
                   case l: Local => args += l
                   case _ => ???

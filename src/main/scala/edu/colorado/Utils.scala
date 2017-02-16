@@ -13,6 +13,8 @@ import scala.util.matching.Regex
  * Created by s on 9/30/16.
  */
 object Utils {
+  def isFrameworkClass(getDeclaringClass: SootClass): Boolean = isFrameworkClass(getDeclaringClass.getName)
+
   val source = scala.io.Source.fromFile(TraceRunnerOptions.FRAMEWORK_FILTER_FILE)
   val filter_lines = (try source.mkString finally source.close()).split("\n")
   val framework_match_regex = filter_lines.map(globToRegex).map(a => a.r)
@@ -20,6 +22,16 @@ object Utils {
     framework_match_regex.exists((a: Regex) => clazz match{
       case a() => true
       case _ => false
+    })
+  }
+  def semicolonSeparatedGlobsToRegex(list: String): Set[Regex] ={
+    list.split(":").map(a => globToRegex(a).r).toSet
+  }
+  def sootClassMatches(clazz: SootClass, regexSet: Set[Regex]): Boolean ={
+    val name: String = clazz.getName
+    regexSet.exists(a => a.findFirstIn(name) match{
+      case Some(_) => true
+      case None => false
     })
   }
   def globToRegex(glob: String): String = {

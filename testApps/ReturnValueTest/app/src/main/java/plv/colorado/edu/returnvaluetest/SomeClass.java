@@ -7,5 +7,4 @@ import android.util.Log;
  */
 
 public class SomeClass {
-    static SomeOtherClass s = new SomeOtherClass();
 }
