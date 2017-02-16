@@ -39,7 +39,6 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
         val superclass: SootClass = applicationClass.getSuperclass
 
         val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]())
-          .filter((a: SootMethod) => Utils.isFrameworkClass(a.getDeclaringClass))
           .foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
           val parameterTypes: List[Type] = a.getParameterTypes.toList
           val mkey: (String, List[Type], Boolean, Int) = (a.getName, parameterTypes,a.isAbstract, a.getModifiers)
@@ -68,8 +67,6 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
             dupModifiers(modifiers, newMethod)
             applicationClass.addMethod(newMethod)
             val units: PatchingChain[Unit] = activeBody.getUnits
-
-//            if (!isAbstract) {
               val thisRef = Jimple.v().newLocal(Utils.nextName("this"), applicationClass.getType)
               activeBody.getLocals.add(thisRef)
               units.addLast(Jimple.v().newIdentityStmt(thisRef, Jimple.v().newThisRef(applicationClass.getType)))
@@ -101,16 +98,8 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
                 units.addLast(Jimple.v().newAssignStmt(returnVal, newSpecialInvokeExpr))
                 units.addLast(Jimple.v().newReturnStmt(returnVal))
               }
-//            }else{
-//              returnType match{
-//                case i: VoidType => units.addLast(Jimple.v().newReturnVoidStmt())
-//                case _ => ???
-//              }
-//            }
           }
         })
-
-//        a.addMethod()
       }
     })
   }
