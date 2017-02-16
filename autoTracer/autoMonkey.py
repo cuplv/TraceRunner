@@ -27,7 +27,7 @@ from utils.getAPKInfo import getAPKInfo
 2: 15.0% traceback 3: 25.0% syskeys 4: 15.0% nav 5: 2.0% majornav 6: 2.0% appswitch 7: 1.0% flip 8: 15.0% anyevent
 '''
 
-MONKEY_EVENT_DIST = { 'throttle'      : '500'
+MONKEY_EVENT_DIST = { 'throttle'      : '300'
                     , 'pct-touch'     : '40' 
                     , 'pct-motion'    : '15'
                     , 'pct-trackball' : '10'
@@ -72,7 +72,7 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, num
            ranNumOfMonkeyEvents = 10
         monkeySprint(appPackageName, ranNumOfMonkeyEvents)
         if i < ranNumOfMonkeyTries - 1:
-           wait = 2 + r.randint(0,10)
+           wait = 2 ## + r.randint(0,10)
            print "Waiting %s seconds before restarting the monkey..." % wait
            time.sleep(wait)
    # events = str(numOfMonkeyEvents)
@@ -86,9 +86,14 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, num
    time.sleep(wait)
 
    print "Stopping the Instrumented App"
-   stop_proc = Popen(['adb','shell','am','force-stop',appPackageName], stdout=PIPE)
+   stop_proc = Popen(['adb','shell','am','force-stop',appPackageName], stdout=PIPE, stderr=PIPE)
    outcome,error = stop_proc.communicate()
    print "App Force-Stop Initiated: %s, %s" % (outcome,error)
+
+   print "Clearing the Instrumented App from task list"
+   clear_app = Popen(['adb','shell','pm','clear',appPackageName], stdout=PIPE, stderr=PIPE)
+   outcome,error = clear_app.communicate()
+   print "App Clear Initiated: %s, %s" % (outcome,error)
 
    trace,_ = nc_proc.communicate()
 
@@ -113,7 +118,7 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
    for index in range(0,int(numOfTraces)):
       runAutoMonkey(appPackageName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
       if index < int(numOfTraces) - 1:
-         wait = 3
+         wait = 1
          print "Waiting %s seconds before next trace ..." % wait
          time.sleep(wait)
 
