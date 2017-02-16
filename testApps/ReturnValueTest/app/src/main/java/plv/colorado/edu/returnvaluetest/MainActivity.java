@@ -15,7 +15,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 //public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends SomeClass{
     static UriMatcher meh = getit();
     static UriMatcher getit(){
         return new UriMatcher(3);
