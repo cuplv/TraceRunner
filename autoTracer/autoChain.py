@@ -106,7 +106,7 @@ if __name__ == "__main__":
        appInputPath    = configs['input'] + "/" + appName + "/" + appData['app']
        tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
        instrumentPath  = configs['instrument'] + "/" + appName
-       createPathIfEmpty( instrumentPath )
+       recreatePath( instrumentPath )
        if appData['instrumented'] == None:
           autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars'])
        else:
