@@ -62,13 +62,14 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
            appName = section[4:]
            appAPK  = get(conf, section, 'app', default='app-debug.apk') 
            tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
+           instrumentedAPK = get(conf, section, 'instrumented', default=None)
            traces = map(lambda s: s.strip(), get(conf, section, 'traces', default='').split(','))
            appUsetracers = get(conf, section, 'usetracers', default=None)
            if appUsetracers == None:
               appUsetracers = usetracers
            else:
               appUsetracers = map(lambda s: s.strip(), appUsetracers.split(','))
-           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'traces':traces, 'usetracers':appUsetracers } 
+           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces, 'usetracers':appUsetracers } 
     configs['apps'] = apps
 
     return configs
@@ -86,8 +87,11 @@ if __name__ == "__main__":
    if configs['startEmulator']:
        startEmulator(configs['name'], configs['sdpath'], devicePort=configs['port'], noWindow=configs['noWindow'])
 
-   recreatePath( configs['instrument'] )
-   recreatePath( configs['output'] )
+   # recreatePath( configs['instrument'] )
+   # recreatePath( configs['output'] )
+
+   createPathIfEmpty( configs['instrument'] )
+   createPathIfEmpty( configs['output'] )
 
    # Run Auto Tracer for each test app listed in the conf file
    for appName in configs['apps']:
@@ -103,7 +107,12 @@ if __name__ == "__main__":
        tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
        instrumentPath  = configs['instrument'] + "/" + appName
        createPathIfEmpty( instrumentPath )
-       autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars'])
+       if appData['instrumented'] == None:
+          autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars'])
+       else:
+          print "Instrumented APK provided... Omitting instrumentation"
+          instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']
+          shutil.copyfile(instrumentInputPath, instrumentPath + "/" + os.path.basename(instrumentInputPath))
 
        # Launch auto tracer and write outputs to the output path
        appInstrPath = configs['instrument'] + "/" + appName + "/" + appData['app']
