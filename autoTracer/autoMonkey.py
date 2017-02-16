@@ -2,6 +2,7 @@
 import os
 import sys
 import time
+import datetime
 import random as r
 
 from subprocess import Popen, PIPE
@@ -97,8 +98,19 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, num
 
    trace,_ = nc_proc.communicate()
 
-   with open("%s/%s.out" % (outputProtoPath,"trace%s" % index), "w") as f:
+   # with open("%s/%s" % (outputProtoPath,"trace%s" % index), "w") as f:
+   with open(generateTraceName(outputProtoPath), "w") as f:
       f.write(trace)
+
+def generateTraceName(outputProtoPath, prefix="trace"):
+   ts = time.time()
+   st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H:%M:%S')
+   traceName = "%s/%s_%s" % (outputProtoPath,prefix,st)
+   index = 1
+   while os.path.exists(traceName):
+     traceName = "%s/%s_%s_%s" % (outputProtoPath,prefix,st,index)
+     index += 1
+   return traceName
 
 def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries):
 
