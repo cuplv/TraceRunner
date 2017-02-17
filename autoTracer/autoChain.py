@@ -68,6 +68,11 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
            appAPK  = get(conf, section, 'app', default='app-debug.apk') 
            tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
            instrumentedAPK = get(conf, section, 'instrumented', default=None)
+           installApp = get(conf, section, 'installapp', default=True)
+           if installApp in ['False','false','No','no']:
+              installApp = False
+           else:
+              installApp = True
            traces = map(lambda s: s.strip(), get(conf, section, 'traces', default='').split(','))
            appUsetracers = get(conf, section, 'usetracers', default=None)
            if appUsetracers == None:
@@ -78,7 +83,8 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
            blackList = map(lambda s: s.strip(), get(conf, section, 'blacklist', default='').split(','))
            blackList = filter(lambda b: b != '', blackList)
 
-           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces, 'usetracers':appUsetracers, 'blacklist':blackList } 
+           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces
+                           , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp } 
     configs['apps'] = apps
 
     return configs
@@ -112,17 +118,20 @@ if __name__ == "__main__":
        traces = ':'.join( appData['traces'] )
 
        # Instrument the App APK and Resign both the App and Tracer APKs
-       appInputPath    = configs['input'] + "/" + appName + "/" + appData['app']
-       tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
-       instrumentPath  = configs['instrument'] + "/" + appName
-       recreatePath( instrumentPath )
-       if appData['instrumented'] == None:
-          autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
-                        ,oneJar=configs['onejar'], blackList=appData['blacklist'])
+       if appData['installapp']:
+          appInputPath    = configs['input'] + "/" + appName + "/" + appData['app']
+          tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
+          instrumentPath  = configs['instrument'] + "/" + appName
+          recreatePath( instrumentPath )
+          if appData['instrumented'] == None:
+             autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
+                           ,oneJar=configs['onejar'], blackList=appData['blacklist'])
+          else:
+             print "Instrumented APK provided... Omitting instrumentation"
+             instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']
+             shutil.copyfile(instrumentInputPath, instrumentPath + "/" + os.path.basename(instrumentInputPath))
        else:
-          print "Instrumented APK provided... Omitting instrumentation"
-          instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']
-          shutil.copyfile(instrumentInputPath, instrumentPath + "/" + os.path.basename(instrumentInputPath))
+          print "App installation omitted, will omit instrumentation too"
 
        # Launch auto tracer and write outputs to the output path
        appInstrPath = configs['instrument'] + "/" + appName + "/" + appData['app']
@@ -137,7 +146,7 @@ if __name__ == "__main__":
            print "Running Monkey Tracer..."
            monkeyOutput = output + "/" + "monkeyTraces"
            createPathIfEmpty( monkeyOutput )
-           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries'])
+           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries'], installApp=appData['installapp'])
        if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
            manualTraceOutput = output + "/manualTraces"
            createPathIfEmpty( manualTraceOutput )

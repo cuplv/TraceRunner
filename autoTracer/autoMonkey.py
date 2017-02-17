@@ -30,13 +30,13 @@ from utils.getAPKInfo import getAPKInfo
 
 MONKEY_EVENT_DIST = { 'throttle'      : '300'
                     , 'pct-touch'     : '50' 
-                    , 'pct-motion'    : '4'
-                    , 'pct-trackball' : '4'
+                    , 'pct-motion'    : '3'
+                    , 'pct-trackball' : '3'
                     , 'pct-nav'       : '0'
                     , 'pct-majornav'  : '0'
                     , 'pct-syskeys'   : '0'
-                    , 'pct-appswitch' : '39'
-                    , 'pct-anyevent'  : '3' }
+                    , 'pct-appswitch' : '40'
+                    , 'pct-anyevent'  : '4' }
 
 def getMonkeyEvents():
    events = []
@@ -112,20 +112,23 @@ def generateTraceName(outputProtoPath, prefix="trace"):
      index += 1
    return traceName
 
-def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries):
+def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries, installApp=True):
 
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    print "Instrumented App Package Name: %s" % appPackageName
 
-   print "Uninstalling Previous Version of Instrumented App..."
-   adb_proc = Popen(['adb','uninstall',appPackageName], stdout=PIPE)
-   outcome,_ = adb_proc.communicate()
-   print "Uninstall Completed: %s" % outcome
+   if installApp:
+      print "Uninstalling Previous Version of Instrumented App..."
+      adb_proc = Popen(['adb','uninstall',appPackageName], stdout=PIPE, stderr=PIPE)
+      outcome,_ = adb_proc.communicate()
+      print "Uninstall Completed: %s" % outcome
 
-   print "Installing Current Version of Instrumented App..."
-   adb_proc = Popen(['adb','install',instrumentedAPKPath], stdout=PIPE)
-   outcome,_ = adb_proc.communicate()
-   print "Install Completed: %s" % outcome
+      print "Installing Current Version of Instrumented App..."
+      adb_proc = Popen(['adb','install',instrumentedAPKPath], stdout=PIPE, stderr=PIPE)
+      outcome,_ = adb_proc.communicate()
+      print "Install Completed: %s" % outcome
+   else:
+      print "App installation omitted. Assuming that app already exist on the device..."
 
    for index in range(0,int(numOfTraces)):
       runAutoMonkey(appPackageName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
