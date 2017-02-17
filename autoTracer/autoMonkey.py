@@ -29,14 +29,14 @@ from utils.getAPKInfo import getAPKInfo
 '''
 
 MONKEY_EVENT_DIST = { 'throttle'      : '300'
-                    , 'pct-touch'     : '40' 
-                    , 'pct-motion'    : '15'
-                    , 'pct-trackball' : '10'
+                    , 'pct-touch'     : '50' 
+                    , 'pct-motion'    : '4'
+                    , 'pct-trackball' : '4'
                     , 'pct-nav'       : '0'
                     , 'pct-majornav'  : '0'
                     , 'pct-syskeys'   : '0'
-                    , 'pct-appswitch' : '30'
-                    , 'pct-anyevent'  : '5' }
+                    , 'pct-appswitch' : '39'
+                    , 'pct-anyevent'  : '3' }
 
 def getMonkeyEvents():
    events = []
