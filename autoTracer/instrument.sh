@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ "$#" -ne 3 ]; then
-    echo "Usage: bash instrument.sh <Path to APK> <Path to Output> <Path to Android Jars>"
+    echo "Usage: bash instrument.sh <Path to APK> <Path to Output> <Path to Android Jars> <':' separated Instr Blacklist (Optional)>"
     exit 1
 fi
 
@@ -9,6 +9,7 @@ APP_APK_FILE=$1
 OUTPUT_PATH=$2
 # ANDROID_JARS=/home/edmund/workshops/git_workshop/external/android-platforms
 ANDROID_JARS=$3
+BLACK_LIST=$4
 
 # Retrieving absolute script path
 CURR_PATH=$(pwd)
@@ -39,7 +40,12 @@ echo Instrumentation Jar Path: $INST_JAR_FILE
 echo Instrumentation Dex Path: $INST_DEX_FILE
 
 cd $TRACERUNNER_PATH
-sbt "run -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE"
+if [ "${BLACK_LIST}" = "" ]
+then
+  sbt "run -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE"
+else
+  sbt "run -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE -x $BLACK_LIST"
+fi
 echo "App ${APP_APK_FILE##*/} instrumented and written to $OUTPUT_PATH"
 cd $CURR_PATH
 

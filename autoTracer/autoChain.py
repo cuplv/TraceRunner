@@ -74,7 +74,11 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
               appUsetracers = usetracers
            else:
               appUsetracers = map(lambda s: s.strip(), appUsetracers.split(','))
-           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces, 'usetracers':appUsetracers } 
+
+           blackList = map(lambda s: s.strip(), get(conf, section, 'blacklist', default='').split(','))
+           blackList = filter(lambda b: b != '', blackList)
+
+           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces, 'usetracers':appUsetracers, 'blacklist':blackList } 
     configs['apps'] = apps
 
     return configs
@@ -114,7 +118,7 @@ if __name__ == "__main__":
        recreatePath( instrumentPath )
        if appData['instrumented'] == None:
           autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
-                        ,oneJar=configs['onejar'])
+                        ,oneJar=configs['onejar'], blackList=appData['blacklist'])
        else:
           print "Instrumented APK provided... Omitting instrumentation"
           instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']

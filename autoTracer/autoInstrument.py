@@ -4,7 +4,7 @@ import sys
 from subprocess import Popen, PIPE
 from shutil import copyfile
 
-def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=None):
+def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=None, blackList=[]):
 
    appOutPath   = outputPath + "/" + appAPKPath.split('/')[-1]
    roboOutPath  = outputPath + "/" + roboAPKPath.split('/')[-1]
@@ -17,12 +17,20 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=Non
    print "   %s" % roboOutPath
 
    print "Instrumenting and Resigning App APK: %s" % appAPKPath
+   if len(blackList) > 0:
+      blackListParam = [':'.join(blackList)]
+      print "Instrumentation blacklist provided: %s" % (':'.join(blackList))
+   else:
+      blackListParam = []
+      print "No instrumentation blacklist provided"
    if not oneJar:
       print "Running with sbt..."
-      instProc = Popen(['bash', 'instrument.sh', appAPKPath, outputPath, andrJarsPath], stdout=PIPE, stderr=PIPE)
+      instProc = Popen(['bash', 'instrument.sh', appAPKPath, outputPath, andrJarsPath] + blackListParam
+                      ,stdout=PIPE, stderr=PIPE)
    else:
       print "Running with oneJar..."
-      instProc = Popen(['bash', 'instrumentOneJar.sh', appAPKPath, outputPath, andrJarsPath], stdout=PIPE, stderr=PIPE)
+      instProc = Popen(['bash', 'instrumentOneJar.sh', appAPKPath, outputPath, andrJarsPath] + blackListParam
+                       ,stdout=PIPE, stderr=PIPE)
 
    outcome,errors = instProc.communicate()
    print "Instrumentation and Resigning completed: %s" % outcome
