@@ -36,8 +36,13 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     monkeyevents   = get(conf, 'tracerOptions', 'monkeyevents', default='40')
     monkeytraces   = get(conf, 'tracerOptions', 'monkeytraces', default='10')
     monkeytries    = get(conf, 'tracerOptions', 'monkeytries', default='5')
+    onejar         = get(conf, 'tracerOptions', 'onejarinstrument', default=False)
+    if onejar in ['true', 'True', 'Yes', 'yes']:
+       onejar = True
+    else:
+       onejar = False
 
-    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries }
+    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -108,7 +113,8 @@ if __name__ == "__main__":
        instrumentPath  = configs['instrument'] + "/" + appName
        recreatePath( instrumentPath )
        if appData['instrumented'] == None:
-          autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars'])
+          autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
+                        ,oneJar=configs['onejar'])
        else:
           print "Instrumented APK provided... Omitting instrumentation"
           instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']

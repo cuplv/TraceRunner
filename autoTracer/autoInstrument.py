@@ -4,7 +4,7 @@ import sys
 from subprocess import Popen, PIPE
 from shutil import copyfile
 
-def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath):
+def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=None):
 
    appOutPath   = outputPath + "/" + appAPKPath.split('/')[-1]
    roboOutPath  = outputPath + "/" + roboAPKPath.split('/')[-1]
@@ -17,7 +17,13 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath):
    print "   %s" % roboOutPath
 
    print "Instrumenting and Resigning App APK: %s" % appAPKPath
-   instProc = Popen(['bash', 'instrument.sh', appAPKPath, outputPath, andrJarsPath], stdout=PIPE)
+   if not oneJar:
+      print "Running with sbt..."
+      instProc = Popen(['bash', 'instrument.sh', appAPKPath, outputPath, andrJarsPath], stdout=PIPE, stderr=PIPE)
+   else:
+      print "Running with oneJar..."
+      instProc = Popen(['bash', 'instrumentOneJar.sh', appAPKPath, outputPath, andrJarsPath], stdout=PIPE, stderr=PIPE)
+
    outcome,errors = instProc.communicate()
    print "Instrumentation and Resigning completed: %s" % outcome
    
