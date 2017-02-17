@@ -34,6 +34,13 @@ if __name__ == "__main__":
    outcome,_ = adb_proc.communicate()
    print "Install Completed: %s" % outcome
 
+   print "Granting permissions"
+   permissions = ['android.permission.READ_EXTERNAL_STORAGE','android.permission.WRITE_EXTERNAL_STORAGE','android.permission.READ_PHONE_STATE']
+   for permission in permissions:
+      perm_proc = Popen(['adb','shell','pm','grant',appName,permission], stdout=PIPE, stderr=PIPE)
+      outcome,err = perm_proc.communicate()
+      print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
+
    print "Starting the Instrumented App..."
    run_proc = Popen(['adb', 'shell', 'am', 'start', '-n', appName + '/' + activityName], stdout=PIPE)
    outcome,_ = run_proc.communicate()

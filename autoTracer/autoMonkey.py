@@ -112,7 +112,7 @@ def generateTraceName(outputProtoPath, prefix="trace"):
      index += 1
    return traceName
 
-def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries, installApp=True):
+def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries, installApp=True, permissions=[]):
 
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    print "Instrumented App Package Name: %s" % appPackageName
@@ -131,6 +131,13 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
       print "App installation omitted. Assuming that app already exist on the device..."
 
    for index in range(0,int(numOfTraces)):
+
+      print "Granting permissions..."
+      for permission in permissions:
+         perm_proc = Popen(['adb','shell','pm','grant',appPackageName,permission], stdout=PIPE, stderr=PIPE)
+         outcome,err = perm_proc.communicate()
+         print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
+
       runAutoMonkey(appPackageName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
       if index < int(numOfTraces) - 1:
          wait = 1

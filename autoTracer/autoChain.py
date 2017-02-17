@@ -41,8 +41,10 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
        onejar = True
     else:
        onejar = False
+    permissions = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'permissions', default='').split(','))
+    permissions = filter(lambda p: p != '', permissions)
 
-    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar }
+    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar, 'permissions':permissions }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -83,8 +85,12 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
            blackList = map(lambda s: s.strip(), get(conf, section, 'blacklist', default='').split(','))
            blackList = filter(lambda b: b != '', blackList)
 
+           permissions = map(lambda s: s.strip(), get(conf, section, 'permissions', default='').split(','))
+           permissions = filter(lambda p: p != '', permissions)
+           permissions = list(set(configs['permissions'] + permissions))
+
            apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces
-                           , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp } 
+                           , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions } 
     configs['apps'] = apps
 
     return configs
@@ -141,12 +147,13 @@ if __name__ == "__main__":
        usetracers = appData['usetracers']
        if 'robot' in usetracers:
            print "Running Robotium Tracer..."
-           autoLaunch(appInstrPath, tracerInstrPath, traces, output)
+           autoLaunch(appInstrPath, tracerInstrPath, traces, output, permissions=appData['permissions'])
        if 'monkey' in usetracers:  
            print "Running Monkey Tracer..."
            monkeyOutput = output + "/" + "monkeyTraces"
            createPathIfEmpty( monkeyOutput )
-           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries'], installApp=appData['installapp'])
+           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries']
+                     ,installApp=appData['installapp'], permissions=appData['permissions'])
        if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
            manualTraceOutput = output + "/manualTraces"
            createPathIfEmpty( manualTraceOutput )
