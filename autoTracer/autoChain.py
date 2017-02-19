@@ -11,6 +11,9 @@ from autoLaunch import autoLaunch
 from autoInstrument import autoInstrument
 from autoMonkey import autoMonkey
 
+
+# adb shell input tap 600 150
+
 def get(conf, section, option, default=None):
      if conf.has_option(section, option):
          return conf.get(section, option)

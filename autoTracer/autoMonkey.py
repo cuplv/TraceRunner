@@ -51,7 +51,7 @@ def monkeySprint(appPackageName, numOfMonkeyEvents):
    outcome,error = trace_proc.communicate()
    print "%s Monkey Steps Completed: %s, %s" % (numOfMonkeyEvents,outcome,error)
 
-def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries):
+def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries):
 
    print "Starting ADB+NetCat Bridge @ 5050..."
    adb_proc = Popen(['adb','reverse','tcp:5050', 'tcp:5050'], stdout=PIPE)
@@ -59,6 +59,7 @@ def runAutoMonkey(appPackageName, outputProtoPath, index, numOfMonkeyEvents, num
    nc_proc = Popen(['nc','-l','-p','5050'], stdout=PIPE)
    print "Started ADB+NetCat Bridge"
 
+   # reachMonkeyDropZone(appPackageName, activityName)
 
    print "Running Android Monkey on Instrumented App..."
    # adb shell monkey -p your.package.name -v 500
@@ -112,6 +113,34 @@ def generateTraceName(outputProtoPath, prefix="trace"):
      index += 1
    return traceName
 
+def reachMonkeyDropZone(appPackageName,activityName):
+      print "Starting App %s/%s" % (appPackageName,activityName)
+      start_proc = Popen(['adb','shell','am','start','-n', "%s/%s" % (appPackageName,activityName)], stdout=PIPE, stderr=PIPE)
+      outcome,stderr = start_proc.communicate()
+      print "App started: %s \n %s" % (outcome,stderr)
+
+      wait = 20
+      print "Sleeping for %s secs..." % wait
+      time.sleep(wait)
+
+      print "Tap Menu button"
+      hit_proc = Popen(['adb','shell','input','tap','600', "150"], stdout=PIPE, stderr=PIPE)
+      outcome,stderr = hit_proc.communicate()
+      print "Tapped: %s \n %s" % (outcome,stderr)
+
+      wait = 10
+      print "Sleeping for %s secs..." % wait
+      time.sleep(wait)
+
+      print "Tap Settings button"
+      hit_proc = Popen(['adb','shell','input','tap','600', "150"], stdout=PIPE, stderr=PIPE)
+      outcome,stderr = hit_proc.communicate()
+      print "Tapped: %s \n %s" % (outcome,stderr)
+
+      wait = 15
+      print "Sleeping for %s secs..." % wait
+      time.sleep(wait)
+
 def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries, installApp=True, permissions=[]):
 
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
@@ -138,7 +167,7 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
          outcome,err = perm_proc.communicate()
          print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
 
-      runAutoMonkey(appPackageName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
+      runAutoMonkey(appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
       if index < int(numOfTraces) - 1:
          wait = 1
          print "Waiting %s seconds before next trace ..." % wait
