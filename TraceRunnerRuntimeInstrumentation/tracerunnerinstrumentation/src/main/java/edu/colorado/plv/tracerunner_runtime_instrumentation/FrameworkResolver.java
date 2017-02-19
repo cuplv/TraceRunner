@@ -429,6 +429,7 @@ public class FrameworkResolver {
                     if(cclazz == null){
                         throw e;
                     }
+
                 }
             }
         } catch (NoSuchMethodException e) {
