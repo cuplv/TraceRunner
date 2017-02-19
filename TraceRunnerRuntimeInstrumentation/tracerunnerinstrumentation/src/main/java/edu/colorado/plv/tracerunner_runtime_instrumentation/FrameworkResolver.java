@@ -1,7 +1,5 @@
 package edu.colorado.plv.tracerunner_runtime_instrumentation;
 
-import android.util.Log;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -413,52 +411,18 @@ public class FrameworkResolver {
     }
 
     List<Method> getFrameworkOverride(Class clazz, String name, String[] argTypes) throws ClassNotFoundException {
-        Method method1 = null;
+        Method method1;
         Class[] objects = null;
         try {
             objects = new Class[argTypes.length];
             for(int j = 0; j< argTypes.length; ++j){
                 objects[j] = ClassUtils.getClass(argTypes[j]);
             }
-            Class cclazz = clazz;
-            while(method1 == null) {
-                try {
-                    method1 = cclazz.getDeclaredMethod(name, objects); //issue #31
-                }catch(NoSuchMethodException e){
-                    cclazz = cclazz.getSuperclass();
-                    if(cclazz == null){
-                        throw e;
-                    }
-
-                }
-            }
+            method1 = clazz.getDeclaredMethod(name, objects);
         } catch (NoSuchMethodException e) {
 
-            Method[] methods = clazz.getMethods();
-            for (Method method : methods) {
-                int modifiers = method.getModifiers();
-                Class<?>[] parameterTypes = method.getParameterTypes();
-                String typesSer = "[";
-                for (Class parameterType : parameterTypes) {
-                    typesSer += parameterType.getName();
-                }
-                typesSer += "]";
-                Log.e("TraceRunnerInst", "class: " + clazz.getName() + " method: " + method.getName() + " args: " + typesSer + " modifiers: " + modifiers);
-            }
-
-            String objectsSer = "[";
-            for (Object object : objects) {
-                objectsSer += object.toString() + ",";
-            }
-            objectsSer += "]";
-
-            String argSer = "[";
-            for (Object argType : argTypes) {
-                argSer += argType.toString() + ",";
-            }
-            argSer += "]";
             throw new RuntimeException("methodName: " + name + " objects: "
-                    + objectsSer + " types: " + argSer, e);
+                    + objects.toString() + " types: " + argTypes.toString(), e);
         }
 //        return  getOverrideHierarchy(method1, ClassUtils.Interfaces.INCLUDE);
         return getOverriddenMethods(method1);

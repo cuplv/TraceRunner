@@ -17,12 +17,6 @@ import scala.collection.mutable
   * Created by s on 11/3/16.
   */
 class OverrideAllMethods(config: Config) extends SceneTransformer {
-  val excluded: List[(String,String)] = List()
-  def blacklisted(a: SootMethod): Boolean = {
-    val methodname: String = a.getName
-    val classname: String = a.getDeclaringClass.getName
-    methodname.startsWith("get")
-  }
   def dbgPred(name: String): Boolean = {
 
 //    >100
@@ -136,20 +130,13 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, clazz.getMethods.toSet.union(exclude)))
     }else Set[SootMethod]()
   }
-
-
-
   def getOverrideableMethods(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
-    if(Utils.isFrameworkClass(clazz)) {
-      clazz.getMethods.flatMap { (a: SootMethod) =>
-        val excluded: Boolean = isExcluded(exclude, a) || blacklisted(a)
-        if (!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded) {
-          Some(a)
-        } else None
-      }.toSet
-    }else{
-      Set[SootMethod]()
-    }
+    clazz.getMethods.flatMap{(a: SootMethod) =>
+      val excluded: Boolean = isExcluded(exclude, a)
+      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded ){
+        Some(a)
+      }else None
+    }.toSet
   }
   def isExcluded(exclude: Set[SootMethod], method: SootMethod): Boolean ={
     val ret = exclude.exists(a => {
