@@ -17,7 +17,8 @@ case class Config(apkPath: String = null,
                   excludeClasses: Set[Regex] = Set(),
                   jimpleOutput: Boolean = false,
                   useJava: Boolean = false,
-                  classOutput: Boolean = false
+                  classOutput: Boolean = false,
+                  noOverrideGet: Boolean = false
                  ){
   val applicationPackagesr = applicationPackages.map((a:String) =>{
     Utils.packageGlobToSignatureMatchingRegex(a).r
@@ -57,6 +58,7 @@ object TraceRunner {
       opt[Unit]('m', "output_jimple").action((x,c) => c.copy(jimpleOutput = true))
       opt[Unit]('c', "output_class").action((x,c) => c.copy(classOutput = true))
       opt[Unit]('v', "use_java").action((x,c) => c.copy(useJava = true))
+      opt[Unit]('q', "no_override_get").action((x,c) => c.copy(noOverrideGet = true))
 
     }
     parser.parse(args,Config()) match {

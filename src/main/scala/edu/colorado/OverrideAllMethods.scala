@@ -21,8 +21,11 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   def blacklisted(a: SootMethod): Boolean = {
     val methodname: String = a.getName
     val classname: String = a.getDeclaringClass.getName
-    methodname.startsWith("get")
-    false
+    if (config.noOverrideGet) {
+      methodname.startsWith("get")
+    } else {
+      false
+    }
   }
   def dbgPred(name: String): Boolean = {
 
@@ -122,7 +125,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       try {
         clazz.getMethod(name, args).makeRef()
       }catch{
-        case t => {
+        case t: Throwable => {
           clazz.getMethodUnsafe(name,seqAsJavaList(args),returnType).makeRef()
         }
       }
