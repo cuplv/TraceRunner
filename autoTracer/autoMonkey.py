@@ -29,14 +29,14 @@ from utils.getAPKInfo import getAPKInfo
 '''
 
 MONKEY_EVENT_DIST = { 'throttle'      : '300'
-                    , 'pct-touch'     : '50' 
-                    , 'pct-motion'    : '3'
-                    , 'pct-trackball' : '3'
+                    , 'pct-touch'     : '54' 
+                    , 'pct-motion'    : '2'
+                    , 'pct-trackball' : '2'
                     , 'pct-nav'       : '0'
                     , 'pct-majornav'  : '0'
                     , 'pct-syskeys'   : '0'
                     , 'pct-appswitch' : '40'
-                    , 'pct-anyevent'  : '4' }
+                    , 'pct-anyevent'  : '2' }
 
 def getMonkeyEvents():
    events = []
@@ -83,25 +83,47 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
    # outcome,error = trace_proc.communicate()
    # print "Trace Completed: %s, %s" % (outcome,error)
 
-   wait = 2
+   wait = 4
    print "Waiting %s seconds before stopping app..." % wait
    time.sleep(wait)
 
    print "Stopping the Instrumented App"
+
    stop_proc = Popen(['adb','shell','am','force-stop',appPackageName], stdout=PIPE, stderr=PIPE)
    outcome,error = stop_proc.communicate()
    print "App Force-Stop Initiated: %s, %s" % (outcome,error)
 
-   print "Clearing the Instrumented App from task list"
-   clear_app = Popen(['adb','shell','pm','clear',appPackageName], stdout=PIPE, stderr=PIPE)
-   outcome,error = clear_app.communicate()
-   print "App Clear Initiated: %s, %s" % (outcome,error)
+   '''
+   appswitch_proc = Popen(['adb','shell','input','keyevent','KEYCODE_APP_SWITCH'], stdout=PIPE, stderr=PIPE)
+   outcome,error = appswitch_proc.communicate()
+   print "App Switch: %s, %s" % (outcome,error)
+   time.sleep(5)
+   kill_proc = Popen(['adb','shell','input','tap','590','475'], stdout=PIPE, stderr=PIPE)
+   outcome,error = kill_proc.communicate()
+   print "App kill: %s, %s" % (outcome,error)
+   '''
+
+   wait = 2
+   print "Waiting %s seconds before collecting trace..." % wait
+   time.sleep(wait)
 
    trace,_ = nc_proc.communicate()
+
+   wait = 2
+   print "Waiting %s seconds before writing trace..." % wait
+   time.sleep(wait)
 
    # with open("%s/%s" % (outputProtoPath,"trace%s" % index), "w") as f:
    with open(generateTraceName(outputProtoPath), "w") as f:
       f.write(trace)
+      f.flush()
+
+   '''
+   print "Clearing the Instrumented App from task list"
+   clear_app = Popen(['adb','shell','pm','clear',appPackageName], stdout=PIPE, stderr=PIPE)
+   outcome,error = clear_app.communicate()
+   print "App Clear Initiated: %s, %s" % (outcome,error)
+   '''
 
 def generateTraceName(outputProtoPath, prefix="trace"):
    ts = time.time()
