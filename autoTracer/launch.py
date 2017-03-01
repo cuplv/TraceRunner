@@ -35,7 +35,7 @@ if __name__ == "__main__":
    print "Install Completed: %s" % outcome
 
    print "Granting permissions"
-   permissions = ['android.permission.READ_EXTERNAL_STORAGE','android.permission.WRITE_EXTERNAL_STORAGE','android.permission.READ_PHONE_STATE']
+   permissions = [] # ['android.permission.READ_EXTERNAL_STORAGE','android.permission.WRITE_EXTERNAL_STORAGE','android.permission.READ_PHONE_STATE']
    for permission in permissions:
       perm_proc = Popen(['adb','shell','pm','grant',appName,permission], stdout=PIPE, stderr=PIPE)
       outcome,err = perm_proc.communicate()
