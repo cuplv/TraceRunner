@@ -22,6 +22,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
     val methodname: String = a.getName
     val classname: String = a.getDeclaringClass.getName
     methodname.startsWith("get")
+    false
   }
   def dbgPred(name: String): Boolean = {
 
