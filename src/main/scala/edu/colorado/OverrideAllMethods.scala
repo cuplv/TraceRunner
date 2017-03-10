@@ -17,6 +17,17 @@ import scala.collection.mutable
   * Created by s on 11/3/16.
   */
 class OverrideAllMethods(config: Config) extends SceneTransformer {
+
+  val excluded: List[(String,String)] = List()
+  def blacklisted(a: SootMethod): Boolean = {
+    val methodname: String = a.getName
+    val classname: String = a.getDeclaringClass.getName
+    if (config.noOverrideGet) {
+      methodname.startsWith("get")
+    } else {
+      false
+    }
+  }
   def dbgPred(name: String): Boolean = {
 
 //    >100
@@ -115,7 +126,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       try {
         clazz.getMethod(name, args).makeRef()
       }catch{
-        case t => {
+        case t: Throwable => {
           clazz.getMethodUnsafe(name,seqAsJavaList(args),returnType).makeRef()
         }
       }
