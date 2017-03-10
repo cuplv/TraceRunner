@@ -1,0 +1,36 @@
+digraph race0_832_4294967295 {
+  node[fontsize=7.5];
+  N67563 [label="Event Action #67563, (HANDLER_DELAYED 1860 1860 16)), tid(1860)\nEnqueue #67282, (HANDLER_DELAYED 1860 1860 16), event(67280), type(HANDLER), tid(1860)), sync, delay(0), Listener(, 50872, 52208)\ndispatcher(android.view.ViewRootImpl$ViewRootHandler_android.support.v7.app.ActionBarActivityDelegateBase$1@b2028a60), what(-1)\nEnqueue sequence(HANDLER sync, HANDLER_AT_TIME async), source(DISPLAY)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 50858 Landroid/support/v7/app/ActionBarActivityDelegateHC;.mPanels", URL="race?focus=67563&id=832", shape="box"];
+  N67985 [label="Event Action #67985, (IDLE_HANDLER 1860 1860 52324)), tid(1860)\nEnqueue #67122, (IDLE_HANDLER 1860 1860 52324), event(66830), type(IDLE_HANDLER), tid(1860)), sync", URL="race?focus=67985&id=832", shape="box"];
+  N70801 [label="Event Action #70801, (INPUT 1860 1860 6)), tid(1860)\nEnqueue sequence(), source(INPUT)\nF Ljava/lang/ref/Reference;.get(()Ljava/lang/Object;)\nwrite 52223 Landroid/util/SparseArray;.mGarbage", URL="race?focus=70801&id=832", shape="box"];
+  N71062 [label="Event Action #71062, (INPUT 1860 1860 8)), tid(1860)\nEnqueue sequence(), source(INPUT)\nF Ljava/lang/ref/Reference;.get(()Ljava/lang/Object;)\nwrite 52223 Landroid/util/SparseArray;.mGarbage", URL="race?focus=71062&id=832", shape="box"];
+  N81925 [label="Event Action #81925, (INPUT 1860 1860 147)), tid(1860)\nEnqueue sequence(), source(INPUT)\nF Ljava/lang/ref/Reference;.get(()Ljava/lang/Object;)\nwrite S Landroid/view/KeyEvent;.gRecyclerTop", URL="race?focus=81925&id=832", shape="box"];
+  N81933 [label="Event Action #81933, (INPUT 1860 1860 148)), tid(1860)\nEnqueue sequence(), source(INPUT)\nF Ljava/lang/ref/Reference;.get(()Ljava/lang/Object;)\nwrite 52223 Landroid/util/SparseArray;.mGarbage\ntrigger_op1\nop1", URL="race?focus=81933&id=832", fillcolor="lightgrey", style="filled", shape="box"];
+  N82014 [label="Event Action #82014, (HANDLER_DELAYED 1860 1860 436)), tid(1860)\nEnqueue #81996, (HANDLER_DELAYED 1860 1860 436), event(81933), type(HANDLER), tid(1860)), sync, delay(0), Listener(, 50735, 50741)\ndispatcher(android.os.Handler_android.app.FragmentManagerImpl$1@b2024480), what(-1)\nEnqueue sequence(HANDLER sync), source(INPUT)\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 53507 Ljava/util/ArrayList;.size", URL="race?focus=82014&id=832", shape="box"];
+  N82089 [label="Event Action #82089, (INPUT 1860 1860 149)), tid(1860)\nEnqueue sequence(), source(INPUT)\nF Ljava/lang/ref/Reference;.get(()Ljava/lang/Object;)\nwrite S Landroid/view/MotionEvent;.gRecyclerTop", URL="race?focus=82089&id=832", shape="box"];
+  N93058 [label="Event Action #93058, (HANDLER_DELAYED 1860 1873 857)), tid(1860)\nEnqueue #93038, (HANDLER_DELAYED 1860 1873 857), event(93037), type(HANDLER), tid(1873)), sync, delay(0), Listener(, -1, 50356)\ndispatcher(android.app.ActivityThread$H), what(STOP_ACTIVITY_HIDE)\nEnqueue sequence(HANDLER sync), source(IPC async,interface(android.app.IApplicationThread),code(SCHEDULE_STOP_ACTIVITY))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 50733 Lcom/peilunzhang/kistenstapelndistill/MainActivity;.mConfigChangeFlags\ntrigger_op2\nop2", URL="race?focus=93058&id=832", fillcolor="lightgrey", style="filled", shape="box"];
+  N93096 [label="Event Action #93096, (HANDLER_DELAYED 1860 1860 859)), tid(1860)\nEnqueue #93084, (HANDLER_DELAYED 1860 1860 859), event(93058), type(HANDLER), tid(1860)), sync, delay(0), Listener(, -1, 50748)\ndispatcher(android.support.v4.app.FragmentActivity$1), what(1)\nEnqueue sequence(HANDLER sync, HANDLER sync), source(IPC async,interface(android.app.IApplicationThread),code(SCHEDULE_STOP_ACTIVITY))\nF Landroid/os/Handler;.dispatchMessage((Landroid/os/Message;)V)\nwrite 50733 Lcom/peilunzhang/kistenstapelndistill/MainActivity;.mReallyStopped", URL="race?focus=93096&id=832", shape="box"];
+  N67563 -> N70801 [style="dotted"];
+  N67563 -> N81925 [style="dotted"];
+  N67563 -> N82014 [style="dotted"];
+  N67563 -> N93058 [style="bold"];
+  N67985 -> N93058 [style="bold"];
+  N70801 -> N71062 [style="dotted"];
+  N70801 -> N81925 [style="dotted"];
+  N70801 -> N82014 [style="dotted"];
+  N70801 -> N93058 [style="bold"];
+  N70801 -> N93096 [style="dotted"];
+  N71062 -> N81925 [style="dotted"];
+  N71062 -> N82014 [style="dotted"];
+  N71062 -> N93058 [style="bold"];
+  N71062 -> N93096 [style="dotted"];
+  N81925 -> N81933 [style="bold"];
+  N81925 -> N93058 [label="READ-UPDATE", color="green", style="dashed", arrowhead="dot", fontcolor="green", URL="race?focus=-1&id=654race?focus=-1&id=767race?focus=-1&id=1007"];
+  N81933 -> N82014 [style="bold"];
+  N81933 -> N82089 [style="bold"];
+  N81933 -> N93058 [label="READ-WRITE", color="red", style="dashed", arrowhead="dot", fontcolor="red", URL="race?focus=-1&id=653race?focus=-1&id=766race?focus=-1&id=832race?focus=-1&id=1006race?focus=-1&id=832"];
+  N82014 -> N82089 [label="UPDATE-READ", color="green", style="dashed", arrowhead="dot", fontcolor="green", URL="race?focus=-1&id=421race?focus=-1&id=422"];
+  N82014 -> N93058 [label="WRITE-READ", color="green", style="dashed", arrowhead="dot", fontcolor="green", URL="race?focus=-1&id=811race?focus=-1&id=830race?focus=-1&id=831race?focus=-1&id=835race?focus=-1&id=836race?focus=-1&id=837race?focus=-1&id=838race?focus=-1&id=842race?focus=-1&id=843race?focus=-1&id=859race?focus=-1&id=860race?focus=-1&id=861race?focus=-1&id=862race?focus=-1&id=863race?focus=-1&id=864"];
+  N82089 -> N93058 [label="READ-UPDATE", color="green", style="dashed", arrowhead="dot", fontcolor="green", URL="race?focus=-1&id=807race?focus=-1&id=840race?focus=-1&id=881race?focus=-1&id=1005"];
+  N93058 -> N93096 [style="bold"];
+}

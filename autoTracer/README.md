@@ -88,9 +88,16 @@ TraceRunnerRuntimeInstrumentation$ ./gradlew assembleDebug
 Configuring Auto Tracer
 =======================
 
-Auto Tracer's top level script (autoChain.py) reads off your configurations specified in 'tracerConfig.ini'. 
-These configurations will ultimately determine where the script retrieve inputs, write intermediate instrumented
-app apks to, and write output traces to.
+Auto Tracer's top level script (autoChain.py) reads off your configurations specified in a config file. You can 
+dictate the config file to use by passing it as the first (and only) argument of the script. If none is given,
+the default 'tracerConfig.ini' will be choosen. These configurations will ultimately determine where the script 
+retrieve inputs, write intermediate instrumented app apks to, and write output traces to. Here is a list of the
+config files available in this repo:
+
+* tracerConfig.ini,openstackConfig.ini : Default configs, serves as an example
+* openstackFullSuiteConfig.ini : Full set of auto-traces for openstack deployment. Use this for production traces and
+  please keep up to date with our app corpus (https://github.com/cuplv/callback-verification/tree/tests/tests/distilled_apps)
+* plConfig.ini : Peilun's spin off script.. (Peilun, why you duplicate this... =( )
 
 This configuration file is organized in several sections. The section [tracerOptions] accepts the following options:
 

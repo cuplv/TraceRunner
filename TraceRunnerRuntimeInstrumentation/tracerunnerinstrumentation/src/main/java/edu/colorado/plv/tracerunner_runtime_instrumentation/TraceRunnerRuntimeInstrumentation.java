@@ -62,12 +62,47 @@ public class TraceRunnerRuntimeInstrumentation {
                     .setType(TraceMsg.MsgType.CALLIN_EXEPION)
                     .setMessageId(id)
                     .setThreadId(Thread.currentThread().getId())
-                    .setCallinException(builder)
                     .setIsActivityThread(isActivityThread)
+                    .setCallinException(builder)
                     .build();
             TraceMsgContainer container = TraceMsgContainer.newBuilder().setMsg(msg).build();
             executorService.execute(new LogDat(container));
         }
+    }
+    public static void logCallbackException(Throwable t, String signature, String methodName){
+        int id = count.getAndIncrement();
+        String message = t.getMessage();
+        boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
+        StackTraceElement[] stackTrace = t.getStackTrace();
+        String className = stackTrace[0].getClassName();
+        TraceMsgContainer.CallbackExceptionMsg.Builder builder
+                = TraceMsgContainer.CallbackExceptionMsg.newBuilder();
+        builder.setType(t.getClass().getName());
+        builder.setThrowingClassName(signature);
+        builder.setThrowingMethodName(methodName);
+        if (message != null) {
+            builder.setExceptionMessage(message);
+        }
+
+        for (StackTraceElement stackTraceElement : stackTrace) {
+            String stMethodName = stackTraceElement.getMethodName();
+            String stClassName = stackTraceElement.getClassName();
+            TraceMsgContainer.StackTrace.Builder protoStackTrace
+                    = TraceMsgContainer.StackTrace.newBuilder();
+            protoStackTrace.setMethod(stMethodName);
+            protoStackTrace.setClassName(stClassName);
+            builder.addStackTrace(protoStackTrace);
+        }
+
+        TraceMsg msg = TraceMsg.newBuilder()
+                .setType(TraceMsg.MsgType.CALLBACK_EXCEPTION)
+                .setMessageId(id)
+                .setThreadId(Thread.currentThread().getId())
+                .setCallbackException(builder)
+                .setIsActivityThread(isActivityThread)
+                .build();
+        TraceMsgContainer container = TraceMsgContainer.newBuilder().setMsg(msg).build();
+        executorService.execute(new LogDat(container));
     }
     public static void logCallbackReturn(String signature, String methodName, Object returnVal){
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -251,25 +286,25 @@ public class TraceRunnerRuntimeInstrumentation {
      *
      */
     public static void  shutdownAndAwaitTermination() {
-        // Disable new tasks from being submitted
-        TraceRunnerRuntimeInstrumentation.executorService.shutdown();
-
-        try {
-            // Wait a while for existing tasks to terminate
-            if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
-                    TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS)) {
-                // cancel currently executing tasks
-                TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
-                // Wait a while for tasks to respond to being cancelled
-                if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
-                        TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS))
-                    System.err.println("Pool did not terminate");
-            }
-        } catch (InterruptedException ie) {
-            TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
-            // Don't think we have to raise a runtime exception here
-            System.err.println("Pool did not terminate");
-        }
+//        // Disable new tasks from being submitted
+//        TraceRunnerRuntimeInstrumentation.executorService.shutdown();
+//
+//        try {
+//            // Wait a while for existing tasks to terminate
+//            if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
+//                    TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS)) {
+//                // cancel currently executing tasks
+//                TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
+//                // Wait a while for tasks to respond to being cancelled
+//                if (! TraceRunnerRuntimeInstrumentation.executorService.awaitTermination(
+//                        TraceRunnerRuntimeInstrumentation.EXECUTOR_TO, TimeUnit.SECONDS))
+//                    System.err.println("Pool did not terminate");
+//            }
+//        } catch (InterruptedException ie) {
+//            TraceRunnerRuntimeInstrumentation.executorService.shutdownNow();
+//            // Don't think we have to raise a runtime exception here
+//            System.err.println("Pool did not terminate");
+//        }
     }
 
 //    public static void logCallback(String signature, String methodName, Object[] arguments){

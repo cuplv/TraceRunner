@@ -1,0 +1,138 @@
+WARNING: linker: libdvm.so has text relocations. This is wasting memory and is a security risk. Please fix.
+:Monkey: seed=42 count=600
+:AllowPackage: com.peilunzhang.kistenstapelndistill
+:IncludeCategory: android.intent.category.LAUNCHER
+:IncludeCategory: android.intent.category.MONKEY
+// Event percentages:
+//   0: 15.0%
+//   1: 10.0%
+//   2: 2.0%
+//   3: 15.0%
+//   4: -0.0%
+//   5: 25.0%
+//   6: 15.0%
+//   7: 2.0%
+//   8: 2.0%
+//   9: 1.0%
+//   10: 13.0%
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=com.peilunzhang.kistenstapelndistill/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.peilunzhang.kistenstapelndistill/.MainActivity } in package com.peilunzhang.kistenstapelndistill
+:Sending Touch (ACTION_DOWN): 0:(48.0,404.0)
+:Sending Touch (ACTION_UP): 0:(45.350014,419.643)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(253.0,313.0)
+:Sending Touch (ACTION_UP): 0:(217.87581,331.7989)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-2.0)
+    // Rejecting start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.android.launcher/com.android.launcher2.Launcher } in package com.android.launcher
+:Sending Touch (ACTION_DOWN): 0:(273.0,189.0)
+:Sending Touch (ACTION_UP): 0:(320.0,179.5158)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,-5.0)
+:Sending Trackball (ACTION_MOVE): 0:(-3.0,1.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,3.0)
+    //[calendar_time:2016-12-22 12:26:59.076  system_uptime:41098]
+    // Sending event #100
+:Sending Touch (ACTION_DOWN): 0:(3.0,33.0)
+:Sending Touch (ACTION_UP): 0:(0.0,45.377342)
+:Sending Touch (ACTION_DOWN): 0:(307.0,30.0)
+:Sending Touch (ACTION_UP): 0:(316.18777,35.829334)
+:Sending Touch (ACTION_DOWN): 0:(201.0,181.0)
+:Sending Touch (ACTION_UP): 0:(289.7353,210.57245)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=com.peilunzhang.kistenstapelndistill/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.peilunzhang.kistenstapelndistill/.MainActivity } in package com.peilunzhang.kistenstapelndistill
+:Sending Touch (ACTION_DOWN): 0:(298.0,379.0)
+:Sending Touch (ACTION_UP): 0:(294.58783,379.32736)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,-1.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-2.0)
+:Sending Touch (ACTION_DOWN): 0:(256.0,204.0)
+:Sending Touch (ACTION_UP): 0:(298.16653,149.98096)
+:Sending Touch (ACTION_DOWN): 0:(242.0,287.0)
+:Sending Touch (ACTION_UP): 0:(256.28848,311.2755)
+:Sending Touch (ACTION_DOWN): 0:(307.0,383.0)
+    //[calendar_time:2016-12-22 12:27:01.493  system_uptime:43505]
+    // Sending event #200
+:Sending Touch (ACTION_UP): 0:(306.41153,416.9469)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,4.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Touch (ACTION_DOWN): 0:(17.0,187.0)
+:Sending Touch (ACTION_UP): 0:(16.635963,184.33571)
+:Sending Touch (ACTION_DOWN): 0:(279.0,48.0)
+:Sending Touch (ACTION_UP): 0:(240.98979,49.373863)
+:Sending Touch (ACTION_DOWN): 0:(207.0,386.0)
+:Sending Touch (ACTION_UP): 0:(199.07307,407.85324)
+    // Rejecting start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.HOME] cmp=com.android.launcher/com.android.launcher2.Launcher } in package com.android.launcher
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_UP): 0:(0.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(0.0,-5.0)
+:Sending Touch (ACTION_DOWN): 0:(47.0,391.0)
+:Sending Touch (ACTION_UP): 0:(50.755066,395.20837)
+:Sending Touch (ACTION_DOWN): 0:(177.0,452.0)
+:Sending Touch (ACTION_UP): 0:(161.0196,394.74677)
+:Sending Touch (ACTION_DOWN): 0:(76.0,103.0)
+:Sending Touch (ACTION_UP): 0:(69.03529,92.35153)
+:Sending Touch (ACTION_DOWN): 0:(253.0,242.0)
+:Sending Touch (ACTION_UP): 0:(230.81824,237.10236)
+:Sending Touch (ACTION_DOWN): 0:(125.0,455.0)
+    //[calendar_time:2016-12-22 12:27:03.555  system_uptime:45567]
+    // Sending event #300
+:Sending Touch (ACTION_UP): 0:(187.69516,385.3596)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,2.0)
+:Sending Touch (ACTION_DOWN): 0:(204.0,289.0)
+:Sending Touch (ACTION_UP): 0:(191.7362,405.5864)
+:Sending Touch (ACTION_DOWN): 0:(269.0,199.0)
+:Sending Touch (ACTION_UP): 0:(271.98074,213.00824)
+:Sending Trackball (ACTION_MOVE): 0:(1.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(261.0,161.0)
+:Sending Touch (ACTION_UP): 0:(262.54056,164.87978)
+:Sending Touch (ACTION_DOWN): 0:(178.0,228.0)
+:Sending Touch (ACTION_UP): 0:(178.859,227.40765)
+:Sending Touch (ACTION_DOWN): 0:(151.0,408.0)
+:Sending Touch (ACTION_UP): 0:(126.0755,441.4201)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,4.0)
+:Sending Touch (ACTION_DOWN): 0:(299.0,410.0)
+:Sending Touch (ACTION_UP): 0:(298.27316,405.94788)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,2.0)
+:Sending Trackball (ACTION_MOVE): 0:(-5.0,-4.0)
+:Sending Touch (ACTION_DOWN): 0:(121.0,268.0)
+:Sending Touch (ACTION_UP): 0:(136.4128,282.73996)
+:Sending Trackball (ACTION_MOVE): 0:(4.0,3.0)
+    //[calendar_time:2016-12-22 12:27:05.102  system_uptime:47114]
+    // Sending event #400
+:Sending Touch (ACTION_DOWN): 0:(251.0,312.0)
+:Sending Touch (ACTION_UP): 0:(230.79312,288.9786)
+:Sending Touch (ACTION_DOWN): 0:(66.0,284.0)
+:Sending Touch (ACTION_UP): 0:(61.03625,301.36945)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(159.0,113.0)
+:Sending Touch (ACTION_UP): 0:(179.93678,147.2893)
+:Sending Touch (ACTION_DOWN): 0:(46.0,18.0)
+:Sending Touch (ACTION_UP): 0:(57.45807,14.411109)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,0.0)
+:Switch: #Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=com.peilunzhang.kistenstapelndistill/.MainActivity;end
+    // Allowing start of Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] cmp=com.peilunzhang.kistenstapelndistill/.MainActivity } in package com.peilunzhang.kistenstapelndistill
+:Sending Trackball (ACTION_MOVE): 0:(3.0,3.0)
+:Sending Touch (ACTION_DOWN): 0:(251.0,104.0)
+:Sending Touch (ACTION_UP): 0:(237.23087,103.06732)
+:Sending Touch (ACTION_DOWN): 0:(4.0,68.0)
+:Sending Touch (ACTION_UP): 0:(11.141901,72.56054)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-3.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-1.0)
+    //[calendar_time:2016-12-22 12:27:06.495  system_uptime:48506]
+    // Sending event #500
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-1.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(3.0,1.0)
+:Sending Touch (ACTION_DOWN): 0:(119.0,187.0)
+:Sending Touch (ACTION_UP): 0:(44.243908,243.74106)
+:Sending Touch (ACTION_DOWN): 0:(235.0,443.0)
+:Sending Touch (ACTION_UP): 0:(111.92425,480.0)
+:Sending Trackball (ACTION_MOVE): 0:(2.0,-4.0)
+:Sending Trackball (ACTION_MOVE): 0:(-2.0,0.0)
+:Sending Trackball (ACTION_MOVE): 0:(-4.0,-4.0)
+Events injected: 600
+:Sending rotation degree=0, persist=false
+:Dropped: keys=0 pointers=0 trackballs=0 flips=0 rotations=0
+## Network stats: elapsed time=10472ms (0ms mobile, 0ms wifi, 10472ms not connected)
+// Monkey finished

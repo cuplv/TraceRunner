@@ -12,7 +12,7 @@ import android.widget.Button;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, MediaPlayer.OnPreparedListener {
-    MediaPlayer m = new MediaPlayer();
+    MediaPlayer m;
     Button b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        bt.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
 //                LayoutParams.WRAP_CONTENT));
 //        linerLayout.addView(bt);
+        m = new MediaPlayer();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ViewGroup layout = (ViewGroup)findViewById(R.id.activity_main);

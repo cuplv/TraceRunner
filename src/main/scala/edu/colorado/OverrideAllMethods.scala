@@ -5,7 +5,7 @@ import java.util
 import edu.colorad.cs.TraceRunner.Config
 import soot.jimple.{Jimple, SpecialInvokeExpr}
 import soot.util.NumberedString
-import soot.{Body, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
+import soot.{Body, Hierarchy, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
 
 import scala.annotation.tailrec
 import scala.collection.JavaConversions._
@@ -17,17 +17,27 @@ import scala.collection.mutable
   * Created by s on 11/3/16.
   */
 class OverrideAllMethods(config: Config) extends SceneTransformer {
+  val excluded: List[(String,String)] = List()
+  def blacklisted(a: SootMethod): Boolean = {
+    val methodname: String = a.getName
+    val classname: String = a.getDeclaringClass.getName
+    if (config.noOverrideGet) {
+      methodname.startsWith("get")
+    } else {
+      false
+    }
+  }
   def dbgPred(name: String): Boolean = {
-//    name.size > 3 && name(0) == 'a' && name(1)=='d' && name(2) == 'd'
-//    name == "addContentView"
-//    name == "onPause"
-//    false
-//    !name.contains("<init>") &&
-//     name(0) < 112 // lower 110 no fail 130 fai
-//    name.startsWith("on") && name(2) == 77 //<=77 fail : <=76 works 77 M
-//    name == ""
+
+//    >100
+    // <= 106
+    // <= 103
+//    name(0) > 101
+//    name(0) > 101
+//    name(0) == 104
+//    name(0) > 104
+//    true
     true
-//    name.startsWith("onMenuItemSelected") //menuitemselected
   }
 
 
@@ -35,26 +45,17 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   override def internalTransform(phaseName: String, options: util.Map[String, String]): scala.Unit = {
     val sc = Scene.v()
     sc.getApplicationClasses.iterator.foreach(applicationClass =>{
-      if(!Utils.isFrameworkClass(applicationClass.getName)) {
+      if(!Utils.isFrameworkClass(applicationClass.getName) && !Utils.sootClassMatches(applicationClass, config.excludeClasses)) {
         val superclass: SootClass = applicationClass.getSuperclass
 
-        val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]()).foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
+        val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]())
+          .foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
           val parameterTypes: List[Type] = a.getParameterTypes.toList
           val mkey: (String, List[Type], Boolean, Int) = (a.getName, parameterTypes,a.isAbstract, a.getModifiers)
           if(acc.contains(mkey)) {
             val returnTypeInMap: Type = acc(mkey)
-            if (a.getReturnType == returnTypeInMap) {
-              acc
-            } else {
-              //Case where return types do not match
-              //TODO: Implement this. Probably can happen with generics, how else can this happen?
-              //Ideas: take less precise type and override that
-              //If type doesn't intersect then what?
-              val returnTypeName: String = returnTypeInMap.getEscapedName
-              Scene.v().getSootClass(returnTypeName)
-
-              ???
-            }
+            val activeHierarchy: Hierarchy = Scene.v().getActiveHierarchy
+            acc //iteration is from most precise type that is overridden so if key is contained then this will override correctly
           }else{
             acc + (mkey -> a.getReturnType)
           }
@@ -76,8 +77,6 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
             dupModifiers(modifiers, newMethod)
             applicationClass.addMethod(newMethod)
             val units: PatchingChain[Unit] = activeBody.getUnits
-
-//            if (!isAbstract) {
               val thisRef = Jimple.v().newLocal(Utils.nextName("this"), applicationClass.getType)
               activeBody.getLocals.add(thisRef)
               units.addLast(Jimple.v().newIdentityStmt(thisRef, Jimple.v().newThisRef(applicationClass.getType)))
@@ -109,16 +108,8 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
                 units.addLast(Jimple.v().newAssignStmt(returnVal, newSpecialInvokeExpr))
                 units.addLast(Jimple.v().newReturnStmt(returnVal))
               }
-//            }else{
-//              returnType match{
-//                case i: VoidType => units.addLast(Jimple.v().newReturnVoidStmt())
-//                case _ => ???
-//              }
-//            }
           }
         })
-
-//        a.addMethod()
       }
     })
   }
@@ -131,7 +122,13 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   def getSuperMethod(clazz: SootClass, name: String, args: List[Type], returnType: Type): SootMethodRef = {
     clazz.getMethods()
     if(clazz.declaresMethod(name,args)){
-      clazz.getMethod(name, args).makeRef()
+      try {
+        clazz.getMethod(name, args).makeRef()
+      }catch{
+        case t: Throwable => {
+          clazz.getMethodUnsafe(name,seqAsJavaList(args),returnType).makeRef()
+        }
+      }
     }else {
       Scene.v().makeMethodRef(clazz, name, args,returnType,false)
     }
@@ -143,13 +140,20 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, clazz.getMethods.toSet.union(exclude)))
     }else Set[SootMethod]()
   }
+
+
+
   def getOverrideableMethods(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
-    clazz.getMethods.flatMap{(a: SootMethod) =>
-      val excluded: Boolean = isExcluded(exclude, a)
-      if(!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded ){
-        Some(a)
-      }else None
-    }.toSet
+    if(Utils.isFrameworkClass(clazz)) {
+      clazz.getMethods.flatMap { (a: SootMethod) =>
+        val excluded: Boolean = isExcluded(exclude, a) || blacklisted(a)
+        if (!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded) {
+          Some(a)
+        } else None
+      }.toSet
+    }else{
+      Set[SootMethod]()
+    }
   }
   def isExcluded(exclude: Set[SootMethod], method: SootMethod): Boolean ={
     val ret = exclude.exists(a => {
