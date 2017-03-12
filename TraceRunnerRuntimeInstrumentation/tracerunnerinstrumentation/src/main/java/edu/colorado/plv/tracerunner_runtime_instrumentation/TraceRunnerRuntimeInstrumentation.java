@@ -218,7 +218,7 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
 
-    public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
+    public static void logCallinExit(String signature, String methodName, Object returnValue){
         if(FrameworkResolver.get().isFramework(signature)) {
             int id = count.getAndIncrement();
             boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
@@ -246,7 +246,7 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
     public static void logCallin(String signature, String methodName, //TODO: add location
-                                 Object[] arguments, Object caller) {
+                                 Object[] arguments, Object caller, String file, int line) {
         if(FrameworkResolver.get().isFramework(signature)) {
             boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
 
@@ -258,6 +258,9 @@ public class TraceRunnerRuntimeInstrumentation {
             CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
             callinMsgBuilder.setClassName(signature);
             callinMsgBuilder.setMethodName(methodName);
+            callinMsgBuilder.setFile(file);
+            callinMsgBuilder.setLine(line);
+
 
             for (Object arg : arguments) {
                 callinMsgBuilder.addParamList(getValueMsg(arg));
