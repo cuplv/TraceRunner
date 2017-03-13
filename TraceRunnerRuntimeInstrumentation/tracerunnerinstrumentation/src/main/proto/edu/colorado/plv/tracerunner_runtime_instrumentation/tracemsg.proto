@@ -45,8 +45,8 @@ message TraceMsgContainer {
         optional ValueMsg caller = 4;
         /* file name for the callin location */
         optional string file = 5;
-        /* line number of callin */
-        optional uint64 line = 6;
+        /* line number and column separated by colon of callin */
+        optional string lineCol = 6;
     }
     message CallinExitMsg {
         /* signature of the callin */

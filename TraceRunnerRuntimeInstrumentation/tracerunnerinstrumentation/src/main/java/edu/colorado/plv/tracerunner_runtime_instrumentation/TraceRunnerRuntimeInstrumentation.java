@@ -246,7 +246,7 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
     public static void logCallin(String signature, String methodName, //TODO: add location
-                                 Object[] arguments, Object caller, String file, int line) {
+                                 Object[] arguments, Object caller, String file, String linecolumn) {
         if(FrameworkResolver.get().isFramework(signature)) {
             boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
 
@@ -259,7 +259,7 @@ public class TraceRunnerRuntimeInstrumentation {
             callinMsgBuilder.setClassName(signature);
             callinMsgBuilder.setMethodName(methodName);
             callinMsgBuilder.setFile(file);
-            callinMsgBuilder.setLine(line);
+            callinMsgBuilder.setLineCol(linecolumn);
 
 
             for (Object arg : arguments) {

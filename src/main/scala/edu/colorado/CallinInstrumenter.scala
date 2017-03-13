@@ -144,7 +144,8 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
   def instrumentInvokeExpr(b: Body, i: Unit, invokeExpr: InvokeExpr, returnLocation: Option[Local]) = {
     val method = b.getMethod
     val units: PatchingChain[soot.Unit] = b.getUnits
-    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object)")
+    val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object,java.lang.String,java.lang.String)")
+    //TODO: finish adding two parameters
     val name1: String = invokeExpr.getMethod.getDeclaringClass.getName
     val currentMethod: SootMethod = invokeExpr.getMethod()
     val methodName: String = currentMethod.getName()
@@ -189,11 +190,19 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     val currentMethodSignature: String = currentMethod.getSignature
     val currentMethodSubSignature: String = currentMethod.getSubSignature
     units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(currentMethodSubSignature)), i)
-    val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature, methodname, arguments, callerref).asJava)
+
+    //Location in file
+    val filename: Local = Jimple.v().newLocal(Utils.nextName("filename"), RefType.v("java.lang.String"))
+    val lineNumber: Local = Jimple.v().newLocal(Utils.nextName("lineNumber"), RefType.v("java.lang.String"))
+
+    units.insertBefore(Jimple.v().newAssignStmt(filename, StringConstant.v(b.getMethod.getDeclaringClass.getName)),i)
+    units.insertBefore(Jimple.v().newAssignStmt(lineNumber, StringConstant.v(i.getJavaSourceStartLineNumber.toString + "," + i.getJavaSourceStartColumnNumber.toString)),i)
+
+    val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature, methodname, arguments, callerref, filename, lineNumber).asJava)
     units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
 
     //TODO: locations of exits
-    val callinExitMethodSig: String = "void logCallinExit(java.lang.String,java.lang.String,java.lang.Object,java.lang.String)"
+    val callinExitMethodSig: String = "void logCallinExit(java.lang.String,java.lang.String,java.lang.Object)"
     returnLocation match{
       case Some(returnLocation) => {
         //Log return value and exit
