@@ -196,7 +196,8 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     val lineNumber: Local = Jimple.v().newLocal(Utils.nextName("lineNumber"), RefType.v("java.lang.String"))
 
     units.insertBefore(Jimple.v().newAssignStmt(filename, StringConstant.v(b.getMethod.getDeclaringClass.getName)),i)
-    units.insertBefore(Jimple.v().newAssignStmt(lineNumber, StringConstant.v(i.getJavaSourceStartLineNumber.toString + "," + i.getJavaSourceStartColumnNumber.toString)),i)
+    val lineOfInst: String = JUtils.getLineNumber(i).toString
+    units.insertBefore(Jimple.v().newAssignStmt(lineNumber, StringConstant.v(lineOfInst)),i)
 
     val expr: Value = Jimple.v().newStaticInvokeExpr(logCallin.makeRef(), List[Local](signature, methodname, arguments, callerref, filename, lineNumber).asJava)
     units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
