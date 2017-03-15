@@ -258,8 +258,10 @@ public class TraceRunnerRuntimeInstrumentation {
             CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
             callinMsgBuilder.setClassName(signature);
             callinMsgBuilder.setMethodName(methodName);
-            callinMsgBuilder.setFile(file);
-            callinMsgBuilder.setLineCol(linecolumn);
+            callinMsgBuilder.setCallingClassName(file);
+            callinMsgBuilder.setCallingClassLine(linecolumn);
+//            callinMsgBuilder.setFile(file);
+//            callinMsgBuilder.setLineCol(linecolumn);
 
 
             for (Object arg : arguments) {
