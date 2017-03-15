@@ -203,7 +203,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     units.insertBefore(Jimple.v().newInvokeStmt(expr), i)
 
     //TODO: locations of exits
-    val callinExitMethodSig: String = "void logCallinExit(java.lang.String,java.lang.String,java.lang.Object)"
+    val callinExitMethodSig: String = "void logCallinExit(java.lang.String,java.lang.String,java.lang.Object,java.lang.String)"
     returnLocation match{
       case Some(returnLocation) => {
         //Log return value and exit

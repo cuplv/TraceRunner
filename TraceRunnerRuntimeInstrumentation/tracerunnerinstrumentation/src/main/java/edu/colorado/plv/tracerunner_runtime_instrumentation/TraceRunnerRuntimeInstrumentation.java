@@ -218,7 +218,7 @@ public class TraceRunnerRuntimeInstrumentation {
         }
     }
 
-    public static void logCallinExit(String signature, String methodName, Object returnValue){
+    public static void logCallinExit(String signature, String methodName, Object returnValue, String location){
         if(FrameworkResolver.get().isFramework(signature)) {
             int id = count.getAndIncrement();
             boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
