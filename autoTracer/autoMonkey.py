@@ -5,6 +5,8 @@ import time
 import datetime
 import random as r
 
+from utils.genName import generateName
+
 from subprocess import Popen, PIPE
 
 from utils.getAPKInfo import getAPKInfo
@@ -45,13 +47,18 @@ def getMonkeyEvents():
          events += ["--%s" % key,val]
    return events
 
-def monkeySprint(appPackageName, numOfMonkeyEvents):
+def monkeySprint(appPackageName, numOfMonkeyEvents, monkeyLog):
    adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',str(numOfMonkeyEvents)]
    trace_proc = Popen(adb_monkey, stdout=PIPE, stderr=PIPE)
    outcome,error = trace_proc.communicate()
    print "%s Monkey Steps Completed: %s, %s" % (numOfMonkeyEvents,outcome,error)
+   if monkeyLog != None:
+      output = "\n%s Monkey Steps Completed: %s, %s\n" % (numOfMonkeyEvents,outcome,error)
+      with open(monkeyLog, "a") as f:
+         f.write(output)
+         f.flush()
 
-def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries):
+def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries, loggingPath):
 
    print "Starting ADB+NetCat Bridge @ 5050..."
    adb_proc = Popen(['adb','reverse','tcp:5050', 'tcp:5050'], stdout=PIPE)
@@ -64,6 +71,11 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
    print "Running Android Monkey on Instrumented App..."
    # adb shell monkey -p your.package.name -v 500
 
+   if loggingPath != None:
+      monkeyLog = generateName(loggingPath, prefix="monkey-run", postfix=".log")
+   else:
+      monkeyLog = None
+
    ranNumOfMonkeyTries = numOfMonkeyTries + r.randint(-2,2)
    if ranNumOfMonkeyTries < 1:
       ranNumOfMonkeyTries = 1
@@ -72,7 +84,7 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
         ranNumOfMonkeyEvents = numOfMonkeyEvents + r.randint(-20,20)
         if ranNumOfMonkeyEvents < 1:
            ranNumOfMonkeyEvents = 10
-        monkeySprint(appPackageName, ranNumOfMonkeyEvents)
+        monkeySprint(appPackageName, ranNumOfMonkeyEvents, monkeyLog)
         if i < ranNumOfMonkeyTries - 1:
            wait = 2 ## + r.randint(0,10)
            print "Waiting %s seconds before restarting the monkey..." % wait
@@ -114,9 +126,16 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
    time.sleep(wait)
 
    # with open("%s/%s" % (outputProtoPath,"trace%s" % index), "w") as f:
-   with open(generateTraceName(outputProtoPath), "w") as f:
+   protoTraceFile = generateTraceName(outputProtoPath)
+   with open(protoTraceFile, "w") as f:
       f.write(trace)
       f.flush()
+
+   if monkeyLog != None:
+      output = "\nOutput trace written to: %s\n" % protoTraceFile
+      with open(monkeyLog, "a") as f:
+         f.write(output)
+         f.flush()
 
    '''
    print "Clearing the Instrumented App from task list"
@@ -163,7 +182,7 @@ def reachMonkeyDropZone(appPackageName,activityName):
       print "Sleeping for %s secs..." % wait
       time.sleep(wait)
 
-def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries, installApp=True, permissions=[]):
+def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEvents, numOfMonkeyTries, installApp=True, permissions=[], loggingPath=None):
 
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    print "Instrumented App Package Name: %s" % appPackageName
@@ -189,7 +208,7 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
          outcome,err = perm_proc.communicate()
          print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
 
-      runAutoMonkey(appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries))
+      runAutoMonkey(appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries), loggingPath=loggingPath)
       if index < int(numOfTraces) - 1:
          wait = 1
          print "Waiting %s seconds before next trace ..." % wait

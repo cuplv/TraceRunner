@@ -4,7 +4,9 @@ import sys
 from subprocess import Popen, PIPE
 from shutil import copyfile
 
-def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=None, blackList=[]):
+from utils.genName import generateName
+
+def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=None, blackList=[], loggingPath=None):
 
    appOutPath   = outputPath + "/" + appAPKPath.split('/')[-1]
    roboOutPath  = outputPath + "/" + roboAPKPath.split('/')[-1]
@@ -34,7 +36,12 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=Non
 
    outcome,errors = instProc.communicate()
    print "Instrumentation and Resigning completed: %s" % outcome
-   
+   if loggingPath != None:
+      output = "######## STDOUT ########\n" + outcome + (("\n######## STDERR ########\n" + errors) if (errors != None) else "")
+      with open(generateName(loggingPath, prefix='instrumentation',postfix=".log"), "w") as f:
+         f.write(output)
+         f.flush()   
+
    if os.path.exists( roboAPKPath ):
       print "Copying Robotium Tester APK to %s" % roboOutPath
       copyfile(roboAPKPath, roboOutPath)

@@ -34,6 +34,7 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     inputPath      = get(conf, 'tracerOptions', 'input', default='/traceRunner/input')
     instrumentPath = get(conf, 'tracerOptions', 'instrument', default='/traceRunner/instrument')
     outputPath     = get(conf, 'tracerOptions', 'output', default='/traceRunner/output')
+    logPath        = get(conf, 'tracerOptions', 'logs', default='/traceRunner/logs')
     androidJarPath = get(conf, 'tracerOptions', 'androidjars', default='/usr/local/android-sdk/platforms')
     usetracers     = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'usetracers', default='monkey,robot').split(','))
     monkeyevents   = get(conf, 'tracerOptions', 'monkeyevents', default='40')
@@ -47,7 +48,8 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     permissions = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'permissions', default='').split(','))
     permissions = filter(lambda p: p != '', permissions)
 
-    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'androidJars':androidJarPath, 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar, 'permissions':permissions }
+    configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'logs':logPath, 'androidJars':androidJarPath, 
+                'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar, 'permissions':permissions }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -116,6 +118,7 @@ if __name__ == "__main__":
 
    createPathIfEmpty( configs['instrument'] )
    createPathIfEmpty( configs['output'] )
+   createPathIfEmpty( configs['logs'] )
 
    # Run Auto Tracer for each test app listed in the conf file
    for appName in configs['apps']:
@@ -131,10 +134,12 @@ if __name__ == "__main__":
           appInputPath    = configs['input'] + "/" + appName + "/" + appData['app']
           tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
           instrumentPath  = configs['instrument'] + "/" + appName
+          loggingPath     = configs['logs'] + "/" + appName
           recreatePath( instrumentPath )
+          createPathIfEmpty( loggingPath )
           if appData['instrumented'] == None:
              autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
-                           ,oneJar=configs['onejar'], blackList=appData['blacklist'])
+                           ,oneJar=configs['onejar'], blackList=appData['blacklist'], loggingPath=loggingPath)
           else:
              print "Instrumented APK provided... Omitting instrumentation"
              instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']
@@ -156,7 +161,7 @@ if __name__ == "__main__":
            monkeyOutput = output + "/" + "monkeyTraces"
            createPathIfEmpty( monkeyOutput )
            autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries']
-                     ,installApp=appData['installapp'], permissions=appData['permissions'])
+                     ,installApp=appData['installapp'], permissions=appData['permissions'], loggingPath=loggingPath)
        if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
            manualTraceOutput = output + "/manualTraces"
            createPathIfEmpty( manualTraceOutput )
