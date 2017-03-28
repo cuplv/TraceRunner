@@ -15,7 +15,10 @@ print path_
 p = subprocess.Popen(path_)
 p.communicate()
 
-manifest = ET.parse(decomptemp + os.path.sep + "AndroidManifest.xml")
+ET.register_namespace("android","http://schemas.android.com/apk/res/android")
+
+manifest_file = decomptemp + os.path.sep + "AndroidManifest.xml"
+manifest = ET.parse(manifest_file)
 
 root = manifest.getroot()
 
@@ -29,7 +32,14 @@ root = manifest.getroot()
 inetPermission = ET.SubElement(root,'uses-permission')
 inetPermission.set('android:name', 'android.permission.INTERNET')
 
-f = open(decomptemp + os.path.sep + "AndroidManifest.xml",'w')
+os.remove(manifest_file)
 
-f.write(ET.tostring(root,encoding='utf8',method='xml'))
-print " "
+f = open(manifest_file,'w')
+manifest.write(f, xml_declaration=True, encoding="utf-8")
+
+outfile = script_dir + os.path.sep + "out.apk"
+
+print "---------"
+pack = ["/usr/bin/java", "-jar", runjar, "b", decomptemp, "-o", outfile]
+p = subprocess.Popen(pack)
+p.communicate()
