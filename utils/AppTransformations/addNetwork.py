@@ -12,8 +12,7 @@ decomptemp = script_dir + os.path.sep + "tmp"
 
 path_ = ["/usr/bin/java", "-jar", runjar, "d", apk, "-s", "-o", decomptemp]
 print path_
-p = subprocess.Popen(path_)
-p.communicate()
+p = subprocess.call(path_)
 
 ET.register_namespace("android","http://schemas.android.com/apk/res/android")
 
@@ -36,10 +35,17 @@ os.remove(manifest_file)
 
 f = open(manifest_file,'w')
 manifest.write(f, xml_declaration=True, encoding="utf-8")
+f.close()
+
+
+import time
+
+for i in xrange(10):
+    time.sleep(1)
+
 
 outfile = script_dir + os.path.sep + "out.apk"
 
 print "---------"
 pack = ["/usr/bin/java", "-jar", runjar, "b", decomptemp, "-o", outfile]
-p = subprocess.Popen(pack)
-p.communicate()
+p2 = subprocess.call(pack)
