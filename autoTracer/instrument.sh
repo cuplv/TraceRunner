@@ -52,6 +52,9 @@ cd $CURR_PATH
 python $TRACERUNNER_PATH/utils/add_external_dex.py --apk $OUTPUT_APK_FILE --dex $INST_DEX_FILE
 echo "Added instrumentation Dex into $OUTPUT_APK_FILE"
 
+python $TRACERUNNER_PATH/utils/AppTransformations/addNetwork.py --apk $OUTPUT_APK_FILE --output $OUTPUT_APK_FILE
+echo "Added Network Permissions into $OUTPUT_APK_FILE"
+
 bash $TRACERUNNER_PATH/utils/resign.sh $OUTPUT_APK_FILE
 echo "Resigned Instrumented APK $OUTPUT_APK_FILE"
 
