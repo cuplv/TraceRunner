@@ -11,6 +11,8 @@ from subprocess import Popen, PIPE
 
 from utils.getAPKInfo import getAPKInfo
 
+from utils.fsUtils import Command
+
 '''
 // Event percentages:
 //   0: 15.0%
@@ -48,22 +50,34 @@ def getMonkeyEvents():
    return events
 
 def monkeySprint(appPackageName, numOfMonkeyEvents, monkeyLog):
+
    adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',str(numOfMonkeyEvents)]
-   trace_proc = Popen(adb_monkey, stdout=PIPE, stderr=PIPE)
-   outcome,error = trace_proc.communicate()
+   # trace_proc = Popen(adb_monkey, stdout=PIPE, stderr=PIPE)
+   # outcome,error = trace_proc.communicate()
+   monkey_fut = Command(adb_monkey).run(120)
+   time.sleep(2)
+   (outcome,error,timedout,_) = monkey_fut()
+
    print "%s Monkey Steps Completed: %s, %s" % (numOfMonkeyEvents,outcome,error)
    if monkeyLog != None:
       output = "\n%s Monkey Steps Completed: %s, %s\n" % (numOfMonkeyEvents,outcome,error)
+      if timedout:
+         output += "Monkey timed out! Aborting further tracing."
       with open(monkeyLog, "a") as f:
          f.write(output)
          f.flush()
 
-def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries, loggingPath):
+   return timedout
+
+def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries, loggingPath):
 
    print "Starting ADB+NetCat Bridge @ 5050..."
    adb_proc = Popen(['adb','reverse','tcp:5050', 'tcp:5050'], stdout=PIPE)
    adb_proc.communicate()
-   nc_proc = Popen(['nc','-l','-p','5050'], stdout=PIPE)
+   # nc_proc = Popen(['nc','-l','-p','5050'], stdout=PIPE)
+   
+   timeout = 600
+   nc_fut = Command(['nc','-l','-p','5050']).run(timeout)
    print "Started ADB+NetCat Bridge"
 
    # reachMonkeyDropZone(appPackageName, activityName)
@@ -72,7 +86,7 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
    # adb shell monkey -p your.package.name -v 500
 
    if loggingPath != None:
-      monkeyLog = generateName(loggingPath, prefix="monkey-run", postfix=".log")
+      monkeyLog = generateName(loggingPath, prefix="monkey-run-%s" % appAPKName, postfix=".log")
    else:
       monkeyLog = None
 
@@ -84,7 +98,9 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
         ranNumOfMonkeyEvents = numOfMonkeyEvents + r.randint(-20,20)
         if ranNumOfMonkeyEvents < 1:
            ranNumOfMonkeyEvents = 10
-        monkeySprint(appPackageName, ranNumOfMonkeyEvents, monkeyLog)
+        timedout = monkeySprint(appPackageName, ranNumOfMonkeyEvents, monkeyLog)
+        if timedout:
+           break
         if i < ranNumOfMonkeyTries - 1:
            wait = 2 ## + r.randint(0,10)
            print "Waiting %s seconds before restarting the monkey..." % wait
@@ -119,14 +135,25 @@ def runAutoMonkey(appPackageName, activityName, outputProtoPath, index, numOfMon
    print "Waiting %s seconds before collecting trace..." % wait
    time.sleep(wait)
 
-   trace,_ = nc_proc.communicate()
+   # trace,_ = nc_proc.communicate()
+
+   (trace,nc_stderr,timedout,_) = nc_fut()
+
+   if timedout:
+      output = "NetCat bridge timedout... no news from instrumenter for %s secs" % timeout
+      print output
+      if monkeyLog != None:
+          with open(monkeyLog, "a") as f:
+            f.write(output)
+            f.flush()
+      return
 
    wait = 2
    print "Waiting %s seconds before writing trace..." % wait
    time.sleep(wait)
 
    # with open("%s/%s" % (outputProtoPath,"trace%s" % index), "w") as f:
-   protoTraceFile = generateTraceName(outputProtoPath)
+   protoTraceFile = generateTraceName(outputProtoPath, prefix="trace-%s" % appAPKName)
    with open(protoTraceFile, "w") as f:
       f.write(trace)
       f.flush()
@@ -187,6 +214,18 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    print "Instrumented App Package Name: %s" % appPackageName
 
+   if appPackageName == None:
+      if loggingPath != None:
+         monkeyLog = generateName(loggingPath, prefix="monkey-run-%s" % appAPKName, postfix=".log")
+         output = "Unable to retrieve package name.. monkey tracing aborted."
+         print output
+         with open(monkeyLog, "a") as f:
+            f.write(output)
+            f.flush()
+         return
+
+   appAPKName = instrumentedAPKPath.split('/')[-1][:-4]
+
    if installApp:
       print "Uninstalling Previous Version of Instrumented App..."
       adb_proc = Popen(['adb','uninstall',appPackageName], stdout=PIPE, stderr=PIPE)
@@ -208,7 +247,7 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
          outcome,err = perm_proc.communicate()
          print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
 
-      runAutoMonkey(appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries), loggingPath=loggingPath)
+      runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries), loggingPath=loggingPath)
       if index < int(numOfTraces) - 1:
          wait = 1
          print "Waiting %s seconds before next trace ..." % wait

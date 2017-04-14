@@ -5,7 +5,7 @@ import shutil
 
 from ConfigParser import ConfigParser
 
-from utils.fsUtils import createPathIfEmpty, recreatePath, getFilesInPath
+from utils.fsUtils import createPathIfEmpty, recreatePath, getFilesInPath, getDirsInPath
 from startEmulator import startEmulator, killEmulator
 from autoLaunch import autoLaunch
 from autoInstrument import autoInstrument
@@ -47,6 +47,11 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
        onejar = False
     permissions = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'permissions', default='').split(','))
     permissions = filter(lambda p: p != '', permissions)
+    inferRepos  = get(conf, 'tracerOptions', 'inferrepos', default=False)
+    if inferRepos in ['true', 'True', 'Yes', 'yes']:
+       inferRepos = True
+    else:
+       inferRepos = False
 
     configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'logs':logPath, 'androidJars':androidJarPath, 
                 'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar, 'permissions':permissions }
@@ -69,33 +74,49 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
         configs['noWindow'] = not display
 
     apps = {}
-    for section in conf.sections():
-       if section.startswith("app:"):
-           appName = section[4:]
-           appAPK  = get(conf, section, 'app', default='app-debug.apk') 
-           tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
-           instrumentedAPK = get(conf, section, 'instrumented', default=None)
-           installApp = get(conf, section, 'installapp', default=True)
-           if installApp in ['False','false','No','no']:
-              installApp = False
-           else:
-              installApp = True
-           traces = map(lambda s: s.strip(), get(conf, section, 'traces', default='').split(','))
-           appUsetracers = get(conf, section, 'usetracers', default=None)
-           if appUsetracers == None:
-              appUsetracers = usetracers
-           else:
-              appUsetracers = map(lambda s: s.strip(), appUsetracers.split(','))
+    if not inferRepos:
+       for section in conf.sections():
+          if section.startswith("app:"):
+              appName = section[4:]
+              appAPK  = get(conf, section, 'app', default='app-debug.apk') 
+              tracerAPK = get(conf, section, 'tracer', default='app-debug-androidTest-unaligned.apk')
+              instrumentedAPK = get(conf, section, 'instrumented', default=None)
+              installApp = get(conf, section, 'installapp', default=True)
+              if installApp in ['False','false','No','no']:
+                 installApp = False
+              else:
+                 installApp = True
+              traces = map(lambda s: s.strip(), get(conf, section, 'traces', default='').split(','))
+              appUsetracers = get(conf, section, 'usetracers', default=None)
+              if appUsetracers == None:
+                 appUsetracers = usetracers
+              else:
+                 appUsetracers = map(lambda s: s.strip(), appUsetracers.split(','))
 
-           blackList = map(lambda s: s.strip(), get(conf, section, 'blacklist', default='').split(','))
-           blackList = filter(lambda b: b != '', blackList)
+              blackList = map(lambda s: s.strip(), get(conf, section, 'blacklist', default='').split(','))
+              blackList = filter(lambda b: b != '', blackList)
 
-           permissions = map(lambda s: s.strip(), get(conf, section, 'permissions', default='').split(','))
-           permissions = filter(lambda p: p != '', permissions)
-           permissions = list(set(configs['permissions'] + permissions))
+              permissions = map(lambda s: s.strip(), get(conf, section, 'permissions', default='').split(','))
+              permissions = filter(lambda p: p != '', permissions)
+              permissions = list(set(configs['permissions'] + permissions))
 
-           apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces
-                           , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions } 
+              apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces
+                              , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions } 
+    else:
+       # Infer repos from given input folder.
+       repoDirs = getDirsInPath( configs['input'] )
+       print "Retrieving from repos:\n%s" % ('\n'.join(repoDirs))
+       for repoDir in repoDirs:
+           files = getFilesInPath( repoDir )
+           apks  = files
+           repoName = repoDir.split('/')[-1]
+           count = 0
+           for apk in filter(lambda f: f.endswith(".apk"), files):
+               thisRepoName = repoName + "##%s" % count
+               apps[thisRepoName] = { 'app': apk.split('/')[-1], 'tracer':'some-tracer.apk', 'instrumented':None, 'traces':[]
+                                    , 'usetracers':['monkey'], 'blacklist':[], 'installapp':True, 'permissions':[] }
+               count += 1
+
     configs['apps'] = apps
 
     return configs
@@ -122,12 +143,15 @@ if __name__ == "__main__":
 
    # Run Auto Tracer for each test app listed in the conf file
    for appName in configs['apps']:
+
        print "Running Test Cases for App: %s" % appName
        
        appData = configs['apps'][appName]
        appAPK  = appData['app']
        tracerAPK = appData['tracer']
        traces = ':'.join( appData['traces'] )
+
+       appName = appName.split("##")[0]
 
        # Instrument the App APK and Resign both the App and Tracer APKs
        if appData['installapp']:
@@ -153,20 +177,25 @@ if __name__ == "__main__":
        output = configs['output'] + "/" + appName
        createPathIfEmpty( output )
        usetracers = appData['usetracers']
-       if 'robot' in usetracers:
-           print "Running Robotium Tracer..."
-           autoLaunch(appInstrPath, tracerInstrPath, traces, output, permissions=appData['permissions'])
-       if 'monkey' in usetracers:  
-           print "Running Monkey Tracer..."
-           monkeyOutput = output + "/" + "monkeyTraces"
-           createPathIfEmpty( monkeyOutput )
-           autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries']
-                     ,installApp=appData['installapp'], permissions=appData['permissions'], loggingPath=loggingPath)
-       if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
-           manualTraceOutput = output + "/manualTraces"
-           createPathIfEmpty( manualTraceOutput )
-           for trace in getFilesInPath(configs['input'] + "/" + appName + "/manualTraces"):
-               shutil.copyfile(trace, manualTraceOutput + "/" + os.path.basename(trace))
+
+       # check if instrumented app path exists
+       if not os.path.exists(appInstrPath):
+           print "Instrumentation failed... aborting for this repo"
+       else:
+          if 'robot' in usetracers:
+             print "Running Robotium Tracer..."
+             autoLaunch(appInstrPath, tracerInstrPath, traces, output, permissions=appData['permissions'])
+          if 'monkey' in usetracers:  
+             print "Running Monkey Tracer..."
+             monkeyOutput = output + "/" + "monkeyTraces"
+             createPathIfEmpty( monkeyOutput )
+             autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries']
+                       ,installApp=appData['installapp'], permissions=appData['permissions'], loggingPath=loggingPath)
+          if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
+             manualTraceOutput = output + "/manualTraces"
+             createPathIfEmpty( manualTraceOutput )
+             for trace in getFilesInPath(configs['input'] + "/" + appName + "/manualTraces"):
+                 shutil.copyfile(trace, manualTraceOutput + "/" + os.path.basename(trace))
 
    # Kill emulator if it was started here
    if configs['startEmulator']:
