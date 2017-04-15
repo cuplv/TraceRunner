@@ -53,7 +53,10 @@ class Command(object):
             timedout = False
             if thread.is_alive():
                print 'Terminating process'
-               self.process.terminate()
+               try:
+                  self.process.terminate()
+               except e:
+                  print e
                # thread.join()
                timedout = True
                self.stdout = (self.stdout + "\n *** Timedout ***") if self.stdout != None else "\n *** Timedout ***"   

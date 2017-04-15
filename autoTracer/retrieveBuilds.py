@@ -95,6 +95,36 @@ apps = [('yDelouis','selfoss-android')
        ,('FoamyGuy','StackSites')
        ,('poliva','WifiStaticArp')]
 
+newlist1 = [('vinsol','expense-tracker')
+           ,('yangtzeu','yangtzeu-app')
+           ,('thehung111','ContactListView')
+           ,('qylk','AudioPlayer')
+           ,('life0fun','wifi-direct-chat')
+           ,('blundell','FaceDetectionTutorial')
+           ,('blint','SSLDroid')
+           ,('WizTeam','WizAndroidMiNotes')
+           ,('swapagarwal','BlackJack')
+           ,('qylk','AudioPlayer')
+           ,('joaobmonteiro','livro-android')
+           ,('yhcting','netmbuddy')
+           ,('smblott-github','intent_radio')
+           ,('jianfengye','Android_Works')
+           ,('macdidi5','AndroidTutorial')
+           ,('wangym','zxing-client-android')
+           ,('NandoVelazquez','Android-Video-Player-Example')
+           ,('dozingcat','CamTimer')
+           ,('pfn','android-sdk-plugin')
+           ,('cgutman','USBIPServerForAndroid')
+           ,('ssnhitfkgd','webRTC')
+           ,('zielmicha','emacs-android-app')
+           ,('dogtim','VideoEditor')
+           ,('qylk','AudioPlayer')
+           ,('yxl','DownloadProvider')
+           ,('zielmicha','emacs-android-app')
+           ,('xiaogegexiao','vipmediaplayer')
+           ,('billthefarmer','sig-gen')
+           ,('phishman3579','android-augment-reality-framework')]
+
 def retrieveBuildData(user, repo):
    print "Calling http://192.12.243.132:8080/builds/?user=%s&repo=%s&stat=ps" % (user,repo)
    buffer = StringIO()
@@ -146,35 +176,60 @@ def copyBuildData(commit, baseLocalRepoPath, appBuilderName, baseRemoteRepoPath)
 
    return failed_copy > 0
 
+def extractSearchOutput(json_file = '/data/search-data/data.json'):
+   with open(json_file, "r") as f:
+      count = 0
+      data = json.loads(f.read())['response']
+
+      print "Number of docs found: %s" % data['numFound']
+      print data['start']
+
+      print data['docs'][0]
+ 
+      ls = []
+      for d in data['docs']:
+          # user = d['user_sni']
+          # repo = d['repo_sni']
+          # print "%s   %s" % (user,repo)
+          user,repo = d['repo_sni'].split("/")
+          ls.append( (user,repo) )
+      return ls
+
 if __name__ == "__main__":
    
-   baseRepoPath = "/data/callback-v3/repo"
-   appBuilderName = 'app-builder-beta'
-   baseRemoteRepoPath = '/data/repo/staging1'
+   baseRepoPath = "/data/callback-v4/repo"
+   appBuilderName = 'muse-behemoth'
+   baseRemoteRepoPath = '/data/repo/production1'
 
    failedRetData = []
    noEntries = []
    failedcopy = []
 
-   for user,repo in troubles: # apps:
-       resp = None
-       try:
-          resp = retrieveBuildData(user,repo)
-       except e:
-          print("Failed to retrieve info of %s/%s from App Builder" % (user,repo))
-          failedRetData.append( (user,repo) )
- 
-       if resp != None:
+   history = {}
 
-          if len(resp['results']) == 0:
-             print("No entries")
-             noEntries.append( (user,repo) )
-          else:
-             commit = latestCommit(resp)
-             succ = copyBuildData(commit, baseRepoPath, appBuilderName, baseRemoteRepoPath)
-             if not succ:
-                 failedcopy.append( (user,repo) )
-     
+   for user,repo in extractSearchOutput() + apps + newlist1: # troubles: # apps:
+       resp = None
+       key = "%s/%s" % (user,repo)
+       if key not in history:
+         history[key] = ()
+         try:
+            resp = retrieveBuildData(user,repo)
+         except e:
+            print("Failed to retrieve info of %s/%s from App Builder" % (user,repo))
+            failedRetData.append( (user,repo) )
+ 
+         if resp != None:
+  
+            if len(resp['results']) == 0:
+               print("No entries")
+               noEntries.append( (user,repo) )
+            else:
+               commit = latestCommit(resp)
+               succ = copyBuildData(commit, baseRepoPath, appBuilderName, baseRemoteRepoPath)
+               if not succ:
+                   failedcopy.append( (user,repo) )
+         
+
    print("## Failed on Builder Data Retrieve: %s" % ', '.join(map(lambda x: "%s/%s" % x,failedRetData)) ) 
    print("## No entries retrieved on: %s" % ', '.join(map(lambda x: "%s/%s" % x,noEntries)) )
    print("## Failed to copy from Builder: %s" % ', '.join(map(lambda x: "%s/%s" % x,failedcopy)) )
