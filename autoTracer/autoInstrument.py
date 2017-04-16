@@ -18,6 +18,8 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=Non
    print "   %s" % appOutPath
    print "   %s" % roboOutPath
 
+   appAPKName = appAPKPath.split('/')[-1][:-4]
+
    print "Instrumenting and Resigning App APK: %s" % appAPKPath
    if len(blackList) > 0:
       blackListParam = [':'.join(blackList)]
@@ -38,7 +40,7 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=Non
    print "Instrumentation and Resigning completed: %s" % outcome
    if loggingPath != None:
       output = "######## STDOUT ########\n" + outcome + (("\n######## STDERR ########\n" + errors) if (errors != None) else "")
-      with open(generateName(loggingPath, prefix='instrumentation',postfix=".log"), "w") as f:
+      with open(generateName(loggingPath, prefix='instrument-%s' % appAPKName,postfix=".log"), "w") as f:
          f.write(output)
          f.flush()   
 
@@ -58,6 +60,8 @@ def autoInstrument(appAPKPath, roboAPKPath, outputPath, andrJarsPath, oneJar=Non
       print "   %s" % roboOutPath
 
    print "Instrumentation and Resigning Done!"
+
+   return True
 
 if __name__ == "__main__":
    if len(sys.argv) != 5:
