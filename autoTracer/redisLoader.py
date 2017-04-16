@@ -16,6 +16,15 @@ queues['media-jobs'] = ['MediaPlayer_pause_search_buildable.json','MediaPlayer_p
                        ,'MediaPlayer_start_search_buildable.json','MediaPlayer_stop_search_buildable.json']
 queues['view-jobs'] = ['View_buildLayer_search_buildable.json']
 
+queues2 = {}
+
+queues2['alert-dialog-jobs'] = ['android.app.AlertDialog_dismiss_dialog_buildable.json','android.app.AlertDialog_show_dialog_buildable.json']
+queues2['other-dialog-jobs'] = ['android.app.Dialog_dismiss_dialog_buildable.json','android.app.Dialog_show_dialog_buildable.json',
+                                'android.app.Presentation_show_dialog_buildable.json','android.app.ProgressDialog_show_dialog_buildable.json']
+
+test = {}
+test['test-jobs'] = ['Fragment_startActivity_search_buildable.json','Fragment_getString_search_buildable.json','MediaPlayer_pause_search_buildable.json','MediaPlayer_prepareAsync_search_buildable.json']
+
 if __name__ == "__main__":
 
     path = '/home/ubuntu/data/search'
