@@ -31,7 +31,11 @@ def decodeProtobuf(file):
     while True:
         if dataBegin >= dataLen:
             return pbufList,None
-        (size, position) = decoder._DecodeVarint(data, dataBegin)
+        try:
+            (size, position) = decoder._DecodeVarint(data, dataBegin)
+        except Exception as e:
+            error = e
+            break
 	try:
         	pbuf = tracemsg_pb2.TraceMsgContainer()
         	pbuf.ParseFromString(data[position:position + size])
@@ -53,4 +57,4 @@ if __name__ == "__main__":
     if not args.check:
     	printFromFile(args.trace)
     else:
-        checkFromFile(args.trace,False)
+        checkFromFile(args.trace,True)
