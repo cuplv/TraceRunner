@@ -1,6 +1,7 @@
 
 import os
 import shutil
+import time
 
 from subprocess import Popen, PIPE
 from threading import Thread
@@ -49,18 +50,20 @@ class Command(object):
 
         # process = self.process
         def Future():
+            time.sleep(0)
 	    thread.join(timeout)
             timedout = False
             if thread.is_alive():
                print 'Terminating process'
                try:
                   self.process.terminate()
-               except e:
-                  print e
+               except Exception:
+                  print "Exception: Missing process..."
+                  pass
                # thread.join()
                timedout = True
                self.stdout = (self.stdout + "\n *** Timedout ***") if self.stdout != None else "\n *** Timedout ***"   
-            return (self.stdout, self.stderr, timedout, self.process.returncode)
+            return (self.stdout, self.stderr, timedout, self.process.returncode if self.process != None else 101)
  
         return Future
 
