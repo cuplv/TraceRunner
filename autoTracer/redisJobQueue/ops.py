@@ -130,9 +130,9 @@ def load_search_data(queue, json_file = '/data/search-data/data.json', redis_sto
       data = loads(f.read())['response']
 
       print "Number of docs found: %s" % data['numFound']
-      print data['start']
+      # print data['start']
 
-      print data['docs'][0]
+      # print data['docs'][0]
  
       ls = []
       history = {}

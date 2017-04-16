@@ -155,8 +155,10 @@ def copyBuildData(commit, baseLocalRepoPath, appBuilderName, baseRemoteRepoPath)
 
    failed_copy = 0
 
+   appNames = []
    for name,info in commit['apps'].items():
-       currRepoPath = baseLocalRepoPath + "/%s-%s-%s" % (commit['user'],commit['repo'],name)
+       appName = "%s-%s-%s" % (commit['user'],commit['repo'],name)
+       currRepoPath = baseLocalRepoPath + "/%s" % appName
        recreatePath( currRepoPath )
        for apkPath in info['apk']:
           # relativeApkPath = newest['apps'].values()[0]['apk'][0]
@@ -166,7 +168,7 @@ def copyBuildData(commit, baseLocalRepoPath, appBuilderName, baseRemoteRepoPath)
           res = None
           try:
              res = os.system("scp %s %s" % (remoteApkPath,localApkPath))
-          except e:
+          except:
              print("Failed to copy %s to %s" % (remoteApkPath,localApkPath))
              failed_copy += 1 
 
@@ -174,7 +176,10 @@ def copyBuildData(commit, baseLocalRepoPath, appBuilderName, baseRemoteRepoPath)
              print("Failed to copy %s to %s" % (remoteApkPath,localApkPath))
              failed_copy += 1
 
-   return failed_copy > 0
+          if res == 0:
+             appNames.append(appName)
+
+   return failed_copy,appNames
 
 def extractSearchOutput(json_file = '/data/search-data/data.json'):
    with open(json_file, "r") as f:
@@ -199,7 +204,7 @@ if __name__ == "__main__":
    
    baseRepoPath = "/data/callback-v4/repo"
    appBuilderName = 'muse-behemoth'
-   baseRemoteRepoPath = '/data/repo/production1'
+   baseRemoteRepoPath = '/eval/data/production1'
 
    failedRetData = []
    noEntries = []
