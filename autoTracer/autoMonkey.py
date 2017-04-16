@@ -54,7 +54,7 @@ def monkeySprint(appPackageName, numOfMonkeyEvents, monkeyLog):
    adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',str(numOfMonkeyEvents)]
    # trace_proc = Popen(adb_monkey, stdout=PIPE, stderr=PIPE)
    # outcome,error = trace_proc.communicate()
-   monkey_fut = Command(adb_monkey).run(120)
+   monkey_fut = Command(adb_monkey).run(60)
    time.sleep(2)
    (outcome,error,timedout,_) = monkey_fut()
 
@@ -76,7 +76,7 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    adb_proc.communicate()
    # nc_proc = Popen(['nc','-l','-p','5050'], stdout=PIPE)
    
-   timeout = 600
+   timeout = 480
    nc_fut = Command(['nc','-l','-p','5050']).run(timeout)
    print "Started ADB+NetCat Bridge"
 
@@ -94,24 +94,27 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    if ranNumOfMonkeyTries < 1:
       ranNumOfMonkeyTries = 1
    print "%s Monkeys will jump on your Android" % ranNumOfMonkeyTries
-   for i in range(0, ranNumOfMonkeyTries):
+   timedout = False
+
+   i = 0
+   while i < ranNumOfMonkeyTries and not timedout:
+        # for i in range(0, ranNumOfMonkeyTries):
         ranNumOfMonkeyEvents = numOfMonkeyEvents + r.randint(-20,20)
         if ranNumOfMonkeyEvents < 1:
            ranNumOfMonkeyEvents = 10
         timedout = monkeySprint(appPackageName, ranNumOfMonkeyEvents, monkeyLog)
-        if timedout:
-           break
         if i < ranNumOfMonkeyTries - 1:
-           wait = 2 ## + r.randint(0,10)
+           wait = 1 ## + r.randint(0,10)
            print "Waiting %s seconds before restarting the monkey..." % wait
            time.sleep(wait)
+        i += 1
    # events = str(numOfMonkeyEvents)
    # adb_monkey = ['adb','shell','monkey','-p',appPackageName] + getMonkeyEvents() + ['-v',events]
    # trace_proc = Popen(adb_monkey, stdout=PIPE)
    # outcome,error = trace_proc.communicate()
    # print "Trace Completed: %s, %s" % (outcome,error)
 
-   wait = 4
+   wait = 2
    print "Waiting %s seconds before stopping app..." % wait
    time.sleep(wait)
 
@@ -131,6 +134,9 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    print "App kill: %s, %s" % (outcome,error)
    '''
 
+   if timedout:
+      return False
+
    wait = 2
    print "Waiting %s seconds before collecting trace..." % wait
    time.sleep(wait)
@@ -146,7 +152,7 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
           with open(monkeyLog, "a") as f:
             f.write(output)
             f.flush()
-      return
+      return False
 
    wait = 2
    print "Waiting %s seconds before writing trace..." % wait
@@ -163,6 +169,8 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
       with open(monkeyLog, "a") as f:
          f.write(output)
          f.flush()
+
+   return True
 
    '''
    print "Clearing the Instrumented App from task list"
@@ -222,7 +230,7 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
          with open(monkeyLog, "a") as f:
             f.write(output)
             f.flush()
-         return
+         return False
 
    appAPKName = instrumentedAPKPath.split('/')[-1][:-4]
 
@@ -247,13 +255,20 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
          outcome,err = perm_proc.communicate()
          print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
 
-      runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries), loggingPath=loggingPath)
+      succ = runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries), loggingPath=loggingPath)
       if index < int(numOfTraces) - 1:
          wait = 1
          print "Waiting %s seconds before next trace ..." % wait
          time.sleep(wait)
 
    print "All Done!"
+
+   print "Uninstalling Instrumented App..."
+   adb_proc = Popen(['adb','uninstall',appPackageName], stdout=PIPE, stderr=PIPE)
+   outcome,_ = adb_proc.communicate()
+   print "Uninstall Completed: %s" % outcome
+
+   return True
 
 if __name__ == "__main__":
    if len(sys.argv) != 6:
