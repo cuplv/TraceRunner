@@ -12,8 +12,8 @@ def truncate_corrupted(trace):
         if message.msg.message_id != last:
             break
         last += 1
-        if last%100 == 0:
-            print "(%i,%i)" % (last,total)
+        # if last%100 == 0:
+        #     print "(%i,%i)" % (last,total)
         newtrace.append(message)
     return newtrace
 
