@@ -147,6 +147,17 @@ Trace Version Tag
 ===============================
 Tag of the format "traceversion0" which denotes that there have been no changes that will affect the appearance of traces until another trace version tag is added. 
 
+
+Multi Dex Output
+===============================
+Danger: work in progress
+Append the -c option to Tracerunner to output class files somewhere. (Currently there is a bug related to doing this which we are working on)
+
+Compile class files to dex with the dx tool
+```
+Android/Sdk/build-tools/24.0.0/dx --dex --multi-dex --output="output.apk" .
+```
+
 Debugging
 =========
 Viewing exceptions
