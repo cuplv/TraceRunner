@@ -43,6 +43,10 @@ message TraceMsgContainer {
         repeated ValueMsg param_list = 3;
         /* object that calls this callin - document better */
         optional ValueMsg caller = 4;
+        /* file name for the callin location */
+        optional string calling_class_name = 5;
+        /* line number and column separated by colon of callin */
+        optional string calling_class_line = 6;
     }
     message CallinExitMsg {
         /* signature of the callin */

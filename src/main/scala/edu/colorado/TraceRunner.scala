@@ -95,6 +95,7 @@ object TraceRunner {
 
         Options.v().set_process_dir(List(config.apkPath).asJava)
         Options.v().set_output_dir(config.outputDir)
+        Options.v().set_keep_line_number(true)
 
 
 
