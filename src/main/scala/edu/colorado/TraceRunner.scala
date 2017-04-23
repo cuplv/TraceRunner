@@ -65,12 +65,12 @@ object TraceRunner {
       case Some(config) => {
 //        if(config.applicationPackages.size > 0) {
 
-        /**hack to make osx openjdk work**/
-        if(System.getProperty("os.name").equals("Mac OS X")){
-          Scene.v().setSootClassPath(config.apkPath + ":" +
-            sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
-
-        }
+//        /**hack to make osx openjdk work**/
+//        if(System.getProperty("os.name").equals("Mac OS X")){
+//          Scene.v().setSootClassPath(config.apkPath + ":" +
+//            sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
+//
+//        }
         //** Set Options **
         //prefer Android APK files// -src-prec apk
         if(!config.useJava) {
