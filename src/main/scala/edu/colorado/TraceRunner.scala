@@ -96,6 +96,7 @@ object TraceRunner {
         Options.v().set_process_dir(List(config.apkPath).asJava)
         Options.v().set_output_dir(config.outputDir)
         Options.v().set_keep_line_number(true)
+        Options.v().set_process_multiple_dex(true)
 
 
 
@@ -118,10 +119,10 @@ object TraceRunner {
         PhaseOptions.v().setPhaseOption("cg", "enabled:false");
 
         /** transformers**/
-        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
-        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes)))
-        PackManager.v().getPack("jtp").add(new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes)))
-        PackManager.v().getPack("jtp").add(new Transform("jtp.exceptionInstrumenter", new ExceptionInstrumenter(config,classes)))
+//        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
+        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes))) //TODO this causes it
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes))) //TODO this causes it
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.exceptionInstrumenter", new ExceptionInstrumenter(config,classes))) //TODO this also causes it
 
         /**run soot transformation**/
         val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)

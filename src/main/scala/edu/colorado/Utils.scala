@@ -61,7 +61,7 @@ object Utils {
     val integerClazz: SootClass = Scene.v()
       .getSootClass("java.lang.Integer")
       assertNotPhantom(integerClazz)
-    v.getType() match {
+    val out = v.getType() match {
       case i: IntType => {
         val boxmethod = integerClazz
           .getMethod("java.lang.Integer valueOf(int)")
@@ -119,6 +119,8 @@ object Utils {
         ???
       }
     }
+    assert(v != null)
+    v
 
   }
 
