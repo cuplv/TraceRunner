@@ -171,8 +171,8 @@ if __name__ == "__main__":
  
    redisConfig = configs['redis']
 
-   appBuilderName = 'muse-behemoth'
-   baseRemoteRepoPath = '/eval/data/production1'
+   appBuilderName = 'cuaws-app-builder'
+   baseRemoteRepoPath = '/builder/data/staging1'
 
    job = rops.dequeue(redisConfig['jobs'], config=redisConfig)   
    while job != None:

@@ -126,10 +126,10 @@ newlist1 = [('vinsol','expense-tracker')
            ,('phishman3579','android-augment-reality-framework')]
 
 def retrieveBuildData(user, repo):
-   print "Calling http://192.12.243.132:8080/builds/?user=%s&repo=%s&stat=ps" % (user,repo)
+   print "Calling http://52.15.135.195:8080/builds/?user=%s&repo=%s&stat=ps" % (user,repo)
    buffer = StringIO()
    c = pycurl.Curl()
-   c.setopt(c.URL, 'http://192.12.243.132:8080/builds/?user=%s&repo=%s&stat=ps' % (user,repo))
+   c.setopt(c.URL, 'http://52.15.135.195:8080/builds/?user=%s&repo=%s&stat=ps' % (user,repo))
    c.setopt(c.WRITEDATA, buffer) 
    c.perform()
    c.close()

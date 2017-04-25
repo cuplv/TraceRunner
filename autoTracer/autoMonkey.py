@@ -85,10 +85,28 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    print "Running Android Monkey on Instrumented App..."
    # adb shell monkey -p your.package.name -v 500
 
+   protoTraceFile = generateTraceName(outputProtoPath, prefix="trace-%s" % appAPKName)
+
    if loggingPath != None:
-      monkeyLog = generateName(loggingPath, prefix="monkey-run-%s" % appAPKName, postfix=".log")
+      monkeyLog  = loggingPath + "/" + "monkey-run-" + protoTraceFile.split("/")[-1] + ".log" # generateName(loggingPath, prefix="monkey-run-%s" % appAPKName, postfix=".log")
+      logcatFile = loggingPath + "/" + "logcat-" + protoTraceFile.split("/")[-1] + ".log"
+
+      # Start logcat
+      print "Clearing current logcat buffers..."
+
+      clear_logcat_fut = Command(['adb','logcat','-c']).run(5)
+      clear_logcat_fut()
+      # clear_logcat_proc = Popen(['adb','logcat','-c'], stdout=PIPE, stderr=PIPE)
+      time.sleep(2)
+
+      print "Opening Logcat stream into %s" % logcatFile
+      nclog = open(logcatFile, 'w')
+      logcat_proc = Popen(['adb','logcat'], stdout=nclog, stderr=nclog)
+      
    else:
       monkeyLog = None
+      logcatFile = None
+      logcat_proc = None
 
    ranNumOfMonkeyTries = numOfMonkeyTries + r.randint(-2,2)
    if ranNumOfMonkeyTries < 1:
@@ -134,6 +152,13 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    print "App kill: %s, %s" % (outcome,error)
    '''
 
+   if logcat_proc != None:
+      # Terminate Logcat and close the file
+      time.sleep(2)
+      logcat_proc.terminate()
+      nclog.flush()
+      nclog.close()
+
    if timedout:
       return False
 
@@ -159,7 +184,7 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    time.sleep(wait)
 
    # with open("%s/%s" % (outputProtoPath,"trace%s" % index), "w") as f:
-   protoTraceFile = generateTraceName(outputProtoPath, prefix="trace-%s" % appAPKName)
+   # protoTraceFile = generateTraceName(outputProtoPath, prefix="trace-%s" % appAPKName)
    with open(protoTraceFile, "w") as f:
       f.write(trace)
       f.flush()
@@ -256,6 +281,11 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
          print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
 
       succ = runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, int(numOfMonkeyEvents), int(numOfMonkeyTries), loggingPath=loggingPath)
+
+      if not succ:
+         print "Failed in previous trace. Aborting this app.."
+         break 
+
       if index < int(numOfTraces) - 1:
          wait = 1
          print "Waiting %s seconds before next trace ..." % wait
