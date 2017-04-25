@@ -202,7 +202,7 @@ if __name__ == "__main__":
                     appRepo = configs['input'] + "/%s" % appName
                     files = getFilesInPath( appRepo )
                     # count = 0
-                    for apk in filter(lambda f: f.endswith(".apk"), files)[:3]:
+                    for apk in filter(lambda f: f.endswith(".apk"), files):
                         '''
                         thisRepoName = repoName + "##%s" % count
                         apps[thisRepoName] = { 'app': apk.split('/')[-1], 'tracer':'some-tracer.apk', 'instrumented':None, 'traces':[]

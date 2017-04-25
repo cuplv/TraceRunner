@@ -151,6 +151,16 @@ def latestCommit(resp):
           result_dtstamp = result['dt_committed']
    return newest
 
+def selectedAPKs(apks):
+   unalignedAPKs = []
+   alignedAPKs = []
+   for apk in apks:
+      if 'unaligned' in apk:
+          unalignedAPKs.append( apk )
+      else:
+          alignedAPKs.append( apk )
+   return (alignedAPKs + unalignedAPKs)[:3]
+
 def copyBuildData(commit, baseLocalRepoPath, appBuilderName, baseRemoteRepoPath):
 
    failed_copy = 0
@@ -160,7 +170,8 @@ def copyBuildData(commit, baseLocalRepoPath, appBuilderName, baseRemoteRepoPath)
        appName = "%s-%s-%s" % (commit['user'],commit['repo'],name)
        currRepoPath = baseLocalRepoPath + "/%s" % appName
        recreatePath( currRepoPath )
-       for apkPath in info['apk']:
+
+       for apkPath in selectedAPKs(info['apk']):
           # relativeApkPath = newest['apps'].values()[0]['apk'][0]
           remoteApkPath = '%s:%s/%s/%s/%s/%s' % (appBuilderName,baseRemoteRepoPath,commit['user'],commit['repo'],commit['hash'],apkPath)
           localApkPath  = currRepoPath + "/" + os.path.basename(remoteApkPath)
