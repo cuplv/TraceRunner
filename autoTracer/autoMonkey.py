@@ -247,6 +247,8 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    print "Instrumented App Package Name: %s" % appPackageName
 
+   appAPKName = instrumentedAPKPath.split('/')[-1][:-4]
+
    if appPackageName == None:
       if loggingPath != None:
          monkeyLog = generateName(loggingPath, prefix="monkey-run-%s" % appAPKName, postfix=".log")
@@ -256,8 +258,6 @@ def autoMonkey(instrumentedAPKPath, outputProtoPath, numOfTraces, numOfMonkeyEve
             f.write(output)
             f.flush()
          return False
-
-   appAPKName = instrumentedAPKPath.split('/')[-1][:-4]
 
    if installApp:
       print "Uninstalling Previous Version of Instrumented App..."
