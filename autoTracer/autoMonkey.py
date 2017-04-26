@@ -77,7 +77,10 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    # nc_proc = Popen(['nc','-l','-p','5050'], stdout=PIPE)
    
    timeout = 480
-   nc_fut = Command(['nc','-l','-p','5050']).run(timeout)
+   # For Non-Mac:
+   # nc_fut = Command(['nc','-l','-p','5050']).run(timeout)
+   # For Mac:
+   nc_fut = Command(['nc','-l','5050']).run(timeout)
    print "Started ADB+NetCat Bridge"
 
    # reachMonkeyDropZone(appPackageName, activityName)
