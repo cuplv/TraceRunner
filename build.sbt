@@ -16,4 +16,5 @@ libraryDependencies += "org.ow2.asm" % "asm-debug-all" % "5.1"
 
 libraryDependencies += "com.github.scopt" % "scopt_2.11" % "3.5.0"
 
+libraryDependencies += "ca.mcgill.sable" % "soot" % "trunk"
 oneJarSettings
