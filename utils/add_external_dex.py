@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     if args.dex != "":
 #        raise Exception("check for multidex and incriment")
-        updateZip(args.apk, "classes2.dex",args.dex)
+        updateZip(args.apk, "classes27.dex",args.dex)
     elif args.dir != "":
         pass
     else:
