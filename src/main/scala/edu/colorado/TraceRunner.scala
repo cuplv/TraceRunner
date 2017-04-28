@@ -54,7 +54,7 @@ object TraceRunner {
         c.copy(applicationPackages = x.split(":").filter(a => a != "")))
       opt[String]('i', "instrumentation-directory").action((x,c) => c.copy(instDir = x)).required()
       opt[String]('x', "exclude-classes").action((x,c) =>
-        c.copy(excludeClasses = Utils.semicolonSeparatedGlobsToRegex(x)))
+        c.copy(excludeClasses = Utils.colonSeparatedGlobsToRegex(x)))
       opt[Unit]('m', "output_jimple").action((x,c) => c.copy(jimpleOutput = true))
       opt[Unit]('c', "output_class").action((x,c) => c.copy(classOutput = true))
       opt[Unit]('v', "use_java").action((x,c) => c.copy(useJava = true))
