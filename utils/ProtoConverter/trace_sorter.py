@@ -52,13 +52,13 @@ if __name__ == "__main__":
     parser.add_argument('--out', help="write sub trace here")
 
     args = parser.parse_args()
-    print "decoding"
+    # print "decoding"
     trace = protoPrinter.decodeProtobuf(args.trace)[0]
     print "truncating"
     strace = sort_trace(trace)
     newtrace = truncate_corrupted(strace)
     print "truncated %i messages" % (len(trace) - len(newtrace))
-    print len(newtrace)
+    print "trace size: %i" % len(newtrace)
     if args.out != None:
         outfile = open(args.out,'w')
         write_proto(newtrace,outfile)

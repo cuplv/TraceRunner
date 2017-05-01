@@ -12,13 +12,16 @@ def printFromFile(file):
 
 def checkFromFile(file, print_p):
     pbufs, err = decodeProtobuf(file)
+
+    sortpbufs = sorted(pbufs, key=lambda m : m.msg.message_id)
+    print "len: %i" % len(sortpbufs)
     last = 0
     missing = 0
-    for pbuf in pbufs:
+    for pbuf in sortpbufs:
         if pbuf.msg.message_id == last:
             last += 1
-            if print_p:
-                print pbuf
+            # if print_p:
+            #     print pbuf
         else:
             if print_p:
                 print pbuf
