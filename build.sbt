@@ -10,10 +10,12 @@ lazy val commonSettings = Seq(
 
 scalaVersion := "2.11.8"
 
-libraryDependencies += "org.smali" % "dexlib2" % "2.1.3"
-
-libraryDependencies += "org.ow2.asm" % "asm-debug-all" % "5.1"
+//libraryDependencies += "org.smali" % "dexlib2" % "2.1.3"
+//
+//libraryDependencies += "org.ow2.asm" % "asm-debug-all" % "5.1"
 
 libraryDependencies += "com.github.scopt" % "scopt_2.11" % "3.5.0"
+
+libraryDependencies += "ca.mcgill.sable" % "soot" % "trunk"
 
 oneJarSettings

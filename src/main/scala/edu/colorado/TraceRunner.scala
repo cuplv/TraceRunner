@@ -97,6 +97,7 @@ object TraceRunner {
         Options.v().set_output_dir(config.outputDir)
         Options.v().set_keep_line_number(true)
         Options.v().set_process_multiple_dex(true)
+//        Options.v().set_oaat(true);
 
 
 
@@ -116,11 +117,11 @@ object TraceRunner {
 
 
         //Disable callgraph construction
-        PhaseOptions.v().setPhaseOption("cg", "enabled:false");
+//        PhaseOptions.v().setPhaseOption("cg", "enabled:false");
 
         /** transformers**/
 //        PackManager.v().getPack("wjtp").add(new Transform("wjtp.overrideallmethods", new OverrideAllMethods(config)))
-        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes))) //TODO this causes it, added locals: stack height?
+//        PackManager.v().getPack("jtp").add(new Transform("jtp.callinInstrumenter", new CallinInstrumenter(config, classes))) //TODO this causes it, added locals: stack height?
 //        PackManager.v().getPack("jtp").add(new Transform("jtp.callbackInstrumenter", new CallbackInstrumenter(config, classes))) //TODO this causes it
 //        PackManager.v().getPack("jtp").add(new Transform("jtp.exceptionInstrumenter", new ExceptionInstrumenter(config,classes))) //TODO this also causes it
 

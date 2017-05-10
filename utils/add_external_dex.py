@@ -53,7 +53,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.dex != "":
-        updateZip(args.apk, "classes2.dex",args.dex)
+        updateZip(args.apk, "classes27.dex",args.dex)
     elif args.dir != "":
         pass
     else:
