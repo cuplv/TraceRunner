@@ -55,6 +55,7 @@ public class FrameworkResolver {
             frameworkMatchers[i] = Pattern.compile(createRegexFromGlob(globs[i]));
         }
     }
+    Pattern insecureBank = Pattern.compile(createRegexFromGlob("com.differentpackage.insecurebankv2*"));
     boolean isFramework(Class clazz){
         String name = clazz.getName();
         return isFramework(name);
@@ -63,7 +64,11 @@ public class FrameworkResolver {
     boolean isFramework(String name) {
         for(Pattern p:frameworkMatchers){
             if(p.matcher(name).find()){
-                return true;
+                if(insecureBank.matcher(name).find()){
+                    return false;
+                }else {
+                    return true;
+                }
             }
         }
         return false;

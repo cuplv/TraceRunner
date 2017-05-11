@@ -18,8 +18,10 @@ object Utils {
   val source = scala.io.Source.fromFile(TraceRunnerOptions.FRAMEWORK_FILTER_FILE)
   val filter_lines = (try source.mkString finally source.close()).split("\n")
   val framework_match_regex = filter_lines.map(globToRegex).map(a => a.r)
+  val insecurebankpackage = "com.differentpackage.insecurebankv2.*".r
   def isFrameworkClass(clazz: String): Boolean ={
     framework_match_regex.exists((a: Regex) => clazz match{
+      case insecurebankpackage() => false
       case a() => true
       case _ => false
     })
