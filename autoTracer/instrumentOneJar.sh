@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [ "$#" -ne 3 ]; then
-    echo "Usage: bash instrument.sh <Path to APK> <Path to Output> <Path to Android Jars> <':' separated Instr Blacklist (Optional)>"
+if [ "$#" -lt 3 ]; then
+    echo "Usage: bash instrumentOneJar.sh <Path to APK> <Path to Output> <Path to Android Jars> <':' separated Instr Blacklist (Optional)>"
     exit 1
 fi
 
@@ -40,12 +40,14 @@ echo Instrumentation Jar Path: $INST_JAR_FILE
 echo Instrumentation Dex Path: $INST_DEX_FILE
 
 cd $TRACERUNNER_PATH
+# sbt "run -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE -x com.squareup.*:com.robotium.*:de.danoeh.antennapod.fragment.SearchFragment"
 if [ "${BLACK_LIST}" = "" ]
 then
-  sbt "run -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE"
+   java -jar target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE
 else
-  sbt "run -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE -x $BLACK_LIST"
+   java -jar target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar -d $APP_APK_FILE -j $ANDROID_JARS -o $OUTPUT_PATH -i $INST_JAR_FILE -x $BLACK_LIST
 fi
+
 echo "App ${APP_APK_FILE##*/} instrumented and written to $OUTPUT_PATH"
 cd $CURR_PATH
 

@@ -33,7 +33,7 @@ def runAutoTracer(appPackageName, atracerPackageName, atracerClassName, outputPr
    with open("%s/%s.out" % (outputProtoPath,atracerClassName), "w") as f:
       f.write(trace)
 
-def autoLaunch(instrumentedAPKPath, atracerAPKPath, atracerClassNames, outputProtoPath):
+def autoLaunch(instrumentedAPKPath, atracerAPKPath, atracerClassNames, outputProtoPath, permissions=[]):
 
    appPackageName,activityName = getAPKInfo(instrumentedAPKPath)
    atracerPackageName,_ = getAPKInfo(atracerAPKPath)
@@ -61,6 +61,13 @@ def autoLaunch(instrumentedAPKPath, atracerAPKPath, atracerClassNames, outputPro
    adb_proc = Popen(['adb','install',atracerAPKPath], stdout=PIPE)
    outcome,_ = adb_proc.communicate()
    print "Install Completed: %s" % outcome
+
+   print "Granting permissions"
+   # permissions = ['android.permission.READ_EXTERNAL_STORAGE','android.permission.WRITE_EXTERNAL_STORAGE','android.permission.READ_PHONE_STATE']
+   for permission in permissions:
+      perm_proc = Popen(['adb','shell','pm','grant',appPackageName,permission], stdout=PIPE, stderr=PIPE)
+      outcome,err = perm_proc.communicate()
+      print "Request permission %s: \n %s \n %s" % (permission,outcome,err)
 
    for atracerClassName in atracerClassNames.split(":"):
        print "Running Auto Tracing for %s" % atracerClassName
