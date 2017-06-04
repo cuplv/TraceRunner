@@ -32,6 +32,15 @@ message TraceMsgContainer {
     /* Defines the information about the instrumented app. */
     message AppMsg {
         optional string app_name = 1;
+        optional string app_site_of_origin = 2; //github, bitbucket, appstore etc
+        optional string app_commit_hash = 3;
+        optional string apk_name = 4;
+        optional string apk_sha1_hash = 5;
+        optional string app_vcs_organization = 6;
+        optional string app_vcs_reponame = 7;
+        optional string trace_runner_commit = 8;
+        optional string trace_runner_additional_info = 9;
+
     }
     /* Msg that contains the information of a callin invocation */
     message CallinEntryMsg {
