@@ -27,7 +27,8 @@ def createEmulator(avdName, abiType=ARM):
     #create new android vm
     #android create avd --force -n gapi_64 -t 45 --abi google_apis/x86
     print "Creating avd " + avdName + " @ API " + apiLevel + " and ABI " + abiType
-    subprocess.call(['android','create','avd','--force','-n',avdName, '-t', apiLevel, '--abi', abiType])
+    createAVD = 'echo |android create avd --force -n ' + avdName + ' -t ' + apiLevel + ' --abi ' + abiType
+    subprocess.call(['bash','-c', createAVD])
 
     # increase android vm ram
     print "Replacing default config.ini with %s" % avdConfig
