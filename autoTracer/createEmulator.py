@@ -10,6 +10,7 @@ ARM = 2
 def createEmulator(avdName, abiType=ARM):
 
     sdkHomePath = os.environ['ANDROID_HOME']
+    homePath = os.environ["HOME"]
 
     print "Deleting existing avd " + avdName
     subprocess.call(['android', 'delete', 'avd', '-n', avdName])
@@ -17,11 +18,11 @@ def createEmulator(avdName, abiType=ARM):
     if abiType == X86:
         abiType   = "google_apis/x86"
         apiLevel  = 'android-23' 
-	avdConfig = "avdConfig/x86-6.0/config.ini"
+        avdConfig = "avdConfig/x86-6.0/config.ini"
     else:
         abiType   = "google_apis/armeabi-v7a"
         apiLevel  = 'android-22'
-	avdConfig = "avdConfig/arm-5.1.1/config.ini"
+        avdConfig = "avdConfig/arm-5.1.1/config.ini"
 
     #create new android vm
     #android create avd --force -n gapi_64 -t 45 --abi google_apis/x86
@@ -30,7 +31,12 @@ def createEmulator(avdName, abiType=ARM):
 
     # increase android vm ram
     print "Replacing default config.ini with %s" % avdConfig
-    shutil.copyfile(avdConfig, sdkHomePath + '/.android/avd/' + avdName + '.avd/config.ini')
+    inHomeDir = homePath + '/.android/avd/' + avdName + '.avd/config.ini'
+    inSdk = sdkHomePath + '/.android/avd/' + avdName + '.avd/config.ini'
+    if os.path.isfile(inSdk):
+        shutil.copyfile(avdConfig, inSdk)
+    elif os.path.isfile(inHomeDir):
+        shutil.copyfile(avdConfig, inHomeDir)
 
     print "Emulator Creation Done!"
 
