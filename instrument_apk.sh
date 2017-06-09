@@ -30,9 +30,9 @@ python ${TRACERUNNER_ROOT}/utils/add_external_dex.py --apk ${OUTPUT}/${APKNAME} 
 
 echo "add network permission to ${OUTPUT}/${APKNAME}"
 
-python ${TRACERUNNER_ROOT}/utils/AppTransformations/addNetwork.py --apk ${OUTPUT}/${APKNAME} --output ${OUTPUT}/tmp
+python ${TRACERUNNER_ROOT}/utils/AppTransformations/addNetwork.py --apk ${OUTPUT}/${APKNAME} --output ${OUTPUT}/tmp_apk
 rm ${OUTPUT}/${APKNAME}
-mv ${OUTPUT}/tmp ${OUTPUT}/${APKNAME}
+mv ${OUTPUT}/tmp_apk ${OUTPUT}/${APKNAME}
 
 echo "resign apk"
 

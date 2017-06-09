@@ -23,7 +23,7 @@ def add_network(apk, outfile,decomptemppar = None, runjarpar = None):
 
     #check if temp file exists and throw error if it does
     if os.path.exists(decomptemp):
-        raise Exception("temp directory already exists, please delete or choose another with --temp")
+        raise Exception("temp directory " + decomptemp +  " already exists, please delete or choose another with --temp")
 
     if runjarpar is None:
         runjar = script_dir + os.path.sep + "apktool_2.2.2.jar"

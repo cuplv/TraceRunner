@@ -8,6 +8,7 @@ import random as r
 from utils.genName import generateName
 
 from subprocess import Popen, PIPE
+import subprocess
 
 from utils.getAPKInfo import getAPKInfo
 
@@ -69,6 +70,14 @@ def monkeySprint(appPackageName, numOfMonkeyEvents, monkeyLog):
 
    return timedout
 
+
+useGnuNetcat = False
+ncHelp = subprocess.check_output(['nc', '--help'])
+if "GNU netcat" in ncHelp:
+    useGnuNetcat = True
+
+
+
 def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries, loggingPath):
 
    print "Starting ADB+NetCat Bridge @ 5050..."
@@ -80,7 +89,11 @@ def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, ind
    # For Non-Mac:
    # nc_fut = Command(['nc','-l','-p','5050']).run(timeout)
    # For Mac:
-   nc_fut = Command(['nc','-l','5050']).run(timeout)
+
+   if useGnuNetcat:
+       nc_fut = Command(['nc','-l', '-p','5050']).run(timeout)
+   else:
+       nc_fut = Command(['nc','-l', '5050']).run(timeout)
    print "Started ADB+NetCat Bridge"
 
    # reachMonkeyDropZone(appPackageName, activityName)

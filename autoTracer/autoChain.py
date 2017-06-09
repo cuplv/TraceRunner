@@ -15,10 +15,10 @@ from autoMonkey import autoMonkey
 # adb shell input tap 600 150
 
 def get(conf, section, option, default=None):
-     if conf.has_option(section, option):
-         return conf.get(section, option)
-     else:
-         return default
+    if conf.has_option(section, option):
+        return conf.get(section, option)
+    else:
+        return default
 
 # Extract configurations from config file.
 def getConfigs(iniFilePath='tracerConfig.ini'):
@@ -42,9 +42,9 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     monkeytries    = get(conf, 'tracerOptions', 'monkeytries', default='5')
     onejar         = get(conf, 'tracerOptions', 'onejarinstrument', default=False)
     if onejar in ['true', 'True', 'Yes', 'yes']:
-       onejar = True
+        onejar = True
     else:
-       onejar = False
+        onejar = False
     permissions = map(lambda s: s.strip(), get(conf, 'tracerOptions', 'permissions', default='').split(','))
     permissions = filter(lambda p: p != '', permissions)
     inferRepos  = get(conf, 'tracerOptions', 'inferrepos', default=False)
@@ -104,17 +104,31 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
                               , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions } 
     else:
        # Infer repos from given input folder.
-       repoDirs = getDirsInPath( configs['input'] )
+
+       def recSearch(pdir):
+           out = set()
+           for dirpath, dirnames, filenames in os.walk(pdir):
+               for file in filenames:
+                   for dirname in dirnames:
+                       out.union(recSearch(dirname))
+                   if file.endswith(".apk"):
+                       out.add(dirpath)
+           return out
+
+       # getDirsInPath( configs['input'] )
+       repoDirs = recSearch(configs['input'])
        print "Retrieving from repos:\n%s" % ('\n'.join(repoDirs))
        for repoDir in repoDirs:
            files = getFilesInPath( repoDir )
            apks  = files
-           repoName = repoDir.split('/')[-1]
+           pathsplit = repoDir.split('/')
+           repoName = pathsplit[-3] + "_" + pathsplit[-2] + "_" + pathsplit[-1]
            count = 0
            for apk in filter(lambda f: f.endswith(".apk"), files):
                thisRepoName = repoName + "##%s" % count
                apps[thisRepoName] = { 'app': apk.split('/')[-1], 'tracer':'some-tracer.apk', 'instrumented':None, 'traces':[]
-                                    , 'usetracers':['monkey'], 'blacklist':[], 'installapp':True, 'permissions':[] }
+                   , 'usetracers':['monkey'], 'blacklist':[], 'installapp':True, 'permissions':[]
+                   , 'repodir': repoDir }
                count += 1
 
     configs['apps'] = apps
@@ -155,10 +169,12 @@ if __name__ == "__main__":
 
        # Instrument the App APK and Resign both the App and Tracer APKs
        if appData['installapp']:
-          appInputPath    = configs['input'] + "/" + appName + "/" + appData['app']
-          tracerInputPath = configs['input'] + "/" + appName + "/" + appData['tracer']
-          instrumentPath  = configs['instrument'] + "/" + appName
-          loggingPath     = configs['logs'] + "/" + appName
+          appInputPath    = appData['repodir'] + "/" + appData['app']
+          dirExtension = appData['repodir'].split(configs['input'])[1] #strip off prefix
+          appData['dirExtension'] = dirExtension
+          tracerInputPath = appData['repodir'] + "/" + appData['tracer']
+          instrumentPath  = configs['instrument'] + "/" + dirExtension
+          loggingPath     = configs['logs'] + "/" + dirExtension
           recreatePath( instrumentPath )
           createPathIfEmpty( loggingPath )
           if appData['instrumented'] == None:
@@ -172,9 +188,9 @@ if __name__ == "__main__":
           print "App installation omitted, will omit instrumentation too"
 
        # Launch auto tracer and write outputs to the output path
-       appInstrPath = configs['instrument'] + "/" + appName + "/" + appData['app']
-       tracerInstrPath = configs['instrument'] + "/" + appName + "/" + appData['tracer']
-       output = configs['output'] + "/" + appName
+       appInstrPath = configs['instrument'] + "/" + appData['dirExtension'] + "/" + appData['app']
+       tracerInstrPath = configs['instrument'] + "/" + appData['dirExtension'] + "/" + appData['tracer']
+       output = configs['output'] + "/" + appData['dirExtension']
        createPathIfEmpty( output )
        usetracers = appData['usetracers']
 
