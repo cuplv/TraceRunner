@@ -2,6 +2,7 @@
 import os
 import sys
 import shutil
+import random
 
 from ConfigParser import ConfigParser
 
@@ -88,8 +89,8 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
                     installApp = True
                 traces = map(lambda s: s.strip(), get(conf, section, 'traces', default='').split(','))
                 appUsetracers = get(conf, section, 'usetracers', default=None)
-                    if appUsetracers == None:
-                        appUsetracers = usetracers
+                if appUsetracers == None:
+                    appUsetracers = usetracers
                 else:
                     appUsetracers = map(lambda s: s.strip(), appUsetracers.split(','))
 
@@ -100,8 +101,7 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
                     permissions = filter(lambda p: p != '', permissions)
                     permissions = list(set(configs['permissions'] + permissions))
 
-                    apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces
-                              , 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions } 
+                    apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces, 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions }
     else:
         # Infer repos from given input folder.
 
@@ -152,7 +152,9 @@ if __name__ == "__main__":
     createPathIfEmpty( configs['logs'] )
  
     # Run Auto Tracer for each test app listed in the conf file
-    for appName in configs['apps']:
+    apps_to_process = configs['apps'].keys()
+    random.shuffle(apps_to_process) # shuffle so if restarted we don't keep redoing the same apps
+    for appName in apps_to_process:
         # Start emulator if requested
         if configs['startEmulator']:
             startEmulator(configs['name'], configs['sdpath'], devicePort=configs['port'], noWindow=configs['noWindow'])
