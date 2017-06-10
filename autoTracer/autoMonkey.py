@@ -77,7 +77,7 @@ useGnuNetcat = False
 ncHelp = ""
 try:
     ncHelp = subprocess.check_output(['nc', '-help'])
-except subprocess.CalledProcessErrror as grepexc:
+except subprocess.CalledProcessError as grepexc:
     if "GNU netcat" in grepexc.output:
         useGnuNetcat = True
 if "GNU netcat" in ncHelp:
