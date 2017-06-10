@@ -72,7 +72,7 @@ def monkeySprint(appPackageName, numOfMonkeyEvents, monkeyLog):
 
 
 useGnuNetcat = False
-ncHelp = subprocess.check_output(['nc', '--help'])
+ncHelp = subprocess.check_output(['nc', '-help'])
 if "GNU netcat" in ncHelp:
     useGnuNetcat = True
 
