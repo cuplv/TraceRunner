@@ -15,7 +15,10 @@ def truncate_corrupted(trace):
         # if last%100 == 0:
         #     print "(%i,%i)" % (last,total)
         newtrace.append(message)
+
     return newtrace
+def sort_trace(trace):
+    return sorted(trace, key=lambda m: m.msg.message_id)
 
 
 def write_proto( msgs,buff):
@@ -35,11 +38,10 @@ if __name__ == "__main__":
                         help="trace file",required=True)
     parser.add_argument('--out', help="write sub trace here")
     args = parser.parse_args()
-    print "decoding"
     trace = protoPrinter.decodeProtobuf(args.trace)[0]
-    print "truncating"
-    newtrace = truncate_corrupted(trace)
-    print len(newtrace)
+    trace_sorted = sort_trace(trace)
+    newtrace = truncate_corrupted(trace_sorted)
+    print args.trace + ", old trace len: " + str(len(trace)) + "new trace len: " + str(len(newtrace))
     outfile = open(args.out,'w')
     write_proto(newtrace,outfile)
     outfile.close()
