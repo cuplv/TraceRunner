@@ -104,6 +104,7 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
                     apps[appName] = { 'app':appAPK, 'tracer':tracerAPK, 'instrumented':instrumentedAPK, 'traces':traces, 'usetracers':appUsetracers, 'blacklist':blackList, 'installapp':installApp, 'permissions': permissions }
     else:
         # Infer repos from given input folder.
+	print "Inferring repos"
 
         def recSearch(pdir):
             out = set()
@@ -153,10 +154,12 @@ if __name__ == "__main__":
  
     # Run Auto Tracer for each test app listed in the conf file
     apps_to_process = configs['apps'].keys()
+    print "processing %i apps" % len(configs['apps'])
     random.shuffle(apps_to_process) # shuffle so if restarted we don't keep redoing the same apps
     for appName in apps_to_process:
         # Start emulator if requested
         if configs['startEmulator']:
+            killEmulator(configs['port'])
             startEmulator(configs['name'], configs['sdpath'], devicePort=configs['port'], noWindow=configs['noWindow'])
  
  
