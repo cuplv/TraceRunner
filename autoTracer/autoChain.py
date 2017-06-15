@@ -11,6 +11,8 @@ from startEmulator import startEmulator, killEmulator
 from autoLaunch import autoLaunch
 from autoInstrument import autoInstrument
 from autoMonkey import autoMonkey
+from multiprocessing import Process
+import time
 
 
 # adb shell input tap 600 150
@@ -136,6 +138,61 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
 
     return configs
 
+
+def trace_app_on_emulator(appName, configs):
+    print "Running Test Cases for App: %s" % appName
+    appData = configs['apps'][appName]
+    appAPK = appData['app']
+    tracerAPK = appData['tracer']
+    traces = ':'.join(appData['traces'])
+    appName = appName.split("##")[0]
+    # Instrument the App APK and Resign both the App and Tracer APKs
+    if appData['installapp']:
+        appInputPath = appData['repodir'] + "/" + appData['app']
+        dirExtension = appData['repodir'].split(configs['input'])[1]  # strip off prefix
+        appData['dirExtension'] = dirExtension
+        tracerInputPath = appData['repodir'] + "/" + appData['tracer']
+        instrumentPath = configs['instrument'] + "/" + dirExtension
+        loggingPath = configs['logs'] + "/" + dirExtension
+        recreatePath(instrumentPath)
+        createPathIfEmpty(loggingPath)
+        if appData['instrumented'] == None:
+            autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
+                           , oneJar=configs['onejar'], blackList=appData['blacklist'], loggingPath=loggingPath)
+        else:
+            print "Instrumented APK provided... Omitting instrumentation"
+            instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']
+            shutil.copyfile(instrumentInputPath, instrumentPath + "/" + os.path.basename(instrumentInputPath))
+    else:
+        print "App installation omitted, will omit instrumentation too"
+
+    # Launch auto tracer and write outputs to the output path
+    appInstrPath = configs['instrument'] + "/" + appData['dirExtension'] + "/" + appData['app']
+    tracerInstrPath = configs['instrument'] + "/" + appData['dirExtension'] + "/" + appData['tracer']
+    output = configs['output'] + "/" + appData['dirExtension']
+    createPathIfEmpty(output)
+    usetracers = appData['usetracers']
+    # check if instrumented app path exists
+    if not os.path.exists(appInstrPath):
+        print "Instrumentation failed... aborting for this repo"
+    else:
+        if 'robot' in usetracers:
+            print "Running Robotium Tracer..."
+            autoLaunch(appInstrPath, tracerInstrPath, traces, output, permissions=appData['permissions'])
+        if 'monkey' in usetracers:
+            print "Running Monkey Tracer..."
+            monkeyOutput = output + "/" + "monkeyTraces"
+            createPathIfEmpty(monkeyOutput)
+            autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'],
+                       configs['monkeytries']
+                       , installApp=appData['installapp'], permissions=appData['permissions'], loggingPath=loggingPath)
+        if os.path.exists(configs['input'] + "/" + appName + "/manualTraces"):
+            manualTraceOutput = output + "/manualTraces"
+            createPathIfEmpty(manualTraceOutput)
+            for trace in getFilesInPath(configs['input'] + "/" + appName + "/manualTraces"):
+                shutil.copyfile(trace, manualTraceOutput + "/" + os.path.basename(trace))
+
+
 if __name__ == "__main__":
  
     if len(sys.argv) > 1:
@@ -161,63 +218,17 @@ if __name__ == "__main__":
         if configs['startEmulator']:
             killEmulator(configs['port'])
             startEmulator(configs['name'], configs['sdpath'], devicePort=configs['port'], noWindow=configs['noWindow'])
- 
- 
-        print "Running Test Cases for App: %s" % appName
-        
-        appData = configs['apps'][appName]
-        appAPK  = appData['app']
-        tracerAPK = appData['tracer']
-        traces = ':'.join( appData['traces'] )
- 
-        appName = appName.split("##")[0]
- 
-        # Instrument the App APK and Resign both the App and Tracer APKs
-        if appData['installapp']:
-            appInputPath    = appData['repodir'] + "/" + appData['app']
-            dirExtension = appData['repodir'].split(configs['input'])[1] #strip off prefix
-            appData['dirExtension'] = dirExtension
-            tracerInputPath = appData['repodir'] + "/" + appData['tracer']
-            instrumentPath  = configs['instrument'] + "/" + dirExtension
-            loggingPath     = configs['logs'] + "/" + dirExtension
-            recreatePath( instrumentPath )
-            createPathIfEmpty( loggingPath )
-            if appData['instrumented'] == None:
-                autoInstrument(appInputPath, tracerInputPath, instrumentPath, configs['androidJars']
-                            ,oneJar=configs['onejar'], blackList=appData['blacklist'], loggingPath=loggingPath)
-            else:
-                print "Instrumented APK provided... Omitting instrumentation"
-                instrumentInputPath = configs['input'] + "/" + appName + "/" + appData['instrumented']
-                shutil.copyfile(instrumentInputPath, instrumentPath + "/" + os.path.basename(instrumentInputPath))
-        else:
-            print "App installation omitted, will omit instrumentation too"
- 
-        # Launch auto tracer and write outputs to the output path
-        appInstrPath = configs['instrument'] + "/" + appData['dirExtension'] + "/" + appData['app']
-        tracerInstrPath = configs['instrument'] + "/" + appData['dirExtension'] + "/" + appData['tracer']
-        output = configs['output'] + "/" + appData['dirExtension']
-        createPathIfEmpty( output )
-        usetracers = appData['usetracers']
- 
-        # check if instrumented app path exists
-        if not os.path.exists(appInstrPath):
-            print "Instrumentation failed... aborting for this repo"
-        else:
-            if 'robot' in usetracers:
-                print "Running Robotium Tracer..."
-                autoLaunch(appInstrPath, tracerInstrPath, traces, output, permissions=appData['permissions'])
-            if 'monkey' in usetracers:  
-                print "Running Monkey Tracer..."
-                monkeyOutput = output + "/" + "monkeyTraces"
-                createPathIfEmpty( monkeyOutput )
-                autoMonkey(appInstrPath, monkeyOutput, configs['monkeytraces'], configs['monkeyevents'], configs['monkeytries']
-                        ,installApp=appData['installapp'], permissions=appData['permissions'], loggingPath=loggingPath)
-            if os.path.exists( configs['input'] + "/" + appName + "/manualTraces" ):
-                manualTraceOutput = output + "/manualTraces"
-                createPathIfEmpty( manualTraceOutput )
-                for trace in getFilesInPath(configs['input'] + "/" + appName + "/manualTraces"):
-                    shutil.copyfile(trace, manualTraceOutput + "/" + os.path.basename(trace))
- 
+
+        #trace_app_on_emulator(appName, configs)
+
+        p = Process(target=trace_app_on_emulator, args=(appName,configs))
+        p.start()
+        time.sleep(10*60) #TODO: figure out if this is enough
+        if p.is_alive():
+            print "Terminating trace thread after timeout"
+            p.terminate()
+        p.join()
+
         # Kill emulator if it was started here
         if configs['startEmulator']:
             killEmulator(configs['port'])
