@@ -83,6 +83,11 @@ except subprocess.CalledProcessError as grepexc:
 if "GNU netcat" in ncHelp:
     useGnuNetcat = True
 
+if useGnuNetcat:
+    print "GNU netcat selected"
+else:
+    print "BSD netcat selected"
+
 
 
 def runAutoMonkey(appAPKName, appPackageName, activityName, outputProtoPath, index, numOfMonkeyEvents, numOfMonkeyTries, loggingPath):
