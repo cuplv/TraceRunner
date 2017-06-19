@@ -204,6 +204,7 @@ public class TraceRunnerRuntimeInstrumentation {
                 StackTraceElement callbackCaller = stackTrace[4];
                 String callerClassName = callbackCaller.getClassName();
                 if (FrameworkResolver.get().isFramework(callerClassName)) {
+                    int id = count.getAndIncrement();
                     //Get class hierarchy info
                     Class firstFramework = null;
                     List<Method> frameworkOverride = null;
@@ -229,7 +230,6 @@ public class TraceRunnerRuntimeInstrumentation {
                     //Get callback info
 
                     String callerMethodName = callbackCaller.getMethodName();
-                    int id = count.getAndIncrement();
                     long threadID = Thread.currentThread().getId();
                     TraceMsgContainer.CallbackEntryMsg.Builder callbackEntryMsgBuilder
                             = TraceMsgContainer.CallbackEntryMsg.newBuilder();
@@ -329,11 +329,11 @@ public class TraceRunnerRuntimeInstrumentation {
         try {
             if(!acquireThread()) {
                 if (FrameworkResolver.get().isFramework(signature)) {
+                    int id = count.getAndIncrement();
                     boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
 
                     //called on Activity Thread
                     //TODO: add callers
-                    int id = count.getAndIncrement();
                     long threadID = Thread.currentThread().getId();
 
                     CallinEntryMsg.Builder callinMsgBuilder = CallinEntryMsg.newBuilder();
