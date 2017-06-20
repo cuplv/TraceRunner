@@ -13,7 +13,7 @@ import argparse
 # runjar = script_dir + os.path.sep + "apktool_2.2.2.jar"
 # decomptemp = script_dir + os.path.sep + "tmp"
 
-def add_network(apk, outfile,decomptemppar = None, runjarpar = None):
+def add_network(apk, outfile,decomptemppar = None, runjarpar = None, clobber_temp_dir = True):
     script_path= os.path.realpath(__file__)
     script_dir = os.path.sep.join(script_path.split(os.path.sep)[:-1])
     if decomptemppar is None:
@@ -22,8 +22,11 @@ def add_network(apk, outfile,decomptemppar = None, runjarpar = None):
         decomptemp = decomptemppar
 
     #check if temp file exists and throw error if it does
-    if os.path.exists(decomptemp):
-        raise Exception("temp directory already exists, please delete or choose another with --temp")
+    if not clobber_temp_dir:
+    	if os.path.exists(decomptemp):
+    	    raise Exception("temp directory already exists, please delete or choose another with --temp")
+    else:
+        shutil.rmtree(decomptemp)
 
     if runjarpar is None:
         runjar = script_dir + os.path.sep + "apktool_2.2.2.jar"
@@ -80,4 +83,7 @@ if __name__ == "__main__":
     parser.add_argument('--apk_tool', type=str,
                         help="location of apktool jar", required=False)
     args = parser.parse_args()
-    add_network(args.apk, args.output,args.temp, args.apk_tool)
+    if args.temp is None:
+    	add_network(args.apk, args.output,args.temp, args.apk_tool)
+    else:
+        add_network(args.apk, args.output, args.temp, args.apk_tool, False)
