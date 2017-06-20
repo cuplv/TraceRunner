@@ -11,9 +11,9 @@ OUTPUT=`dir_resolve $2`
 echo "Orig_APK: ${ORIG_APK}"
 
 
-TRACERUNNER_ROOT=/Users/s/Documents/source/TraceRunner
+TRACERUNNER_ROOT=/Users/$(whoami)/Documents/source/TraceRunner
 cd $TRACERUNNER_ROOT
-PLATFORMS=/Users/s/Library/Android/sdk/platforms/
+PLATFORMS=/Users/$(whoami)/Library/Android/sdk/platforms/
 #instrument
 
 #with common exclusion list for exceeding method limits
