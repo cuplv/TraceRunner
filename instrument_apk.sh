@@ -16,6 +16,9 @@ cd $TRACERUNNER_ROOT
 PLATFORMS=/Users/s/Library/Android/sdk/platforms/
 #instrument
 
+#with common exclusion list for exceeding method limits
+#java -jar ${TRACERUNNER_ROOT}/target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar -j ${PLATFORMS} -d $ORIG_APK -o $OUTPUT  -i ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar -x "org.apache.commons*:org.jsoup*:com.squareup.okhttp*:rx*:org.shredzone.flattr4j*:okhttp3*:retrofit2*:com.bumptech.glide*:org.json*:java*"
+
 java -jar ${TRACERUNNER_ROOT}/target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar -j ${PLATFORMS} -d $ORIG_APK -o $OUTPUT  -i ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar
 
 #extract apk name
