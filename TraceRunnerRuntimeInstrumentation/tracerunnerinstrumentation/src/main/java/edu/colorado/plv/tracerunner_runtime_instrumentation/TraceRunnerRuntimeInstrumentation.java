@@ -449,13 +449,16 @@ public class TraceRunnerRuntimeInstrumentation {
      */
     private static ValueMsg.Builder setValue(ValueMsg.Builder builder, Object obj) {
         /* set the value only for numbers and strings */
-        if (obj instanceof Boolean ||
+
+        if (obj != null && (obj instanceof Boolean ||
                 obj instanceof Number ||
                 obj instanceof Character ||
-                obj instanceof String) {
-            builder.setValue(obj.toString());
+                obj instanceof String)) {
+            try {
+                builder.setValue(obj.toString());
+            }catch(NullPointerException e){}
+            //BigInt sometimes throws null pointer exception from its toString implementation
         }
-
         return builder;
     }
 }
