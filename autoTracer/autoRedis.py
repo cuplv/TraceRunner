@@ -69,8 +69,12 @@ def getConfigs(iniFilePath='tracerConfig.ini'):
     redisPass = get(conf, 'tracerOptions', 'redispass', default='phoenix-has-died')
     redisJobs = get(conf, 'tracerOptions', 'redisjobs', default='callback-jobs')
 
+    builderHost = get(conf, 'tracerOptions', 'builderhost', default='0.0.0.0')
+    builderPath = get(conf, 'tracerOptions', 'builderpath', default='/data/build')
+ 
     configs = { 'startEmulator':startEmu, 'input':inputPath, 'instrument':instrumentPath, 'output':outputPath, 'logs':logPath, 'androidJars':androidJarPath, 
-                'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar, 'permissions':permissions }
+                'usetracers':usetracers, 'monkeyevents':monkeyevents, 'monkeytraces':monkeytraces, 'monkeytries':monkeytries, 'onejar':onejar, 
+                'permissions':permissions, 'builderhost':builderHost, 'builderpath':builderPath }
 
     if startEmu:
         emuSect = 'emulatorOptions'
@@ -171,8 +175,8 @@ if __name__ == "__main__":
  
    redisConfig = configs['redis']
 
-   appBuilderName = 'cuaws-app-builder'
-   baseRemoteRepoPath = '/builder/data/staging1'
+   appBuilderName = configs['builderhost'] # 'cuaws-app-builder'
+   baseRemoteRepoPath = configs['builderpath'] # '/builder/data/staging1'
 
    job = rops.dequeue(redisConfig['jobs'], config=redisConfig)   
    while job != None:
