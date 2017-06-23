@@ -384,7 +384,12 @@ public class FrameworkResolver {
 
             superClass = superClass.getSuperclass();
             if(superClass != null) {
-                for (Method method1 : superClass.getDeclaredMethods()) {
+                Method[] declaredMethods = new Method[0];
+                try {
+                    declaredMethods = superClass.getDeclaredMethods();
+                }catch(NoClassDefFoundError e){
+                }
+                for (Method method1 : declaredMethods) {
                     addIfSuper(method, out, argCount, method1);
                 }
             }
