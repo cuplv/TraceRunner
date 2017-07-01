@@ -388,6 +388,9 @@ public class FrameworkResolver {
                 try {
                     declaredMethods = superClass.getDeclaredMethods();
                 }catch(NoClassDefFoundError e){
+                    //Fall back to "getMethods" if "getDeclaredMethods" fails in dumb way
+                    //getMethods can also fail under annoying circumstances so we just hope one of the two works
+                    declaredMethods = superClass.getMethods();
                 }
                 for (Method method1 : declaredMethods) {
                     addIfSuper(method, out, argCount, method1);

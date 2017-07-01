@@ -20,6 +20,26 @@ def truncate_corrupted(trace):
 def sort_trace(trace):
     return sorted(trace, key=lambda m: m.msg.message_id)
 
+def deduplicate_exceptions(trace):
+    newtrace = []
+    for message in trace:
+        if message.msg.type == message.msg.CALLIN_EXEPION:  # tracemsg_pb2.TraceMsgContainer.TraceMsg.MsgType.CALLIN_EXEPION:
+            last = newtrace[-1]
+            if last.msg.type == last.msg.CALLIN_EXEPION:
+                msg_exception = message.msg.callinException
+                prev_exception = last.msg.callinException
+                if msg_exception.throwing_class_name != prev_exception.throwing_class_name \
+                        or msg_exception.throwing_method_name != msg_exception.throwing_method_name:
+                    raise Exception("Two different callin exceptions adjascent to one another")
+                else:
+                    print ""
+            else:
+                newtrace.append(message)
+        else:
+            newtrace.append(message)
+    return newtrace
+
+
 
 def write_proto( msgs,buff):
     out = None
@@ -43,5 +63,6 @@ if __name__ == "__main__":
     newtrace = truncate_corrupted(trace_sorted)
     print args.trace + ", old trace len: " + str(len(trace)) + "new trace len: " + str(len(newtrace))
     outfile = open(args.out,'w')
-    write_proto(newtrace,outfile)
+    newnewtrace = deduplicate_exceptions(newtrace)
+    write_proto(newnewtrace,outfile)
     outfile.close()
