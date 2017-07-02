@@ -69,8 +69,10 @@ public class TraceRunnerRuntimeInstrumentation {
                 String message = t.getMessage();
                 StackTraceElement[] stackTrace = t.getStackTrace();
 
-                String className = stackTrace[0].getClassName();
-                if (FrameworkResolver.get().isFramework(className)) {
+                String className = null;
+                if(stackTrace.length > 0) //ignore exceptions with zero length stack traces
+                    className = stackTrace[0].getClassName();
+                if (className != null && FrameworkResolver.get().isFramework(className)) {
 
                     int id = count.getAndIncrement();
                     TraceMsgContainer.CallinExceptionMsg.Builder builder
@@ -161,9 +163,14 @@ public class TraceRunnerRuntimeInstrumentation {
                 StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
                 boolean isActivityThread = Looper.getMainLooper().getThread() == Thread.currentThread();
 
-                StackTraceElement callbackCaller = stackTrace[4];
-                String callerClassName = callbackCaller.getClassName();
-                if (FrameworkResolver.get().isFramework(callerClassName)) {
+                StackTraceElement callbackCaller = null;
+                String callerClassName = null;
+                if(stackTrace.length > 4) {
+                    callbackCaller = stackTrace[4];
+                    callerClassName = callbackCaller.getClassName();
+                }
+                //log if caller is framework or native
+                if (callbackCaller == null || FrameworkResolver.get().isFramework(callerClassName)) {
                     int id = count.getAndIncrement();
                     long threadID = Thread.currentThread().getId();
                     TraceMsgContainer.CallbackExitMsg.Builder builder
@@ -449,13 +456,16 @@ public class TraceRunnerRuntimeInstrumentation {
      */
     private static ValueMsg.Builder setValue(ValueMsg.Builder builder, Object obj) {
         /* set the value only for numbers and strings */
-        if (obj instanceof Boolean ||
+
+        if (obj != null && (obj instanceof Boolean ||
                 obj instanceof Number ||
                 obj instanceof Character ||
-                obj instanceof String) {
-            builder.setValue(obj.toString());
+                obj instanceof String)) {
+            try {
+                builder.setValue(obj.toString());
+            }catch(NullPointerException e){}
+            //BigInt sometimes throws null pointer exception from its toString implementation
         }
-
         return builder;
     }
 }
