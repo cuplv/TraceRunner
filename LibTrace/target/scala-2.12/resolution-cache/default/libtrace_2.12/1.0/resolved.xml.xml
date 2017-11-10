@@ -4,7 +4,7 @@
 		module="libtrace_2.12"
 		revision="1.0"
 		status="integration"
-		publication="20170907155355"
+		publication="20170907160033"
 	>
 		<description>
 		LibTrace

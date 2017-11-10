@@ -1,0 +1,5 @@
+[0m[[0minfo[0m] [0mCompiling 1 protobuf files to /Users/s/Documents/source/TraceRunner/LibTrace/target/scala-2.11/src_managed/main[0m
+[0m[[0mdebug[0m] [0mprotoc options:[0m
+[0m[[0minfo[0m] [0mCompiling schema /Users/s/Documents/source/TraceRunner/LibTrace/src/main/protobuf/edu/colorado/plv/tracerunner_runtime_instrumentation/tracemsg.proto[0m
+[0m[[0minfo[0m] [0mCompiling protobuf[0m
+[0m[[0minfo[0m] [0mProtoc target directory: /Users/s/Documents/source/TraceRunner/LibTrace/target/scala-2.11/src_managed/main[0m

@@ -57,10 +57,19 @@ object TraceStructure {
 
   }
 
+  def addAtLevel(old :CTrace, level: Int, cMsg: CMsg): CTrace = {
+    //TODO: implement this method
+    //Takes a CTrace and a
+    ???
+  }
   @tailrec
   def iGetTraceTree(trace: RawTrace, stack: List[TraceMsg], acc:CTrace): CTrace = trace match{
     case h::t if isExitMsg(h)=> stack match{
-      case top::rest if exitMsgMatch(top, h) => ???
+      case top::rest if exitMsgMatch(top, h) => {
+
+        val newAcc = addAtLevel(acc, t.length, ???)
+        iGetTraceTree(t, rest, newAcc)
+      }
       case _ => acc //Corrupted trace truncate rest
     }
     case h::t => iGetTraceTree(t, h::stack, acc)
