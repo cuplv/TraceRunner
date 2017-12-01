@@ -13,8 +13,8 @@ import scala.collection.mutable.ArrayBuffer
 object TraceStructure {
   type RawTrace = List[TraceMsg]
 
-  abstract case class CMsg()
-  sealed abstract case class CCallbackExit()
+  abstract class CMsg()
+  sealed abstract class CCallbackExit()
   case class CCallbackExitException( exit: CallbackExceptionMsg) extends CCallbackExit
   case class CCallbackExitNormal( exit: CallbackExitMsg) extends CCallbackExit
 

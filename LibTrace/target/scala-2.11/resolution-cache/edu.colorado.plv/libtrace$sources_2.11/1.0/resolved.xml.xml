@@ -4,7 +4,7 @@
 		module="libtrace$sources_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20170908112212"
+		publication="20171122170631"
 	/>
 	<configurations>
 		<conf name="compile" visibility="public" description=""/>
