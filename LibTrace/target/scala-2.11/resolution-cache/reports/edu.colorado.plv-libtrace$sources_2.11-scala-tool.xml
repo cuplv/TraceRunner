@@ -7,7 +7,7 @@
 		revision="1.0"
 		conf="scala-tool"
 		confs="compile, runtime, test, provided, optional, protobuf, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
-		date="20171122170631"/>
+		date="20180109141310"/>
 	<dependencies>
 		<module organisation="org.scala-lang" name="scala-compiler">
 			<revision name="2.11.11" status="release" pubdate="20170413135049" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, optional, optional(default), master" position="0">
@@ -22,9 +22,9 @@
 			</revision>
 		</module>
 		<module organisation="jline" name="jline">
-			<revision name="2.14.3" status="release" pubdate="20170106044657" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, master(compile), compile(*), master" position="5">
+			<revision name="2.14.3" status="release" pubdate="20170106024657" resolver="sbt-chain" artresolver="sbt-chain" homepage="" downloaded="false" searched="false" default="false" conf="compile, master(compile), compile(*), master" position="5">
 				<license name="The BSD License" url="http://www.opensource.org/licenses/bsd-license.php"/>
-				<metadata-artifact status="no" details="" size="5171" time="0" location="/Users/s/.ivy2/cache/jline/jline/ivy-2.14.3.xml" searched="false" origin-is-local="false" origin-location="file:////Users/s/.sbt/preloaded/jline/jline/2.14.3/ivys/ivy.xml"/>
+				<metadata-artifact status="no" details="" size="5183" time="0" location="/Users/s/.ivy2/cache/jline/jline/ivy-2.14.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/jline/jline/2.14.3/jline-2.14.3.pom"/>
 				<caller organisation="edu.colorado.plv" name="libtrace$sources_2.11" conf="scala-tool" rev="2.14.3" rev-constraint-default="2.14.3" rev-constraint-dynamic="2.14.3" callerrev="1.0"/>
 				<artifacts>
 					<artifact name="jline" type="src" ext="jar" extra-classifier="sources" status="no" details="" size="110147" time="0" location="/Users/s/.ivy2/cache/jline/jline/srcs/jline-2.14.3-sources.jar">

@@ -7,7 +7,7 @@ import subprocess
 #from com.sun.tools.attach import VirtualMachine
 
 
-if len(sys.argv) != 4:
+if (len(sys.argv) != 4) or (len(sys.argv) != 5):
 	print "run with jython -J-cp /Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/lib/tools.jar"
 	raise Exception("usage: [apk path] [package] [appname]")
 apk_path = sys.argv[1]
@@ -26,7 +26,10 @@ if 0 != res:
 
 #run apk
 print "***Run APK***"
-res = subprocess.call(['adb', 'shell', 'am', 'start', '-n', package + '/' + appname])
+if (len(sys.argv) == 5) and (sys.argv[4] == "dbg"):
+	res = subprocess.call(['adb', 'shell', 'am', 'start', '-D', '-n', package + '/' + appname])
+else:
+	res = subprocess.call(['adb', 'shell', 'am', 'start', '-n', package + '/' + appname])
 if  0 != res:
 	raise Exception("starting failed")
 

@@ -4,7 +4,7 @@
 		module="libtrace_2.11"
 		revision="1.0"
 		status="integration"
-		publication="20171122170630"
+		publication="20180109141223"
 	>
 		<description>
 		LibTrace
@@ -37,5 +37,7 @@
 		<dependency org="org.scala-lang" name="scala-library" rev="2.11.11" conf="scala-tool->default,optional(default);compile->default(compile)"/>
 		<dependency org="com.trueaccord.scalapb" name="scalapb-runtime_2.11" rev="0.6.2" conf="compile->default(compile);protobuf->default(compile)"/>
 		<dependency org="org.scalatest" name="scalatest_2.11" rev="3.0.1" conf="test->default(compile)"/>
+		<dependency org="dk.brics.automaton" name="automaton" rev="1.11-8" conf="compile->default(compile)"/>
+		<dependency org="guru.nidi" name="graphviz-java" rev="0.2.2" conf="compile->default(compile)"/>
 	</dependencies>
 </ivy-module>
