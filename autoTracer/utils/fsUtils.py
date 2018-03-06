@@ -1,6 +1,12 @@
 
 import os
 import shutil
+import time
+
+from subprocess import Popen, PIPE
+from threading import Thread
+
+from os.path import isfile, isdir, join
 
 def createPathIfEmpty(path):
     if not os.path.exists(path):
@@ -15,3 +21,49 @@ def removePathIfExists(path):
 def recreatePath(path):
     removePathIfExists(path)
     createPathIfEmpty(path)
+
+
+def getFilesInPath(path):
+    return [join(path, f) for f in os.listdir(path) if isfile(join(path, f))]
+
+def getDirsInPath(path):
+    return [join(path, f) for f in os.listdir(path) if isdir(join(path, f))]
+
+class Command(object):
+    def __init__(self, cmd):
+        self.cmd = cmd
+        self.process = None
+        self.stdout = None
+        self.stderr = None
+
+    def run(self, timeout):
+        def target():
+            print 'Thread started with timeout at %s seconds' % timeout
+            self.process = Popen(self.cmd, stdout=PIPE, stderr=PIPE)
+            (stdout,stderr) = self.process.communicate()
+            self.stdout = stdout
+            self.stderr = stderr
+            print 'Thread finished'
+
+        thread = Thread(target=target)
+        thread.start()
+
+        # process = self.process
+        def Future():
+            time.sleep(0)
+	    thread.join(timeout)
+            timedout = False
+            if thread.is_alive():
+               print 'Terminating process'
+               try:
+                  self.process.terminate()
+               except Exception:
+                  print "Exception: Missing process..."
+                  pass
+               # thread.join()
+               timedout = True
+               self.stdout = (self.stdout + "\n *** Timedout ***") if self.stdout != None else "\n *** Timedout ***"   
+            return (self.stdout, self.stderr, timedout, self.process.returncode if self.process != None else 101)
+ 
+        return Future
+

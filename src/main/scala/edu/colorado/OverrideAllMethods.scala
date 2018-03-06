@@ -135,7 +135,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   }
 
   final def getOverrideableMethodsChain(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
-    if(clazz.getName != "java.lang.Object"){
+    if(clazz.getName != "java.lang.Object" && clazz.getName != "java.lang.Thread"){
       val curOverrideableMethods: Set[SootMethod] = getOverrideableMethods(clazz, exclude)
       curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, clazz.getMethods.toSet.union(exclude)))
     }else Set[SootMethod]()

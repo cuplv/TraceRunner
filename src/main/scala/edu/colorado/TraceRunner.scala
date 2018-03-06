@@ -54,7 +54,7 @@ object TraceRunner {
         c.copy(applicationPackages = x.split(":").filter(a => a != "")))
       opt[String]('i', "instrumentation-directory").action((x,c) => c.copy(instDir = x)).required()
       opt[String]('x', "exclude-classes").action((x,c) =>
-        c.copy(excludeClasses = Utils.semicolonSeparatedGlobsToRegex(x)))
+        c.copy(excludeClasses = Utils.colonSeparatedGlobsToRegex(x)))
       opt[Unit]('m', "output_jimple").action((x,c) => c.copy(jimpleOutput = true))
       opt[Unit]('c', "output_class").action((x,c) => c.copy(classOutput = true))
       opt[Unit]('v', "use_java").action((x,c) => c.copy(useJava = true))
@@ -65,12 +65,12 @@ object TraceRunner {
       case Some(config) => {
 //        if(config.applicationPackages.size > 0) {
 
-        /**hack to make osx openjdk work**/
-        if(System.getProperty("os.name").equals("Mac OS X")){
-          Scene.v().setSootClassPath(config.apkPath + ":" +
-            sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
-
-        }
+//        /**hack to make osx openjdk work**/
+//        if(System.getProperty("os.name").equals("Mac OS X")){
+//          Scene.v().setSootClassPath(config.apkPath + ":" +
+//            sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
+//
+//        }
         //** Set Options **
         //prefer Android APK files// -src-prec apk
         if(!config.useJava) {
@@ -95,6 +95,7 @@ object TraceRunner {
 
         Options.v().set_process_dir(List(config.apkPath).asJava)
         Options.v().set_output_dir(config.outputDir)
+        Options.v().set_keep_line_number(true)
 
 
 

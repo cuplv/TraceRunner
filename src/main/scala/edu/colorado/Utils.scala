@@ -24,7 +24,7 @@ object Utils {
       case _ => false
     })
   }
-  def semicolonSeparatedGlobsToRegex(list: String): Set[Regex] ={
+  def colonSeparatedGlobsToRegex(list: String): Set[Regex] ={
     list.split(":").map(a => globToRegex(a).r).toSet
   }
   def sootClassMatches(clazz: SootClass, regexSet: Set[Regex]): Boolean ={

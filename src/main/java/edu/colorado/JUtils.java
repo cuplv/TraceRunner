@@ -1,5 +1,7 @@
 package edu.colorado;
 
+import soot.tagkit.*;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,4 +26,29 @@ public class JUtils {
         }
         return classNames;
     }
+      /** Returns the line number of the code element host
+   * or 0 if the line number tag does not exists
+   *
+   * @param
+   * @return the line number of host if it exsits, 0 otherwise
+   */
+  public static int getLineNumber(Host code)
+  {
+    int lineNumber = 0;
+
+//      for(code.getTags()
+    /* solution that should works both on bytecode and on sources */
+    Tag lineNumberTag = code.getTag("SourceLnPosTag");
+    if (null != lineNumberTag && lineNumberTag instanceof SourceLnPosTag) {
+      lineNumber = ((SourceLnPosTag) lineNumberTag).startLn();
+    }
+    else {
+      lineNumberTag = code.getTag("LineNumberTag");
+      if (null != lineNumberTag && lineNumberTag instanceof LineNumberTag) {
+        lineNumber = ((LineNumberTag) lineNumberTag).getLineNumber();
+      }
+    }
+
+    return lineNumber;
+  }
 }
