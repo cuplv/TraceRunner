@@ -30,7 +30,7 @@ def add_network(apk, outfile,decomptemppar = None, runjarpar = None, clobber_tem
         	shutil.rmtree(decomptemp)
 
     if runjarpar is None:
-        runjar = script_dir + os.path.sep + "apktool_2.2.2.jar"
+        runjar = script_dir + os.path.sep + "apktool_2.3.3.jar"
     else:
         runjar = runjarpar
     path_ = ["/usr/bin/java", "-jar", runjar, "d", apk, "-s", "-o", decomptemp]
