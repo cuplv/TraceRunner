@@ -34,7 +34,7 @@ def add_network(apk, outfile,decomptemppar = None, runjarpar = None, clobber_tem
     else:
         runjar = runjarpar
     path_ = ["/usr/bin/java", "-jar", runjar, "d", apk, "-s", "-o", decomptemp]
-    print path_
+    print(path_)
     subprocess.call(path_)
 
 
