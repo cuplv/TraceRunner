@@ -2,6 +2,7 @@ package edu.colorado.TraceRunner
 //import soot.G;
 
 
+import better.files.File
 import edu.colorado._
 import soot.options.Options
 import soot.{PackManager, PhaseOptions, Scene, SootClass, Transform}
@@ -126,6 +127,9 @@ object TraceRunner {
         /**run soot transformation**/
         val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
 
+        val outApk = File(config.outputDir + "/" + config.apkPath.split("/").last)
+        if(outApk.exists)
+          outApk.delete()
         soot.Main.main(config1);
 
       }

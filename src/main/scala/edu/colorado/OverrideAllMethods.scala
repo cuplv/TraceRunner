@@ -44,7 +44,9 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
   override def internalTransform(phaseName: String, options: util.Map[String, String]): scala.Unit = {
     val sc = Scene.v()
     sc.getApplicationClasses.iterator.asScala.foreach(applicationClass =>{
-      if(!Utils.isFrameworkClass(applicationClass.getName) && !Utils.sootClassMatches(applicationClass, config.excludeClasses)) {
+      if(Utils.sootClassMatches(applicationClass, config.applicationPackagesr.toSet)
+        && !Utils.isFrameworkClass(applicationClass.getName) &&
+        !Utils.sootClassMatches(applicationClass, config.excludeClasses)) {
         val superclass: SootClass = applicationClass.getSuperclass
 
         val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]())
