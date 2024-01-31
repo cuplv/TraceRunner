@@ -2,14 +2,13 @@ package edu.colorado
 
 import java.util
 
-import edu.colorad.cs.TraceRunner.Config
+import edu.colorado.TraceRunner.Config
 import soot.jimple.{Jimple, SpecialInvokeExpr}
 import soot.util.NumberedString
 import soot.{Body, Hierarchy, Local, PatchingChain, Scene, SceneTransformer, SootClass, SootMethod, SootMethodRef, Type, Unit, VoidType}
 
 import scala.annotation.tailrec
-import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
 
@@ -44,13 +43,13 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
 
   override def internalTransform(phaseName: String, options: util.Map[String, String]): scala.Unit = {
     val sc = Scene.v()
-    sc.getApplicationClasses.iterator.foreach(applicationClass =>{
+    sc.getApplicationClasses.iterator.asScala.foreach(applicationClass =>{
       if(!Utils.isFrameworkClass(applicationClass.getName) && !Utils.sootClassMatches(applicationClass, config.excludeClasses)) {
         val superclass: SootClass = applicationClass.getSuperclass
 
         val methodsToOverride = getOverrideableMethodsChain(superclass, Set[SootMethod]())
           .foldLeft(Map[(String, List[Type], Boolean, Int), Type]())((acc, a) => {
-          val parameterTypes: List[Type] = a.getParameterTypes.toList
+          val parameterTypes: List[Type] = a.getParameterTypes.asScala.toList
           val mkey: (String, List[Type], Boolean, Int) = (a.getName, parameterTypes,a.isAbstract, a.getModifiers)
           if(acc.contains(mkey)) {
             val returnTypeInMap: Type = acc(mkey)
@@ -62,7 +61,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
         })
         methodsToOverride.foreach(methodTup => {
           val methodName: String = methodTup._1._1
-          val methodParams: List[Type] = methodTup._1._2
+          val methodParams = methodTup._1._2.asJava
           val returnType: Type = methodTup._2
           val isAbstract: Boolean = methodTup._1._3
           val modifiers: Int = methodTup._1._4
@@ -80,7 +79,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
               val thisRef = Jimple.v().newLocal(Utils.nextName("this"), applicationClass.getType)
               activeBody.getLocals.add(thisRef)
               units.addLast(Jimple.v().newIdentityStmt(thisRef, Jimple.v().newThisRef(applicationClass.getType)))
-              val parameterZip: mutable.Buffer[(Type, Int)] = newMethod.getParameterTypes zip (0 until newMethod.getParameterCount)
+              val parameterZip: mutable.Buffer[(Type, Int)] = newMethod.getParameterTypes.asScala zip (0 until newMethod.getParameterCount)
               //Copy parameters into locals
               val args = parameterZip
                 .map(paramNumType => {
@@ -95,10 +94,10 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
 
               //Call super to units
               val method: SootMethodRef = getSuperMethod(applicationClass.getSuperclass, methodName,
-                methodParams, returnType)
+                methodParams.asScala.toList, returnType)
 
               val b: Boolean = activeBody.getThisLocal == thisRef
-              val newSpecialInvokeExpr: SpecialInvokeExpr = Jimple.v().newSpecialInvokeExpr(thisRef, method, args)
+              val newSpecialInvokeExpr: SpecialInvokeExpr = Jimple.v().newSpecialInvokeExpr(thisRef, method, args.asJava)
               if (method.returnType() == VoidType.v()) {
                 units.addLast(Jimple.v().newInvokeStmt(newSpecialInvokeExpr))
                 units.addLast(Jimple.v().newReturnVoidStmt())
@@ -121,23 +120,26 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
 
   def getSuperMethod(clazz: SootClass, name: String, args: List[Type], returnType: Type): SootMethodRef = {
     clazz.getMethods()
-    if(clazz.declaresMethod(name,args)){
+    if(clazz.declaresMethod(name,args.asJava)){
       try {
-        clazz.getMethod(name, args).makeRef()
+        clazz.getMethod(name, args.asJava).makeRef()
       }catch{
         case t: Throwable => {
-          clazz.getMethodUnsafe(name,seqAsJavaList(args),returnType).makeRef()
+          clazz.getMethodUnsafe(name,args.asJava,returnType).makeRef()
         }
       }
     }else {
-      Scene.v().makeMethodRef(clazz, name, args,returnType,false)
+      Scene.v().makeMethodRef(clazz, name, args.asJava,returnType,false)
     }
   }
 
   final def getOverrideableMethodsChain(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
+    if(clazz == null){
+      return Set()
+    }
     if(clazz.getName != "java.lang.Object" && clazz.getName != "java.lang.Thread"){
       val curOverrideableMethods: Set[SootMethod] = getOverrideableMethods(clazz, exclude)
-      curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, clazz.getMethods.toSet.union(exclude)))
+      curOverrideableMethods.union(getOverrideableMethodsChain(clazz.getSuperclass, clazz.getMethods.asScala.toSet.union(exclude)))
     }else Set[SootMethod]()
   }
 
@@ -145,7 +147,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
 
   def getOverrideableMethods(clazz: SootClass, exclude: Set[SootMethod]): Set[SootMethod] = {
     if(Utils.isFrameworkClass(clazz)) {
-      clazz.getMethods.flatMap { (a: SootMethod) =>
+      clazz.getMethods.asScala.flatMap { (a: SootMethod) =>
         val excluded: Boolean = isExcluded(exclude, a) || blacklisted(a)
         if (!a.isPrivate && !a.isStatic && !a.getDeclaringClass.isInterface && !a.isAbstract && !a.isFinal && !excluded) {
           Some(a)
@@ -160,7 +162,7 @@ class OverrideAllMethods(config: Config) extends SceneTransformer {
       val name: String = method.getName
       val name1: String = a.getName
       if(name1 == name){
-        if(a.getParameterTypes.size != 0 &&(a.getParameterTypes zip method.getParameterTypes).exists(t => t._1 != t._2)){
+        if(a.getParameterTypes.size != 0 &&(a.getParameterTypes.asScala zip method.getParameterTypes.asScala).exists(t => t._1 != t._2)){
           false
         }else{
           true

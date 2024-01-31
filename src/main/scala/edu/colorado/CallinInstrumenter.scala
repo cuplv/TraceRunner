@@ -4,7 +4,7 @@ import java.util
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import java.util.concurrent.locks.ReentrantLock
 
-import edu.colorad.cs.TraceRunner.Config
+import edu.colorado.TraceRunner.Config
 import soot.dava.internal.javaRep.DNewInvokeExpr
 import soot.grimp.internal.{GDynamicInvokeExpr, GNewInvokeExpr, GStaticInvokeExpr}
 import soot.jimple.internal._
@@ -12,8 +12,7 @@ import soot.jimple._
 import soot.util.Chain
 import soot.{ArrayType, Body, BodyTransformer, BooleanType, ByteType, CharType, DoubleType, FloatType, IntType, Local, LongType, PatchingChain, RefType, Scene, ShortType, SootClass, SootMethod, Type, Unit, Value, ValueBox, VoidType}
 
-import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 
 /**
@@ -50,7 +49,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
     if(method_in_app && name != "<clinit>") { //Is this an application method we should instrument?
       val units: PatchingChain[soot.Unit] = b.getUnits;
-      for (i: soot.Unit <- units.snapshotIterator()) {
+      for (i: soot.Unit <- units.snapshotIterator().asScala) {
         i.apply(new AbstractStmtSwitch {
 
           override def caseAssignStmt(stmt: AssignStmt) = {

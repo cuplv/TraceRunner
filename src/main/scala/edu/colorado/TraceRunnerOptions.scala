@@ -1,6 +1,6 @@
 package edu.colorado
 
-import edu.colorad.cs.TraceRunner.Config
+import edu.colorado.TraceRunner.Config
 
 /**
  * Created by s on 9/29/16.

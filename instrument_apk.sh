@@ -6,9 +6,12 @@ dir_resolve() {
   popd &> /dev/null
 }
 
+echo "$1"
+
 ORIG_APK=`dir_resolve $1`
-OUTPUT=`dir_resolve $2`
 echo "Orig_APK: ${ORIG_APK}"
+OUTPUT=`dir_resolve $2`
+echo "Output: ${OUTPUT}"
 
 
 TRACERUNNER_ROOT=/Users/$(whoami)/Documents/source/TraceRunner
@@ -16,10 +19,12 @@ cd $TRACERUNNER_ROOT
 PLATFORMS=/Users/$(whoami)/Library/Android/sdk/platforms/
 #instrument
 
+TRACERUNNER_JAR="/target/scala-2.13/tracerunner-assembly-0.1.0-SNAPSHOT.jar"
+#TRACERUNNER_JAR="/target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar"
 #with common exclusion list for exceeding method limits
-#java -jar ${TRACERUNNER_ROOT}/target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar -j ${PLATFORMS} -d $ORIG_APK -o $OUTPUT  -i ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar -x "org.apache.commons*:org.jsoup*:com.squareup.okhttp*:rx*:org.shredzone.flattr4j*:okhttp3*:retrofit2*:com.bumptech.glide*:org.json*:java*"
+#java -jar ${TRACERUNNER_ROOT}${TRACERUNNER_JAR} -j ${PLATFORMS} -d $ORIG_APK -o $OUTPUT  -i ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar -x "org.apache.commons*:org.jsoup*:com.squareup.okhttp*:rx*:org.shredzone.flattr4j*:okhttp3*:retrofit2*:com.bumptech.glide*:org.json*:java*"
 
-java -jar ${TRACERUNNER_ROOT}/target/scala-2.11/tracerunner_2.11-0.1-SNAPSHOT-one-jar.jar -j ${PLATFORMS} -d $ORIG_APK -o $OUTPUT  -i ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar
+java -jar ${TRACERUNNER_ROOT}${TRACERUNNER_JAR} -j ${PLATFORMS} -d $ORIG_APK -o $OUTPUT  -i ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/tracerunnerinstrumentation/build/intermediates/bundles/debug/classes.jar -p "$3"
 
 #extract apk name
 APKNAME=$(basename $ORIG_APK)

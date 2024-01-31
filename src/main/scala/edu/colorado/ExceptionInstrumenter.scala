@@ -2,13 +2,13 @@ package edu.colorado
 
 import java.util
 
-import edu.colorad.cs.TraceRunner.Config
+import edu.colorado.TraceRunner.Config
 import soot.jimple._
 import soot.jimple.internal.JIdentityStmt
 import soot.util.Chain
 import soot.{Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootMethod, Trap, Unit, UnitBox, Value}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 
 /**
   * Created by s on 11/21/16.
@@ -34,7 +34,7 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
       val units: PatchingChain[Unit] = b.getUnits
       val endstmt: Unit = units.getLast
       val traps: Chain[Trap] = b.getTraps
-      traps.iterator().foreach((a: Trap) => {
+      traps.iterator().asScala.foreach((a: Trap) => {
         val handlerUnit: Unit = a.getHandlerUnit
         handlerUnit match{
           case h: JIdentityStmt => {
@@ -83,10 +83,10 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
     val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
     val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
     val argsLog: List[Local] = List[Local](lval, lsignature, methodname)
-    val logCall = Jimple.v().newStaticInvokeExpr(logException.makeRef(), argsLog)
+    val logCall = Jimple.v().newStaticInvokeExpr(logException.makeRef(), argsLog:_*)
     val logStmt: InvokeStmt = Jimple.v().newInvokeStmt(logCall)
     val emit: Unit = if(isTerminal) {
-      val logTerm = Jimple.v().newStaticInvokeExpr(logCallbackException.makeRef(), argsLog)
+      val logTerm = Jimple.v().newStaticInvokeExpr(logCallbackException.makeRef(), argsLog:_*)
       val logTermStmt: InvokeStmt = Jimple.v().newInvokeStmt(logTerm)
       units.insertAfter(logTermStmt,h)
       logTermStmt

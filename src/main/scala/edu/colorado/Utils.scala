@@ -2,11 +2,11 @@ package edu.colorado
 
 import java.util.concurrent.atomic.AtomicInteger
 
-import edu.colorad.cs.TraceRunner.Config
+import edu.colorado.TraceRunner.Config
 import soot._
 import soot.jimple.{Jimple, NullConstant}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.util.matching.Regex
 
 /**
@@ -41,7 +41,7 @@ object Utils {
         case '?' => "."
         case '.' => "\\."
         case '\\' => "\\\\"
-        case a => List(a)
+        case a => List(a).mkString
       }
     )
   }
@@ -65,26 +65,26 @@ object Utils {
       case i: IntType => {
         val boxmethod = integerClazz
           .getMethod("java.lang.Integer valueOf(int)")
-          Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+          Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v).asJava)
       }
       case i: FloatType => {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Float")
           .getMethod("java.lang.Float valueOf(float)")
-        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v).asJava)
 
       }
       case i: LongType => {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Long")
           .getMethod("java.lang.Long valueOf(long)")
-        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v).asJava)
       }
       case i: DoubleType => {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Double")
           .getMethod("java.lang.Double valueOf(double)")
-        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v).asJava)
       }
       case i: RefType => v
       case i: ArrayType =>v //TODO: test that this works (https://docs.oracle.com/javase/specs/jls/se7/html/jls-10.html)
@@ -92,7 +92,7 @@ object Utils {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Boolean")
           .getMethod("java.lang.Boolean valueOf(boolean)")
-        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v))
+        Jimple.v ().newStaticInvokeExpr (boxmethod.makeRef (), List[Value] (v).asJava)
       }
       case i: NullType => {
         NullConstant.v()
@@ -101,19 +101,19 @@ object Utils {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Character")
           .getMethod("java.lang.Character valueOf(char)")
-        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v))
+        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v).asJava)
       }
       case i: ShortType => {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Short")
           .getMethod("java.lang.Short valueOf(short)")
-        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v))
+        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v).asJava)
       }
       case i: ByteType => {
         val boxmethod = Scene.v()
           .getSootClass("java.lang.Byte")
           .getMethod("java.lang.Byte valueOf(byte)")
-        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v))
+        Jimple.v().newStaticInvokeExpr(boxmethod.makeRef(), List[Value](v).asJava)
       }
       case i => {
         ???

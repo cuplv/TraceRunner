@@ -1,4 +1,4 @@
-package edu.colorad.cs.TraceRunner
+package edu.colorado.TraceRunner
 //import soot.G;
 
 

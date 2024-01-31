@@ -1,12 +1,11 @@
 package edu.colorado
 
 import java.util
-
-import edu.colorad.cs.TraceRunner.Config
+import edu.colorado.TraceRunner.Config
 import soot.jimple._
-import soot.{ArrayType, Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootMethod, Value}
+import soot.{ArrayType, Body, BodyTransformer, Local, PatchingChain, RefType, Scene, SootMethod, SootMethodRef, Value}
 
-import scala.collection.JavaConversions._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable.ListBuffer
 import scala.util.matching.Regex
 
@@ -40,7 +39,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       val args = new scala.collection.mutable.ListBuffer[Local]()
       var lastArg: Option[soot.Unit] = None
       var thisRef: Option[soot.Unit] = None
-      for (i: soot.Unit <- units.snapshotIterator()) {
+      for (i: soot.Unit <- units.snapshotIterator().asScala) {
 
         i.apply(new AbstractStmtSwitch {
           private val methodSignature: String = method.getSubSignature
@@ -54,8 +53,8 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
             units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
             val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
             units.insertBefore(Jimple.v().newAssignStmt(returnTmp, NullConstant.v()),i)
-            units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
-              List[Local](lsignature, methodname, returnTmp))),i)
+            val (a:SootMethodRef,b) = (logReturn.makeRef(), List[Local](lsignature, methodname, returnTmp))
+            units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(a,b:_*)),i)
           }
           override def caseReturnStmt(stmt: ReturnStmt): Unit = {
             stmt.getOp match{
@@ -70,7 +69,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
                 units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
 
                 units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
-                  List[Local](lsignature, methodname, returnTmp))),i)
+                  List[Local](lsignature, methodname, returnTmp):_*)),i)
               }
               case l: Constant => {
                 val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
@@ -82,7 +81,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
                 val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
                 units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
                 units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
-                  List[Value](lsignature, methodname, returnTmp))),i)
+                  List[Value](lsignature, methodname, returnTmp):_*)),i)
               }
               case l: Expr => {
                 ???
@@ -125,7 +124,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
           val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
 
-          val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes, returnType, inputArgs, simpleName)))//TODO: update method call
+          val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes, returnType, inputArgs, simpleName):_*))//TODO: update method call
           units.insertAfter(expr,l)
           val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
           val thisAssign = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(0)), newThisRef)
@@ -181,7 +180,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
               val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
               val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
               val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
-              val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes ,returnType ,inputArgs, simpleName)))
+              val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes ,returnType ,inputArgs, simpleName):_*))
 
               units.insertAfter(expr,thisRef)
               //TODO: assign return type
@@ -236,7 +235,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
       val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
       val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature,
-        methodname,argTypes, returnType, inputArgs, simpleName)))
+        methodname,argTypes, returnType, inputArgs, simpleName):_*))
       units.addFirst(expr)
       units.addFirst(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)))
       units.addFirst(Jimple.v().newAssignStmt(methodname, StringConstant.v(method.getName)))
@@ -248,7 +247,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
       units.addFirst(Jimple.v.newAssignStmt(simpleName, StringConstant.v(method.getName())))
 
 
-      for (i: soot.Unit <- units.snapshotIterator()) {
+      for (i: soot.Unit <- units.snapshotIterator().asScala) {
 
         i.apply(new AbstractStmtSwitch {
           private val methodSignature: String = method.getSubSignature
@@ -263,7 +262,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
             val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
             units.insertBefore(Jimple.v().newAssignStmt(returnTmp, NullConstant.v()),i)
             units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
-              List[Local](lsignature, methodname, returnTmp))),i)
+              List[Local](lsignature, methodname, returnTmp):_*)),i)
           }
         })}
 
