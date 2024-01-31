@@ -23,3 +23,5 @@ assemblyMergeStrategy in assembly := {
 
 mainClass in assembly := Some("edu.colorado.TraceRunner.TraceRunner")
 libraryDependencies += "com.github.pathikrit" % "better-files_2.13" % "3.9.1"
+
+libraryDependencies += "ca.mcgill.sable" % "soot" % "4.1.0"

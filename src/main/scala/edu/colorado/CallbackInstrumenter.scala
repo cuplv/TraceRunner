@@ -20,6 +20,12 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
   override def internalTransform(b: Body, phaseName: String, options: util.Map[String, String]) = {
     val declaration: String = b.getMethod.getDeclaration
     val method: SootMethod = b.getMethod()
+    val locals = method.getActiveBody.getLocals
+    def addLocal(loc:Local):Unit = {
+      if(!locals.contains(loc)){
+        locals.add(loc)
+      }
+    }
 
     val name: String = b.getMethod.getName
     //val signature: String = b.getMethod.getSignature
@@ -45,13 +51,16 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           private val methodSignature: String = method.getSubSignature
 
           override def caseReturnVoidStmt(stmt: ReturnVoidStmt): Unit = {
-            val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+            val lsignature: Local = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+            addLocal(lsignature)
             val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+            addLocal(methodname)
             val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
               .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
             units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
             units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
             val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+            addLocal(returnTmp)
             units.insertBefore(Jimple.v().newAssignStmt(returnTmp, NullConstant.v()),i)
             val (a:SootMethodRef,b) = (logReturn.makeRef(), List[Local](lsignature, methodname, returnTmp))
             units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(a,b:_*)),i)
@@ -60,12 +69,15 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
             stmt.getOp match{
               case l: Local => {
                 val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+                addLocal(lsignature)
                 val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+                addLocal(methodname)
                 val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
                   .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
                 units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
                 units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
                 val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+                addLocal(returnTmp)
                 units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
 
                 units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
@@ -73,12 +85,15 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
               }
               case l: Constant => {
                 val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+                addLocal(lsignature)
                 val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+                addLocal(methodname)
                 val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
                   .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
                 units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
                 units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
                 val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+                addLocal(returnTmp)
                 units.insertBefore(Jimple.v().newAssignStmt(returnTmp, Utils.autoBox(l)),i)
                 units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
                   List[Value](lsignature, methodname, returnTmp):_*)),i)
@@ -115,14 +130,20 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 
           //Create new local for args array
           val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+          addLocal(inputArgs)
           //add call to entry method
           val logCallback: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
             .getMethod(logCallbackEntrySig)
           val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+          addLocal(lsignature)
           val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+          addLocal(methodname)
           val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
+          addLocal(argTypes)
           val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
+          addLocal(returnType)
           val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
+          addLocal(simpleName)
 
           val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes, returnType, inputArgs, simpleName):_*))//TODO: update method call
           units.insertAfter(expr,l)
@@ -158,6 +179,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
           val tuples: ListBuffer[(Local, Int)] = args zip (1 to args.length).toList
           tuples.foreach((a: (Local,Int)) => {
             val tmpLocal: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), RefType.v("java.lang.Object"))
+            addLocal(tmpLocal)
 
             val argAssign: AssignStmt = Jimple.v().newAssignStmt(tmpLocal, Utils.autoBox(a._1))
             val argAssign2: AssignStmt = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(a._2)), tmpLocal)
@@ -171,15 +193,21 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
             case Some(thisRef) => {
 
               val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+              addLocal(inputArgs)
               val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
               val thisAssign = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(inputArgs, IntConstant.v(0)), newThisRef)
               val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+              addLocal(lsignature)
               val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+              addLocal(methodname)
               val logCallback: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
                 .getMethod(logCallbackEntrySig)
               val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
+              addLocal(argTypes)
               val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
+              addLocal(returnType)
               val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
+              addLocal(simpleName)
               val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature, methodname,argTypes ,returnType ,inputArgs, simpleName):_*))
 
               units.insertAfter(expr,thisRef)
@@ -229,11 +257,17 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 
 
       val simpleName: Local = Jimple.v().newLocal(Utils.nextName("simpleName"), RefType.v("java.lang.String"))
+      addLocal(simpleName)
       val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+      addLocal(lsignature)
       val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+      addLocal(methodname)
       val argTypes: Local = Jimple.v().newLocal(Utils.nextName("argTypes"), ArrayType.v(RefType.v("java.lang.String"),1))
+      addLocal(argTypes)
       val returnType: Local = Jimple.v().newLocal(Utils.nextName("returnType"), RefType.v("java.lang.String"))
+      addLocal(returnType)
       val inputArgs: Local = Jimple.v().newLocal(Utils.nextName("inputArgs"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+      addLocal(inputArgs)
       val expr= Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logCallback.makeRef(), List[Local](lsignature,
         methodname,argTypes, returnType, inputArgs, simpleName):_*))
       units.addFirst(expr)
@@ -254,12 +288,15 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 
           override def caseReturnVoidStmt(stmt: ReturnVoidStmt): Unit = {
             val lsignature = Jimple.v().newLocal(Utils.nextName("callinSig"), RefType.v("java.lang.String"))
+            addLocal(lsignature)
             val methodname = Jimple.v().newLocal(Utils.nextName("callinName"), RefType.v("java.lang.String"))
+            addLocal(methodname)
             val logReturn: SootMethod = Scene.v().getSootClass(TraceRunnerOptions.CALLIN_INSTRUMENTATION_CLASS)
               .getMethod("void logCallbackReturn(java.lang.String,java.lang.String,java.lang.Object)")
             units.insertBefore(Jimple.v().newAssignStmt(lsignature, StringConstant.v(signature)),i)
             units.insertBefore(Jimple.v().newAssignStmt(methodname, StringConstant.v(methodSignature)),i)
             val returnTmp = Jimple.v().newLocal(Utils.nextName("returnTmp"), RefType.v("java.lang.Object"))
+            addLocal(returnTmp)
             units.insertBefore(Jimple.v().newAssignStmt(returnTmp, NullConstant.v()),i)
             units.insertBefore(Jimple.v().newInvokeStmt(Jimple.v().newStaticInvokeExpr(logReturn.makeRef(),
               List[Local](lsignature, methodname, returnTmp):_*)),i)
@@ -267,5 +304,10 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
         })}
 
     }
+//    if(method.getDeclaringClass.getName == "com.example.row1antennapodrxjava.MainActivity" && method.getName == "<init>") {
+//      println()
+//    }
+    method.getActiveBody.validate()
+    //    method.getDeclaringClass.validate()
   }
 }

@@ -88,6 +88,12 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
   def captureReturn(b: Body, units: PatchingChain[Unit], i: Unit, invokeExpr: InvokeExpr): (Unit,Option[Local]) = {
 
+    val locals = b.getMethod.getActiveBody.getLocals
+    def addLocal(loc:Local):Boolean= {
+      if(!locals.contains(loc)){
+        locals.add(loc)
+      }else false
+    }
     val returnType: Type = invokeExpr.getMethod.getReturnType
     returnType match {
       case r: VoidType => {
@@ -97,6 +103,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
       case r: RefType => {
         //thing that extends Object
         val returnValue = Jimple.v().newLocal(Utils.nextName("returnValue"), RefType.v("java.lang.Object"))
+        addLocal(returnValue)
         //        units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr), i)
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(returnValue, invokeExpr)
         units.swapWith(i, newUnit)
@@ -120,8 +127,10 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
             ???
           }
         }
+        addLocal(returnValue)
         units.insertBefore(Jimple.v().newAssignStmt(returnValue, invokeExpr), i)
         val boxedReturnValue = Jimple.v().newLocal(Utils.nextName("boxedReturnValue"), RefType.v("java.lang.Object"))
+        addLocal(boxedReturnValue)
         val newUnit: AssignStmt = Jimple.v().newAssignStmt(boxedReturnValue, Utils.autoBox(returnValue))
         //        units.insertBefore(newUnit, i)
         units.swapWith(i, newUnit)
@@ -142,6 +151,14 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     */
   def instrumentInvokeExpr(b: Body, i: Unit, invokeExpr: InvokeExpr, returnLocation: Option[Local]) = {
     val method = b.getMethod
+
+    val locals = method.getActiveBody.getLocals
+    def addLocal(loc:Local):Boolean = {
+      if(!locals.contains(loc)){
+        locals.add(loc)
+      }else false
+    }
+
     val units: PatchingChain[soot.Unit] = b.getUnits
     val logCallin: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod("void logCallin(java.lang.String,java.lang.String,java.lang.Object[],java.lang.Object,java.lang.String,java.lang.String)")
     //TODO: finish adding two parameters
@@ -152,6 +169,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     //Arguments
     val argCount: Int = invokeExpr.getArgCount
     val arguments: Local = Jimple.v().newLocal(Utils.nextName("arguments"), ArrayType.v(RefType.v("java.lang.Object"), 1))
+    addLocal(arguments)
     units.insertBefore(Jimple.v().newAssignStmt(
       arguments, Jimple.v().newNewArrayExpr(RefType.v("java.lang.Object"), IntConstant.v(argCount + 1))), i)
 
@@ -165,6 +183,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     (1 until (argCount + 1)).foreach(a => {
       val arg: Value = invokeExpr.getArg(a - 1)
       val tmpLocal = Jimple.v().newLocal(Utils.nextName("arguments"), RefType.v("java.lang.Object"))
+      addLocal(tmpLocal)
       val argAssign: AssignStmt = Jimple.v().newAssignStmt(
         tmpLocal, Utils.autoBox(arg))
       val argAssign2: AssignStmt = Jimple.v().newAssignStmt(Jimple.v().newArrayRef(arguments, IntConstant.v(a)), tmpLocal)
@@ -176,11 +195,14 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
     //Caller
     val newThisRef = if(b.getMethod.isStatic){NullConstant.v()} else{b.getThisLocal}
     val callerref: Local = Jimple.v().newLocal(Utils.nextName("callerref"), RefType.v("java.lang.Object"))
+    addLocal(callerref)
     units.insertBefore(Jimple.v().newAssignStmt(callerref, newThisRef), i)
 
     //Signature and method name
     val signature: Local = Jimple.v().newLocal(Utils.nextName("signaturename"), RefType.v("java.lang.String"))
+    addLocal(signature)
     val methodname: Local = Jimple.v().newLocal(Utils.nextName("methodname"), RefType.v("java.lang.String"))
+    addLocal(methodname)
     //Create signature information
     val sigassign = Jimple.v().newAssignStmt(signature, StringConstant.v(name1))
     units.insertBefore(sigassign, i)
@@ -192,7 +214,9 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
 
     //Location in file
     val filename: Local = Jimple.v().newLocal(Utils.nextName("filename"), RefType.v("java.lang.String"))
+    addLocal(filename)
     val lineNumber: Local = Jimple.v().newLocal(Utils.nextName("lineNumber"), RefType.v("java.lang.String"))
+    addLocal(lineNumber)
 
     units.insertBefore(Jimple.v().newAssignStmt(filename, StringConstant.v(b.getMethod.getDeclaringClass.getName)),i)
     val lineOfInst: String = JUtils.getLineNumber(i).toString
@@ -215,6 +239,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         //Log return value and exit
         val exitLogMethod: SootMethod = Scene.v().getSootClass(callinInstrumentClass).getMethod(callinExitMethodSig)
         val nullreflocal = Jimple.v().newLocal(Utils.nextName("nullref"), RefType.v("java.lang.Object"))
+        addLocal(nullreflocal)
         val exitExpr = Jimple.v().newStaticInvokeExpr(exitLogMethod.makeRef(), List[Local](signature, methodname, nullreflocal, signature).asJava)
         units.insertAfter(Jimple.v().newInvokeStmt(exitExpr), i)
         units.insertAfter(Jimple.v().newAssignStmt(nullreflocal, NullConstant.v()),i)
