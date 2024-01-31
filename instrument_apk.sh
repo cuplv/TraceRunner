@@ -28,21 +28,22 @@ java -jar ${TRACERUNNER_ROOT}${TRACERUNNER_JAR} -j ${PLATFORMS} -d $ORIG_APK -o 
 
 #extract apk name
 APKNAME=$(basename $ORIG_APK)
-echo "APK name: $APKNAME"
+echo "*** APK name: $APKNAME"
 
 #add instrumentation
 
-echo "add instrumentation to ${OUTPUT}/${APKNAME}"
+echo "*** add instrumentation to ${OUTPUT}/${APKNAME}"
 
 python ${TRACERUNNER_ROOT}/utils/add_external_dex.py --apk ${OUTPUT}/${APKNAME} --dex ${TRACERUNNER_ROOT}/TraceRunnerRuntimeInstrumentation/app/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex
 
-echo "add network permission to ${OUTPUT}/${APKNAME}"
+# Note: network permission now default
+#echo "***  add network permission to ${OUTPUT}/${APKNAME}"
 
-python ${TRACERUNNER_ROOT}/utils/AppTransformations/addNetwork.py --apk ${OUTPUT}/${APKNAME} --output ${OUTPUT}/tmp
-rm ${OUTPUT}/${APKNAME}
-mv ${OUTPUT}/tmp ${OUTPUT}/${APKNAME}
-
-echo "resign apk"
+#python ${TRACERUNNER_ROOT}/utils/AppTransformations/addNetwork.py --apk ${OUTPUT}/${APKNAME} --output ${OUTPUT}/tmp
+###rm ${OUTPUT}/${APKNAME}
+###mv ${OUTPUT}/tmp ${OUTPUT}/${APKNAME}
+###
+echo "*** resign apk"
 
 #resign
 bash ${TRACERUNNER_ROOT}/utils/resign.sh ${OUTPUT}/${APKNAME}

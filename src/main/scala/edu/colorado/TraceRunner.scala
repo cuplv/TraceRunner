@@ -109,7 +109,7 @@ object TraceRunner {
         /**add instrumentation to classpath**/
         val path: String = Scene.v().getSootClassPath
 //":/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar")
-        Scene.v().setSootClassPath(path + ":" + config.instDir +":" + sys.env("JAVA_HOME") + "/jre/lib/rt.jar")
+        Scene.v().setSootClassPath(path + ":" + config.instDir +":" + scala.util.Properties.envOrElse("JAVA_HOME", ???) + "/jre/lib/rt.jar")
 
         val classes: scala.collection.mutable.Buffer[String] = JUtils.getClasses(config.instDir).asScala
         classes.foreach(a => Scene.v().addBasicClass(a))
@@ -127,9 +127,9 @@ object TraceRunner {
         /**run soot transformation**/
         val config1: Array[String] = TraceRunnerOptions.getSootConfig(config)
 
-        val outApk = File(config.outputDir + "/" + config.apkPath.split("/").last)
-        if(outApk.exists)
-          outApk.delete()
+//        val outApk = File(config.outputDir + "/" + config.apkPath.split("/").last)
+//        if(outApk.exists)
+//          outApk.delete()
         soot.Main.main(config1);
 
       }

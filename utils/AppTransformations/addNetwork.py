@@ -58,14 +58,20 @@ def add_network(apk, outfile,decomptemppar = None, runjarpar = None, clobber_tem
 
     os.remove(manifest_file)
 
-    f = open(manifest_file,'w')
-    manifest.write(f, xml_declaration=True, encoding="utf-8")
-    f.close()
+
+
+    with open(manifest_file, 'w', encoding='utf-8') as f:
+        manifest.write(f, xml_declaration=True, encoding='unicode')
+    # f = open(manifest_file,'w')
+    # print("===pre write")
+    # manifest.write(f, xml_declaration=True, encoding="utf-8")
+    # print("===done write")
+    # f.close()
 
 
     import time
 
-    for i in xrange(10):
+    for i in range(10):
         time.sleep(1)
 
     pack = ["/usr/bin/java", "-jar", runjar, "b", decomptemp, "-o", outfile]

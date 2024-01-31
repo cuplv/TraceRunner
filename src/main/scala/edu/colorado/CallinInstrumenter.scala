@@ -46,7 +46,7 @@ class CallinInstrumenter(config: Config, instrumentationClasses: scala.collectio
         case _ => false
       }
     })
-    val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
+    val method_in_app: Boolean = Utils.sootClassMatches(b.getMethod.getDeclaringClass, config.applicationPackagesr.toSet) && !Utils.isFrameworkClass(signature)
     if(method_in_app && name != "<clinit>") { //Is this an application method we should instrument?
       val units: PatchingChain[soot.Unit] = b.getUnits;
       for (i: soot.Unit <- units.snapshotIterator().asScala) {

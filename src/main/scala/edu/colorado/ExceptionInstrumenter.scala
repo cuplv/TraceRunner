@@ -26,7 +26,8 @@ class ExceptionInstrumenter(config: Config, instrumentationClasses: scala.collec
 
     val name: String = b.getMethod.getName
     val signature: String = b.getMethod.getDeclaringClass.getName
-    val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
+    val method_in_app: Boolean = Utils.sootClassMatches(b.getMethod.getDeclaringClass, config.applicationPackagesr.toSet) && !Utils.isFrameworkClass(signature)
+
     //TODO: no exception instrumentation on synchronized methods see issue #
     if(method_in_app && name != "<clinit>" && !method.isStatic && name != "<init>" && !method.isSynchronized) {
 

@@ -31,7 +31,7 @@ class CallbackInstrumenter(config: Config, instrumentationClasses: scala.collect
 //        case _ => false
 //      }
 //    })
-    val method_in_app: Boolean = !Utils.isFrameworkClass(signature)
+    val method_in_app: Boolean = Utils.sootClassMatches(b.getMethod.getDeclaringClass, config.applicationPackagesr.toSet) && !Utils.isFrameworkClass(signature)
     if(method_in_app && name != "<clinit>" && !method.isStatic) { //Is this a method we would like to instrument?
       val units: PatchingChain[soot.Unit] = b.getUnits;
       val paramCount: Int = method.getParameterCount
